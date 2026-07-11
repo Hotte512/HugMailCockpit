@@ -5,10 +5,12 @@ import './component/hug-mail-compose-modal';
 import './component/hug-mail-history-grid';
 import './component/hug-mail-tab-content';
 import './component/hug-mail-document-type-mapping';
+import './component/hug-mail-preview-card';
 import './module/hug-mail-cockpit';
 import './extension/sw-order-detail';
 import './extension/sw-customer-detail';
 import './extension/sw-order-document-card';
+import './extension/sw-mail-template-detail';
 import deDE from './snippet/de-DE.json';
 import enGB from './snippet/en-GB.json';
 

@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`hug-mail-preview-card renders the card (snapshot) 1`] = `
+"<div class="mt-card-stub hug-mail-preview-card" position-identifier="hug-mail-preview-card" title="hug-mail-cockpit.previewCard.title">
+  <p class="hug-mail-preview-card__hint">hug-mail-cockpit.previewCard.hint</p>
+  <sw-entity-single-select-stub entity="order" label-property="orderNumber" criteria="[object Object]" label="hug-mail-cockpit.previewCard.orderLabel" placeholder="hug-mail-cockpit.previewCard.orderPlaceholder"></sw-entity-single-select-stub><input class="mt-text-field-stub" value="">
+  <div class="hug-mail-preview-card__actions"><button class="mt-button-stub" disabled="">hug-mail-cockpit.composeModal.previewButton</button><button class="mt-button-stub" disabled="">hug-mail-cockpit.previewCard.sendTestButton</button></div>
+  <!--v-if-->
+</div>"
+`;

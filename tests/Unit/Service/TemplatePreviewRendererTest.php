@@ -92,6 +92,39 @@ class TemplatePreviewRendererTest extends TestCase
         static::assertSame('contentHtml', $result->errors[0]['field']);
     }
 
+    public function testLenientModeStillRendersDespiteUnknownVariables(): void
+    {
+        $result = $this->renderer->render(
+            'Subject',
+            'Hello {{ unknownVariable }}!',
+            [],
+            $this->context,
+            lenient: true,
+        );
+
+        // The missing variable is still reported (konzept.md §5) …
+        static::assertFalse($result->isSuccessful());
+        static::assertCount(1, $result->errors);
+        static::assertSame('contentHtml', $result->errors[0]['field']);
+        // … but a lenient second pass produces renderable output.
+        static::assertSame('Hello !', $result->contentHtml);
+        static::assertSame('Subject', $result->subject);
+    }
+
+    public function testLenientModeDoesNotHideSyntaxErrors(): void
+    {
+        $result = $this->renderer->render(
+            'Subject',
+            '{% if %}',
+            [],
+            $this->context,
+            lenient: true,
+        );
+
+        static::assertFalse($result->isSuccessful());
+        static::assertNull($result->contentHtml);
+    }
+
     public function testLetterheadWrapsContentBeforeRendering(): void
     {
         $order = new OrderEntity();

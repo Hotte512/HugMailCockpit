@@ -119,7 +119,7 @@ Leere Mails starten mit `<p></p>` (TipTap-stabil — sonst greift das Gate schon
 - Felder: Entity-Single-Select `order` (sortiert `createdAt DESC`, Suche über Bestellnummer) + optional Event-Auswahl (MailAware-Events, in 1.0 nur Order-basierte) + Empfänger-Feld für Testversand.
 - Buttons: **Vorschau** (Modal, gerendertes HTML) · **Testmail senden**.
 - **Twig-Fehler sichtbar machen:** Renderer fängt `Twig\Error\Error`, gibt Message + Zeile zurück, Anzeige als roter Alert mit Codezeile.
-- **Knackpunkt:** Templates erwarten je nach Flow-Event unterschiedliche Root-Variablen. 1.0: Order-Context + Dummy-Fallback für unbekannte Keys (undefined → sichtbarer Platzhalter statt Exception, via `StringLoader` + strict_variables=false-Fallback-Pass, der die fehlenden Variablen *meldet*).
+- **Knackpunkt:** Templates erwarten je nach Flow-Event unterschiedliche Root-Variablen. *(Umgesetzt)* 1.0: Order-Context + `lenient`-Modus des `TemplatePreviewRenderer`: strikter Pass meldet fehlende Variablen (Message + Zeile), ein zweiter Pass im Test-Modus (strict_variables aus) rendert trotzdem — fehlende Werte erscheinen als Leerstelle statt Platzhalter. „Testmail senden" verschickt das **gerenderte** Ergebnis (source `preview`), nie das rohe Twig — dadurch greift die Twig-Policy nicht und Vorschau = Versand.
 
 ---
 

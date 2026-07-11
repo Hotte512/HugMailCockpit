@@ -77,6 +77,17 @@
                 "unknown": "Unknown"
             },
             "actionOpenArchive": "Open in mail archive (EML, resend)"
+        },
+        "previewCard": {
+            "title": "Test with a real order",
+            "hint": "Renders this template with the data of a real order — in the order's language. Missing flow variables are reported but do not block the preview.",
+            "orderLabel": "Order",
+            "orderPlaceholder": "Search order number …",
+            "recipientLabel": "Recipient for test dispatch",
+            "recipientHelp": "The test mail contains the rendered result of this template.",
+            "sendTestButton": "Send test mail",
+            "sendTestSuccess": "The test mail has been sent.",
+            "renderFailed": "The template could not be rendered."
         }
     }
 }

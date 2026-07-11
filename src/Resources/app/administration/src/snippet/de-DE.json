@@ -77,6 +77,17 @@
                 "unknown": "Unbekannt"
             },
             "actionOpenArchive": "Im Mail-Archiv öffnen (EML, erneut senden)"
+        },
+        "previewCard": {
+            "title": "Test mit echter Bestellung",
+            "hint": "Rendert diese Vorlage mit den Daten einer echten Bestellung — in der Sprache der Bestellung. Fehlende Flow-Variablen werden gemeldet, verhindern die Vorschau aber nicht.",
+            "orderLabel": "Bestellung",
+            "orderPlaceholder": "Bestellnummer suchen …",
+            "recipientLabel": "Empfänger für Testversand",
+            "recipientHelp": "Die Testmail enthält das gerenderte Ergebnis dieser Vorlage.",
+            "sendTestButton": "Testmail senden",
+            "sendTestSuccess": "Die Testmail wurde versendet.",
+            "renderFailed": "Die Vorlage konnte nicht gerendert werden."
         }
     }
 }

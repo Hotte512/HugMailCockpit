@@ -30,6 +30,7 @@ class TemplatePreviewRenderer
         Context $context,
         ?string $headerHtml = null,
         ?string $footerHtml = null,
+        bool $lenient = false,
     ): PreviewResult {
         $errors = [];
 
@@ -44,7 +45,37 @@ class TemplatePreviewRenderer
         $renderedSubject = $this->renderField('subject', $subject, false, $templateData, $context, $errors);
         $renderedContent = $this->renderField('contentHtml', $contentHtml, true, $templateData, $context, $errors);
 
+        // Lenient mode (F4, konzept.md §5): templates may expect flow-event
+        // variables we cannot provide. Missing variables stay reported, but a
+        // second pass without strict variables still produces output.
+        if ($lenient) {
+            if ($renderedSubject === null) {
+                $renderedSubject = $this->renderInTestMode($subject, false, $templateData, $context);
+            }
+
+            if ($renderedContent === null) {
+                $renderedContent = $this->renderInTestMode($contentHtml, true, $templateData, $context);
+            }
+        }
+
         return new PreviewResult($renderedSubject, $renderedContent, $errors);
+    }
+
+    /**
+     * @param array<string, mixed> $templateData
+     */
+    private function renderInTestMode(string $template, bool $htmlEscape, array $templateData, Context $context): ?string
+    {
+        $this->stringTemplateRenderer->enableTestMode();
+
+        try {
+            return $this->stringTemplateRenderer->render($template, $templateData, $context, $htmlEscape);
+        } catch (AdapterException) {
+            // Syntax errors persist even without strict variables.
+            return null;
+        } finally {
+            $this->stringTemplateRenderer->disableTestMode();
+        }
     }
 
     /**

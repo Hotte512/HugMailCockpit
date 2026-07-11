@@ -126,6 +126,9 @@ class MailCockpitController
             $mailContext->context,
             $letterhead['headerHtml'],
             $letterhead['footerHtml'],
+            // F4 uses the lenient mode: templates expecting flow-event
+            // variables still render, missing variables stay reported.
+            ($payload['lenient'] ?? false) === true,
         );
 
         return new JsonResponse([

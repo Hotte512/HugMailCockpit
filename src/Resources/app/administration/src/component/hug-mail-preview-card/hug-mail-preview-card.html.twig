@@ -1,0 +1,71 @@
+<mt-card
+    v-if="cardVisible"
+    class="hug-mail-preview-card"
+    position-identifier="hug-mail-preview-card"
+    :title="$tc('hug-mail-cockpit.previewCard.title')"
+>
+    <p class="hug-mail-preview-card__hint">
+        {{ $tc('hug-mail-cockpit.previewCard.hint') }}
+    </p>
+
+    <sw-entity-single-select
+        entity="order"
+        label-property="orderNumber"
+        :criteria="orderCriteria"
+        :value="orderId"
+        :label="$tc('hug-mail-cockpit.previewCard.orderLabel')"
+        :placeholder="$tc('hug-mail-cockpit.previewCard.orderPlaceholder')"
+        @update:value="orderId = $event"
+    />
+
+    <mt-text-field
+        v-model="recipientEmail"
+        :label="$tc('hug-mail-cockpit.previewCard.recipientLabel')"
+        :help-text="$tc('hug-mail-cockpit.previewCard.recipientHelp')"
+    />
+
+    <div class="hug-mail-preview-card__actions">
+        <mt-button
+            variant="secondary"
+            :disabled="!orderId"
+            :is-loading="isLoadingPreview"
+            @click="openPreview"
+        >
+            {{ $tc('hug-mail-cockpit.composeModal.previewButton') }}
+        </mt-button>
+        <mt-button
+            variant="primary"
+            :disabled="!orderId || recipientEmail.trim() === ''"
+            :is-loading="isSending"
+            @click="sendTestMail"
+        >
+            {{ $tc('hug-mail-cockpit.previewCard.sendTestButton') }}
+        </mt-button>
+    </div>
+
+    <mt-modal-root v-if="preview.open" :is-open="true" @change="onPreviewModalChange">
+        <mt-modal :title="$tc('hug-mail-cockpit.composeModal.previewTitle')" width="l">
+            <template #default>
+                <mt-banner
+                    v-for="(error, index) in preview.errors"
+                    :key="index"
+                    variant="critical"
+                    :title="previewErrorTitle(error)"
+                >
+                    {{ error.message }}
+                </mt-banner>
+
+                <template v-if="preview.contentHtml !== null">
+                    <p class="hug-mail-preview-card__preview-subject">
+                        <strong>{{ preview.subject }}</strong>
+                    </p>
+                    <iframe
+                        class="hug-mail-preview-card__preview-frame"
+                        sandbox=""
+                        :srcdoc="preview.contentHtml"
+                    ></iframe>
+                </template>
+            </template>
+        </mt-modal>
+    </mt-modal-root>
+</mt-card>
