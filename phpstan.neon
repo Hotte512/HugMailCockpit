@@ -14,3 +14,12 @@ parameters:
     # Treat @param/@return PHPDoc types as guidance only; do not silently widen
     # inferred types based on doc blocks.
     treatPhpDocTypesAsCertain: false
+
+    ignoreErrors:
+        # The core test stub StaticEntityRepository infers its collection type
+        # from the constructor argument and always widens to EntityCollection —
+        # a known mismatch against precisely typed repository parameters.
+        -
+            message: '#StaticEntityRepository<Shopware\\Core\\Framework\\DataAbstractionLayer\\EntityCollection> given#'
+            path: tests/*
+            identifier: argument.type

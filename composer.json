@@ -59,7 +59,6 @@
         "ecs-fix": "ecs check --fix",
         "phpstan": "phpstan analyse",
         "phpunit": "phpunit",
-        "rector": "rector process --dry-run",
-        "rector-fix": "rector process"
+        "rector": "rector process"
     }
 }

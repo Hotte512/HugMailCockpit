@@ -2,7 +2,7 @@
 
 Shopware-6-Plugin für manuellen E-Mail-Versand aus der Administration — freie E-Mails, Dokumentversand, Mail-Historie und Template-Preview mit echten Bestelldaten.
 
-> **Status: in Entwicklung** — Plugin-Grundgerüst steht (installierbar, Konfiguration, ACL, Datenbank-Schema); die Features F1–F4 sind noch nicht implementiert. Verbindliche Planungsgrundlage: [docs/konzept.md](docs/konzept.md)
+> **Status: in Entwicklung** — Grundgerüst und F1-Backend stehen (Versandpfad, API-Routen `send`/`preview`/`variables`/`history`, ACL-Durchsetzung); die Admin-Oberfläche (F1-Modal) und F2–F4 folgen. Verbindliche Planungsgrundlage: [docs/konzept.md](docs/konzept.md)
 
 ## Features (geplanter MVP 1.0)
 

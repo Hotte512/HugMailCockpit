@@ -11,8 +11,52 @@
             <tag name="shopware.entity.definition" entity="hug_mail_reference"/>
         </service>
 
-        <!-- Backend services (HugMailSender, MailContextBuilder, AttachmentResolver,
-             TemplatePreviewRenderer, MailReferenceWriter, DocumentMailTemplateMapper)
-             are added in phase 2 – see docs/konzept.md §6. -->
+        <!-- ============================================================
+             F1 backend services (docs/konzept.md §6)
+             ============================================================ -->
+        <service id="Hug\MailCockpit\Service\TwigContentPolicy"/>
+
+        <service id="Hug\MailCockpit\Service\MailContextBuilder">
+            <argument type="service" id="order.repository"/>
+            <argument type="service" id="customer.repository"/>
+        </service>
+
+        <service id="Hug\MailCockpit\Service\AttachmentResolver">
+            <argument type="service" id="Shopware\Core\Checkout\Document\Service\DocumentGenerator"/>
+        </service>
+
+        <service id="Hug\MailCockpit\Service\TemplatePreviewRenderer">
+            <argument type="service" id="Shopware\Core\Framework\Adapter\Twig\StringTemplateRenderer"/>
+        </service>
+
+        <service id="Hug\MailCockpit\Service\MailReferenceWriter">
+            <argument type="service" id="hug_mail_reference.repository"/>
+        </service>
+
+        <service id="Hug\MailCockpit\Service\HugMailSender">
+            <!-- Guardrail: dispatch only through the core mail service
+                 (type-hinted as AbstractMailService). -->
+            <argument type="service" id="Shopware\Core\Content\Mail\Service\MailService"/>
+            <argument type="service" id="Hug\MailCockpit\Service\MailContextBuilder"/>
+            <argument type="service" id="Hug\MailCockpit\Service\AttachmentResolver"/>
+            <argument type="service" id="Hug\MailCockpit\Service\MailReferenceWriter"/>
+        </service>
+
+        <!-- Optional runtime dependency: repository only exists while
+             FroshPlatformMailArchive is installed and active. -->
+        <service id="Hug\MailCockpit\Service\MailArchiveGateway">
+            <argument type="service" id="frosh_mail_archive.repository" on-invalid="null"/>
+        </service>
+
+        <!-- ============================================================
+             API controller (/api/_action/hug-mail-cockpit/*)
+             ============================================================ -->
+        <service id="Hug\MailCockpit\Core\Api\MailCockpitController" public="true">
+            <argument type="service" id="Hug\MailCockpit\Service\HugMailSender"/>
+            <argument type="service" id="Hug\MailCockpit\Service\MailContextBuilder"/>
+            <argument type="service" id="Hug\MailCockpit\Service\TemplatePreviewRenderer"/>
+            <argument type="service" id="Hug\MailCockpit\Service\TwigContentPolicy"/>
+            <argument type="service" id="Hug\MailCockpit\Service\MailArchiveGateway"/>
+        </service>
     </services>
 </container>

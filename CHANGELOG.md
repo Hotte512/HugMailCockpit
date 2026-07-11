@@ -7,6 +7,10 @@ Format angelehnt an [Keep a Changelog](https://keepachangelog.com/de/1.1.0/); Ve
 ## [Unreleased]
 
 ### Hinzugefügt
+- F1-Backend: kompletter Versandpfad für manuelle E-Mails aus der Administration — Versand ausschließlich über den Core-Mailservice, Mail-Sprache immer aus der Bestellung/dem Kunden (nie Admin-Sprache), Dokumente als Anhänge, Audit-Eintrag nach jedem Versand, automatische Verknüpfung ins MailArchive (orderId/customerId/templateId)
+- Admin-API-Routen `/api/_action/hug-mail-cockpit/` → `send`, `preview` (mit Twig-Fehlern inkl. Zeilenangabe), `variables` (Variablen-Picker-Daten + Empfänger-Vorbelegung), `history` (liest FroshPlatformMailArchive)
+- Serverseitige Twig-Richtlinie: ohne das Privileg `twig_editor` sind nur einfache Variablen (`{{ order.orderNumber }}`) erlaubt — Tags, Filter und Funktionsaufrufe werden abgelehnt (Missbrauchsschutz, auch in der Vorschau)
+- 55 PHPUnit-Tests für alle Backend-Services und den API-Controller
 - Plugin-Grundgerüst (installier- und aktivierbar): Composer-Paket `hug/mail-cockpit`, Plugin-Klasse mit Datenbank-Cleanup bei Deinstallation, Service-Container-Konfiguration
 - Plugin-Konfiguration mit einzeln abschaltbaren Feature-Toggles für F1–F4
 - ACL-Berechtigungen `hug_mail_cockpit.viewer` / `.sender` / `.free_sender` / `.twig_editor` (als zusätzliche Berechtigungen in der Admin-Rollenverwaltung, inkl. deutscher und englischer Beschriftung)
