@@ -16,7 +16,7 @@ exports[`hug-mail-compose-modal renders the compose form after loading the mail 
           <p class="hug-mail-compose-modal__no-documents">hug-mail-cockpit.composeModal.noDocuments</p>
         </div>
         <div class="hug-mail-compose-modal__upload">
-          <sw-media-upload-v2-stub upload-tag="hug-mail-cockpit-attachment" allow-multi-select="true" variant="compact" label="hug-mail-cockpit.composeModal.uploadLabel"></sw-media-upload-v2-stub>
+          <sw-media-upload-v2-stub upload-tag="hug-mail-cockpit-attachment" allow-multi-select="true" variant="compact" default-folder="hug_mail_reference" label="hug-mail-cockpit.composeModal.uploadLabel"></sw-media-upload-v2-stub>
           <sw-upload-listener-stub upload-tag="hug-mail-cockpit-attachment" auto-upload=""></sw-upload-listener-stub>
           <!--v-if-->
         </div>

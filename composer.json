@@ -1,7 +1,7 @@
 {
     "name": "hug/mail-cockpit",
     "description": "Manual e-mail cockpit for the Shopware 6.7 admin – compose free e-mails from order/customer detail, mail history tab, send documents by mail, template preview with real order data",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "type": "shopware-platform-plugin",
     "license": "proprietary",
     "authors": [
