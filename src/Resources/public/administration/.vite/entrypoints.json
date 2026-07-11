@@ -1,0 +1,23 @@
+{
+  "base": "/bundles/hugmailcockpit/administration/",
+  "entryPoints": {
+    "hug-mail-cockpit": {
+      "css": [],
+      "dynamic": [],
+      "js": [
+        "/bundles/hugmailcockpit/administration/assets/hug-mail-cockpit-CTeDLpt9.js"
+      ],
+      "legacy": false,
+      "preload": []
+    }
+  },
+  "legacy": false,
+  "metadatas": {},
+  "version": [
+    "7.1.0",
+    7,
+    1,
+    0
+  ],
+  "viteServer": null
+}

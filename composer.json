@@ -1,0 +1,65 @@
+{
+    "name": "hug/mail-cockpit",
+    "description": "Manual e-mail cockpit for the Shopware 6.7 admin – compose free e-mails from order/customer detail, mail history tab, send documents by mail, template preview with real order data",
+    "version": "0.1.0",
+    "type": "shopware-platform-plugin",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Hotte512",
+            "homepage": "https://github.com/Hotte512/HugMailCockpit"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "shopware/core": "~6.7.0",
+        "shopware/administration": "~6.7.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.5",
+        "phpstan/phpstan": "^1.11",
+        "symplify/easy-coding-standard": "^12.3",
+        "rector/rector": "^1.2"
+    },
+    "suggest": {
+        "frosh/mail-platform-archive": "Enables the mail history tab (F2). Version >= 3.6 required (order_id and mail_template_id columns on frosh_mail_archive)."
+    },
+    "autoload": {
+        "psr-4": {
+            "Hug\\MailCockpit\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Hug\\MailCockpit\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "shopware-plugin-class": "Hug\\MailCockpit\\HugMailCockpit",
+        "label": {
+            "de-DE": "Mail-Cockpit",
+            "en-GB": "Mail Cockpit"
+        },
+        "description": {
+            "de-DE": "Manueller E-Mail-Versand aus der Administration: freie E-Mails aus Bestell- und Kundendetail, Mail-Historie, Dokumentversand per E-Mail und Template-Vorschau mit echten Bestelldaten.",
+            "en-GB": "Manual e-mail dispatch from the administration: free e-mails from order and customer detail, mail history, sending documents by e-mail and template preview with real order data."
+        },
+        "manufacturerLink": {
+            "de-DE": "https://github.com/Hotte512/HugMailCockpit",
+            "en-GB": "https://github.com/Hotte512/HugMailCockpit"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "symfony/runtime": true
+        }
+    },
+    "scripts": {
+        "ecs": "ecs check",
+        "ecs-fix": "ecs check --fix",
+        "phpstan": "phpstan analyse",
+        "phpunit": "phpunit",
+        "rector": "rector process --dry-run",
+        "rector-fix": "rector process"
+    }
+}

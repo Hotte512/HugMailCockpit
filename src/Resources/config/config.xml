@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/shopware/shopware/trunk/src/Core/System/SystemConfig/Schema/config.xsd">
+
+    <card>
+        <title lang="de-DE">Funktionen</title>
+        <title lang="en-GB">Features</title>
+
+        <input-field type="bool">
+            <name>freeMailEnabled</name>
+            <label lang="de-DE">F1: Freie E-Mails verfassen</label>
+            <label lang="en-GB">F1: Compose free e-mails</label>
+            <helpText lang="de-DE">Button „E-Mail senden" in der Smart Bar von Bestell- und Kundendetail. Benötigt das ACL-Recht „Freie Mails verfassen".</helpText>
+            <helpText lang="en-GB">"Send e-mail" button in the smart bar of order and customer detail. Requires the "compose free mails" ACL privilege.</helpText>
+            <defaultValue>true</defaultValue>
+        </input-field>
+
+        <input-field type="bool">
+            <name>historyEnabled</name>
+            <label lang="de-DE">F2: Mail-Historie-Tab</label>
+            <label lang="en-GB">F2: Mail history tab</label>
+            <helpText lang="de-DE">Historie-Tab in Bestell- und Kundendetail. Benötigt zusätzlich das Plugin FroshPlatformMailArchive (Version ≥ 3.6) – ohne MailArchive bleibt der Tab unabhängig von dieser Einstellung ausgeblendet.</helpText>
+            <helpText lang="en-GB">History tab in order and customer detail. Additionally requires the FroshPlatformMailArchive plugin (version ≥ 3.6) – without MailArchive the tab stays hidden regardless of this setting.</helpText>
+            <defaultValue>true</defaultValue>
+        </input-field>
+
+        <input-field type="bool">
+            <name>documentMailEnabled</name>
+            <label lang="de-DE">F3: Dokumente per E-Mail versenden</label>
+            <label lang="en-GB">F3: Send documents by e-mail</label>
+            <helpText lang="de-DE">Kontextmenü-Aktion „Per E-Mail senden (Cockpit)" im Dokumenten-Grid der Bestellung inkl. Mehrfachauswahl.</helpText>
+            <helpText lang="en-GB">Context menu action "Send by e-mail (Cockpit)" in the order document grid, including multi-select.</helpText>
+            <defaultValue>true</defaultValue>
+        </input-field>
+
+        <input-field type="bool">
+            <name>templatePreviewEnabled</name>
+            <label lang="de-DE">F4: Template-Vorschau mit echten Bestelldaten</label>
+            <label lang="en-GB">F4: Template preview with real order data</label>
+            <helpText lang="de-DE">Card „Test mit echter Bestellung" in der Mail-Template-Detailseite inkl. Testversand.</helpText>
+            <helpText lang="en-GB">"Test with real order" card on the mail template detail page, including test dispatch.</helpText>
+            <defaultValue>true</defaultValue>
+        </input-field>
+    </card>
+</config>

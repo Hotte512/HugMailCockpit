@@ -1,6 +1,9 @@
 /vendor/
 /node_modules/
+/composer.lock
+/coverage/
 .claude/settings.local.json
+.claude/worktrees/
 .phpunit.result.cache
 .phpactor.json
 .DS_Store

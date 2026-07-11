@@ -1,0 +1,13 @@
+{
+    "sw-privileges": {
+        "additional_permissions": {
+            "hug_mail_cockpit": {
+                "label": "Mail-Cockpit",
+                "viewer": "Mail-Historie sehen",
+                "sender": "Dokumente per E-Mail versenden",
+                "free_sender": "Freie E-Mails verfassen",
+                "twig_editor": "Twig-Modus im Editor verwenden"
+            }
+        }
+    }
+}

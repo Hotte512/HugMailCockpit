@@ -1,0 +1,18 @@
+<?xml version="1.0" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <!-- ============================================================
+             DAL entity definitions
+             ============================================================ -->
+        <service id="Hug\MailCockpit\Core\Content\MailReference\MailReferenceDefinition">
+            <tag name="shopware.entity.definition" entity="hug_mail_reference"/>
+        </service>
+
+        <!-- Backend services (HugMailSender, MailContextBuilder, AttachmentResolver,
+             TemplatePreviewRenderer, MailReferenceWriter, DocumentMailTemplateMapper)
+             are added in phase 2 – see docs/konzept.md §6. -->
+    </services>
+</container>

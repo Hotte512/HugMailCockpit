@@ -2,7 +2,7 @@
 
 Shopware-6-Plugin für manuellen E-Mail-Versand aus der Administration — freie E-Mails, Dokumentversand, Mail-Historie und Template-Preview mit echten Bestelldaten.
 
-> **Status: in Entwicklung** — noch kein lauffähiger Code. Verbindliche Planungsgrundlage: [docs/konzept.md](docs/konzept.md)
+> **Status: in Entwicklung** — Plugin-Grundgerüst steht (installierbar, Konfiguration, ACL, Datenbank-Schema); die Features F1–F4 sind noch nicht implementiert. Verbindliche Planungsgrundlage: [docs/konzept.md](docs/konzept.md)
 
 ## Features (geplanter MVP 1.0)
 
@@ -14,7 +14,8 @@ Shopware-6-Plugin für manuellen E-Mail-Versand aus der Administration — freie
 ## Anforderungen
 
 - Shopware **≥ 6.7** (`shopware/core: ~6.7.0`) — kein 6.6-Support
-- Optional: [FroshPlatformMailArchive](https://github.com/FriendsOfShopware/FroshPlatformMailArchive) für die Mail-Historie (F2)
+- PHP ≥ 8.2
+- Optional: [FroshPlatformMailArchive](https://github.com/FriendsOfShopware/FroshPlatformMailArchive) **≥ 3.6** für die Mail-Historie (F2) — ab 3.6 speichert das Archiv `order_id` und `mail_template_id`
 
 ## Installation
 
@@ -23,6 +24,10 @@ bin/console plugin:refresh
 bin/console plugin:install --activate HugMailCockpit
 bin/console cache:clear
 ```
+
+## Konfiguration
+
+Unter *Einstellungen → System → Plugins → Mail-Cockpit* lassen sich die Features F1–F4 einzeln aktivieren/deaktivieren (Standard: alle aktiv). F2 setzt zusätzlich FroshPlatformMailArchive ≥ 3.6 voraus und bleibt ohne dieses Plugin ausgeblendet.
 
 ## Berechtigungen (ACL)
 
