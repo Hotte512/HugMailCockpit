@@ -1,4 +1,9 @@
 import './acl';
+import './service';
+import './component/hug-mail-variable-picker';
+import './component/hug-mail-compose-modal';
+import './extension/sw-order-detail';
+import './extension/sw-customer-detail';
 import deDE from './snippet/de-DE.json';
 import enGB from './snippet/en-GB.json';
 

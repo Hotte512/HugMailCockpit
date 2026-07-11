@@ -1,0 +1,51 @@
+<div class="hug-mail-variable-picker">
+    <mt-text-field
+        v-model="searchTerm"
+        size="small"
+        :placeholder="$tc('hug-mail-cockpit.variablePicker.searchPlaceholder')"
+    />
+
+    <div
+        v-for="(keys, rootKey) in filteredVariables"
+        :key="rootKey"
+        class="hug-mail-variable-picker__group"
+    >
+        <button
+            type="button"
+            class="hug-mail-variable-picker__root"
+            @click="toggleGroup(rootKey)"
+        >
+            <mt-icon
+                :name="isGroupOpen(rootKey) ? 'regular-chevron-down-xxs' : 'regular-chevron-right-xxs'"
+                size="12px"
+            />
+            {{ rootKey }}
+        </button>
+
+        <ul v-if="isGroupOpen(rootKey)" class="hug-mail-variable-picker__list">
+            <li v-if="keys.length === 0">
+                <button
+                    type="button"
+                    class="hug-mail-variable-picker__variable"
+                    @click="selectVariable(rootKey)"
+                >
+                    {{ rootKey }}
+                </button>
+            </li>
+            <li v-for="key in keys" :key="key">
+                <button
+                    type="button"
+                    class="hug-mail-variable-picker__variable"
+                    :title="buildExpression(rootKey, key)"
+                    @click="selectVariable(rootKey + '.' + key)"
+                >
+                    {{ key }}
+                </button>
+            </li>
+        </ul>
+    </div>
+
+    <p v-if="Object.keys(filteredVariables).length === 0" class="hug-mail-variable-picker__empty">
+        {{ $tc('hug-mail-cockpit.variablePicker.empty') }}
+    </p>
+</div>

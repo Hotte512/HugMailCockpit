@@ -2,10 +2,12 @@
   "base": "/bundles/hugmailcockpit/administration/",
   "entryPoints": {
     "hug-mail-cockpit": {
-      "css": [],
+      "css": [
+        "/bundles/hugmailcockpit/administration/assets/hug-mail-cockpit-CP1gTt1z.css"
+      ],
       "dynamic": [],
       "js": [
-        "/bundles/hugmailcockpit/administration/assets/hug-mail-cockpit-CTeDLpt9.js"
+        "/bundles/hugmailcockpit/administration/assets/hug-mail-cockpit-mAtTM4St.js"
       ],
       "legacy": false,
       "preload": []

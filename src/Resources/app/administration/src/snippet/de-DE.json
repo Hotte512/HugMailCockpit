@@ -9,5 +9,40 @@
                 "twig_editor": "Twig-Modus im Editor verwenden"
             }
         }
+    },
+    "hug-mail-cockpit": {
+        "smartBar": {
+            "sendMail": "E-Mail senden"
+        },
+        "composeModal": {
+            "title": "E-Mail senden",
+            "recipientLabel": "Empfänger",
+            "toggleCcBcc": "CC/BCC",
+            "ccLabel": "CC",
+            "bccLabel": "BCC",
+            "addressListHelp": "Mehrere Adressen mit Komma trennen",
+            "templateLabel": "Vorlage",
+            "templateHelp": "Die Vorlage wird als Kopie geladen – Änderungen hier verändern die Vorlage nicht.",
+            "subjectLabel": "Betreff",
+            "editorModeSimple": "Einfach",
+            "editorModeTwig": "Twig",
+            "twigWarningTitle": "Twig-Inhalt",
+            "twigWarningText": "Der Inhalt enthält Twig-Blöcke, die im einfachen Editor als Text angezeigt werden.",
+            "attachmentsHeadline": "Anhänge",
+            "noDocuments": "Zu dieser Bestellung existieren noch keine Dokumente.",
+            "uploadLabel": "Datei hochladen",
+            "languageLabel": "Sprache",
+            "previewButton": "Vorschau",
+            "sendButton": "Senden",
+            "previewTitle": "Vorschau",
+            "previewError": "Twig-Fehler",
+            "previewErrorLine": "Twig-Fehler in Zeile {line}",
+            "missingFields": "Empfänger, Betreff und Inhalt dürfen nicht leer sein.",
+            "sendSuccess": "Die E-Mail wurde versendet."
+        },
+        "variablePicker": {
+            "searchPlaceholder": "Variable suchen …",
+            "empty": "Keine Variablen gefunden."
+        }
     }
 }

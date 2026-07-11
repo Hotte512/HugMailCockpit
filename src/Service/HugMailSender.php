@@ -7,6 +7,7 @@ namespace Hug\MailCockpit\Service;
 use Hug\MailCockpit\Exception\MailCockpitException;
 use Shopware\Core\Content\Mail\Service\AbstractMailService;
 use Shopware\Core\Framework\Context;
+use Shopware\Core\System\SystemConfig\SystemConfigService;
 
 /**
  * Single dispatch path for all cockpit mails (guardrail: always through
@@ -19,6 +20,7 @@ class HugMailSender
         private readonly MailContextBuilder $contextBuilder,
         private readonly AttachmentResolver $attachmentResolver,
         private readonly MailReferenceWriter $referenceWriter,
+        private readonly SystemConfigService $systemConfigService,
     ) {
     }
 
@@ -36,6 +38,11 @@ class HugMailSender
             'contentHtml' => $command->contentHtml,
             'contentPlain' => $this->htmlToPlainText($command->contentHtml),
             'salesChannelId' => $mailContext->salesChannelId,
+            // MailService reads $data['senderName'] unguarded — always provide it.
+            'senderName' => $this->systemConfigService->getString(
+                'core.basicInformation.shopName',
+                $mailContext->salesChannelId,
+            ),
         ];
 
         if ($command->documentIds !== []) {

@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`hug-mail-variable-picker renders all variable groups (snapshot) 1`] = `
+"<div class="hug-mail-variable-picker"><input class="mt-text-field-stub" value="">
+  <div class="hug-mail-variable-picker__group"><button type="button" class="hug-mail-variable-picker__root">
+      <mt-icon-stub name="regular-chevron-down-xxs" size="12px"></mt-icon-stub> order
+    </button>
+    <ul class="hug-mail-variable-picker__list">
+      <!--v-if-->
+      <li><button type="button" class="hug-mail-variable-picker__variable" title="{{ order.orderNumber }}">orderNumber</button></li>
+      <li><button type="button" class="hug-mail-variable-picker__variable" title="{{ order.amountTotal }}">amountTotal</button></li>
+      <li><button type="button" class="hug-mail-variable-picker__variable" title="{{ order.orderDateTime }}">orderDateTime</button></li>
+    </ul>
+  </div>
+  <div class="hug-mail-variable-picker__group"><button type="button" class="hug-mail-variable-picker__root">
+      <mt-icon-stub name="regular-chevron-down-xxs" size="12px"></mt-icon-stub> salesChannel
+    </button>
+    <ul class="hug-mail-variable-picker__list">
+      <!--v-if-->
+      <li><button type="button" class="hug-mail-variable-picker__variable" title="{{ salesChannel.name }}">name</button></li>
+    </ul>
+  </div>
+  <!--v-if-->
+</div>"
+`;

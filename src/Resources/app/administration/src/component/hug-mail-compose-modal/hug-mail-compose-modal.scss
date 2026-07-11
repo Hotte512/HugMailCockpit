@@ -1,0 +1,79 @@
+.hug-mail-compose-modal {
+    &__layout {
+        display: grid;
+        grid-template-columns: 1fr 280px;
+        gap: 16px;
+        min-height: 480px;
+    }
+
+    &__form {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    &__recipients {
+        display: flex;
+        align-items: flex-end;
+        gap: 8px;
+
+        > :first-child {
+            flex: 1;
+        }
+    }
+
+    &__cc-bcc {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+    }
+
+    &__editor-toggle {
+        display: flex;
+        gap: 4px;
+    }
+
+    &__editor {
+        min-height: 260px;
+    }
+
+    &__attachments h3 {
+        font-size: 14px;
+        margin-bottom: 4px;
+    }
+
+    &__no-documents,
+    &__language {
+        color: var(--color-text-tertiary-default, #8a8f98);
+        font-size: 13px;
+    }
+
+    &__uploads {
+        list-style: none;
+        margin: 4px 0 0;
+        padding: 0;
+        font-size: 13px;
+    }
+
+    &__footer {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+    }
+
+    &__footer-right {
+        display: flex;
+        gap: 8px;
+    }
+
+    &__preview-frame {
+        width: 100%;
+        min-height: 400px;
+        border: 1px solid var(--color-border-primary-default, #d1d9e0);
+        background: #fff;
+    }
+
+    &__preview-subject {
+        margin-bottom: 8px;
+    }
+}

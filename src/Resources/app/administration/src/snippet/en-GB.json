@@ -9,5 +9,40 @@
                 "twig_editor": "Use Twig mode in the editor"
             }
         }
+    },
+    "hug-mail-cockpit": {
+        "smartBar": {
+            "sendMail": "Send e-mail"
+        },
+        "composeModal": {
+            "title": "Send e-mail",
+            "recipientLabel": "Recipient",
+            "toggleCcBcc": "CC/BCC",
+            "ccLabel": "CC",
+            "bccLabel": "BCC",
+            "addressListHelp": "Separate multiple addresses with commas",
+            "templateLabel": "Template",
+            "templateHelp": "The template is loaded as a copy – changes here never modify the template.",
+            "subjectLabel": "Subject",
+            "editorModeSimple": "Simple",
+            "editorModeTwig": "Twig",
+            "twigWarningTitle": "Twig content",
+            "twigWarningText": "The content contains Twig blocks that are displayed as plain text in the simple editor.",
+            "attachmentsHeadline": "Attachments",
+            "noDocuments": "No documents exist for this order yet.",
+            "uploadLabel": "Upload file",
+            "languageLabel": "Language",
+            "previewButton": "Preview",
+            "sendButton": "Send",
+            "previewTitle": "Preview",
+            "previewError": "Twig error",
+            "previewErrorLine": "Twig error at line {line}",
+            "missingFields": "Recipient, subject and content must not be empty.",
+            "sendSuccess": "The e-mail has been sent."
+        },
+        "variablePicker": {
+            "searchPlaceholder": "Search variable …",
+            "empty": "No variables found."
+        }
     }
 }

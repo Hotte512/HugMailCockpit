@@ -19,6 +19,7 @@ use Shopware\Core\Content\Mail\Service\AbstractMailService;
 use Shopware\Core\Framework\Api\Context\AdminApiSource;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\Uuid\Uuid;
+use Shopware\Core\System\SystemConfig\SystemConfigService;
 use Symfony\Component\Mime\Email;
 
 class HugMailSenderTest extends TestCase
@@ -74,11 +75,17 @@ class HugMailSenderTest extends TestCase
 
     private function sender(): HugMailSender
     {
+        $systemConfigService = $this->createMock(SystemConfigService::class);
+        $systemConfigService->method('getString')
+            ->with('core.basicInformation.shopName', $this->salesChannelId)
+            ->willReturn('Demo Testshop');
+
         return new HugMailSender(
             $this->mailService,
             $this->contextBuilder,
             $this->attachmentResolver,
             $this->referenceWriter,
+            $systemConfigService,
         );
     }
 
@@ -117,6 +124,8 @@ class HugMailSenderTest extends TestCase
         static::assertSame('Order {{ order.orderNumber }}', $capturedData['subject']);
         static::assertSame('<p>Hello</p>', $capturedData['contentHtml']);
         static::assertSame($this->salesChannelId, $capturedData['salesChannelId']);
+        // MailService reads $data['senderName'] unguarded — the key is mandatory.
+        static::assertSame('Demo Testshop', $capturedData['senderName']);
         // MailArchive links the mail via these data keys (X-Frosh-* headers).
         static::assertSame($this->orderId, $capturedData['orderId']);
         // The mail must render in the order language, never the admin language.

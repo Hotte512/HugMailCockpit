@@ -1,0 +1,195 @@
+<mt-modal-root :is-open="true" @change="onModalChange">
+    <mt-modal
+        class="hug-mail-compose-modal"
+        :title="modalTitle"
+        width="full"
+        inset
+    >
+        <template #default>
+            <sw-loader v-if="isLoading" />
+
+            <div v-else class="hug-mail-compose-modal__layout">
+                <div class="hug-mail-compose-modal__form">
+                    <div class="hug-mail-compose-modal__recipients">
+                        <mt-text-field
+                            v-model="recipientEmail"
+                            required
+                            :label="$tc('hug-mail-cockpit.composeModal.recipientLabel')"
+                        />
+                        <mt-button
+                            variant="secondary"
+                            size="x-small"
+                            @click="showCcBcc = !showCcBcc"
+                        >
+                            {{ $tc('hug-mail-cockpit.composeModal.toggleCcBcc') }}
+                        </mt-button>
+                    </div>
+
+                    <div v-if="showCcBcc" class="hug-mail-compose-modal__cc-bcc">
+                        <mt-text-field
+                            v-model="cc"
+                            :label="$tc('hug-mail-cockpit.composeModal.ccLabel')"
+                            :help-text="$tc('hug-mail-cockpit.composeModal.addressListHelp')"
+                        />
+                        <mt-text-field
+                            v-model="bcc"
+                            :label="$tc('hug-mail-cockpit.composeModal.bccLabel')"
+                            :help-text="$tc('hug-mail-cockpit.composeModal.addressListHelp')"
+                        />
+                    </div>
+
+                    <sw-entity-single-select
+                        entity="mail_template"
+                        :criteria="mailTemplateCriteria"
+                        label-property="subject"
+                        :value="mailTemplateId"
+                        :label="$tc('hug-mail-cockpit.composeModal.templateLabel')"
+                        :help-text="$tc('hug-mail-cockpit.composeModal.templateHelp')"
+                        @update:value="onTemplateSelected"
+                    />
+
+                    <mt-text-field
+                        v-model="subject"
+                        required
+                        :label="$tc('hug-mail-cockpit.composeModal.subjectLabel')"
+                    />
+
+                    <div class="hug-mail-compose-modal__editor-toggle">
+                        <mt-button
+                            :variant="editorMode === 'simple' ? 'primary' : 'secondary'"
+                            size="small"
+                            @click="switchEditorMode('simple')"
+                        >
+                            {{ $tc('hug-mail-cockpit.composeModal.editorModeSimple') }}
+                        </mt-button>
+                        <mt-button
+                            v-if="canUseTwigEditor"
+                            :variant="editorMode === 'twig' ? 'primary' : 'secondary'"
+                            size="small"
+                            @click="switchEditorMode('twig')"
+                        >
+                            {{ $tc('hug-mail-cockpit.composeModal.editorModeTwig') }}
+                        </mt-button>
+                    </div>
+
+                    <mt-banner
+                        v-if="twigContentWarningVisible"
+                        variant="attention"
+                        :title="$tc('hug-mail-cockpit.composeModal.twigWarningTitle')"
+                    >
+                        {{ $tc('hug-mail-cockpit.composeModal.twigWarningText') }}
+                    </mt-banner>
+
+                    <div class="hug-mail-compose-modal__editor">
+                        <mt-text-editor
+                            v-if="editorMode === 'simple'"
+                            ref="wysiwygEditor"
+                            v-model="contentHtml"
+                        />
+                        <sw-code-editor
+                            v-else
+                            ref="codeEditor"
+                            :value="contentHtml"
+                            completion-mode="text"
+                            @update:value="contentHtml = $event"
+                        />
+                    </div>
+
+                    <div v-if="orderId" class="hug-mail-compose-modal__attachments">
+                        <h3>{{ $tc('hug-mail-cockpit.composeModal.attachmentsHeadline') }}</h3>
+                        <mt-checkbox
+                            v-for="document in documents"
+                            :key="document.id"
+                            :label="documentLabel(document)"
+                            :checked="selectedDocumentIds.includes(document.id)"
+                            @update:checked="toggleDocument(document.id, $event)"
+                        />
+                        <p v-if="documents.length === 0" class="hug-mail-compose-modal__no-documents">
+                            {{ $tc('hug-mail-cockpit.composeModal.noDocuments') }}
+                        </p>
+                    </div>
+
+                    <div class="hug-mail-compose-modal__upload">
+                        <sw-media-upload-v2
+                            :upload-tag="uploadTag"
+                            :allow-multi-select="true"
+                            variant="compact"
+                            :label="$tc('hug-mail-cockpit.composeModal.uploadLabel')"
+                        />
+                        <sw-upload-listener
+                            :upload-tag="uploadTag"
+                            auto-upload
+                            @media-upload-finish="onUploadFinished"
+                        />
+                        <ul v-if="uploadedMedia.length > 0" class="hug-mail-compose-modal__uploads">
+                            <li v-for="media in uploadedMedia" :key="media.id">
+                                📎 {{ media.fileName }}
+                            </li>
+                        </ul>
+                    </div>
+
+                    <p class="hug-mail-compose-modal__language">
+                        {{ $tc('hug-mail-cockpit.composeModal.languageLabel') }}: {{ languageName }}
+                    </p>
+                </div>
+
+                <hug-mail-variable-picker
+                    class="hug-mail-compose-modal__variables"
+                    :variables="variables"
+                    @variable-selected="onVariableSelected"
+                />
+            </div>
+        </template>
+
+        <template #footer>
+            <div class="hug-mail-compose-modal__footer">
+                <mt-button
+                    variant="secondary"
+                    :disabled="isLoading || isSending"
+                    @click="openPreview"
+                >
+                    {{ $tc('hug-mail-cockpit.composeModal.previewButton') }}
+                </mt-button>
+                <div class="hug-mail-compose-modal__footer-right">
+                    <mt-button variant="secondary" :disabled="isSending" @click="close">
+                        {{ $tc('global.default.cancel') }}
+                    </mt-button>
+                    <mt-button
+                        variant="primary"
+                        :disabled="isLoading"
+                        :is-loading="isSending"
+                        @click="send"
+                    >
+                        {{ $tc('hug-mail-cockpit.composeModal.sendButton') }}
+                    </mt-button>
+                </div>
+            </div>
+        </template>
+    </mt-modal>
+
+    <mt-modal-root v-if="preview.open" :is-open="true" @change="onPreviewModalChange">
+        <mt-modal :title="$tc('hug-mail-cockpit.composeModal.previewTitle')" width="l">
+            <template #default>
+                <mt-banner
+                    v-for="(error, index) in preview.errors"
+                    :key="index"
+                    variant="critical"
+                    :title="previewErrorTitle(error)"
+                >
+                    {{ error.message }}
+                </mt-banner>
+
+                <template v-if="preview.errors.length === 0">
+                    <p class="hug-mail-compose-modal__preview-subject">
+                        <strong>{{ preview.subject }}</strong>
+                    </p>
+                    <iframe
+                        class="hug-mail-compose-modal__preview-frame"
+                        sandbox=""
+                        :srcdoc="preview.contentHtml"
+                    ></iframe>
+                </template>
+            </template>
+        </mt-modal>
+    </mt-modal-root>
+</mt-modal-root>

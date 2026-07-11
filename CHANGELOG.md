@@ -7,6 +7,9 @@ Format angelehnt an [Keep a Changelog](https://keepachangelog.com/de/1.1.0/); Ve
 ## [Unreleased]
 
 ### Hinzugefügt
+- F1-Admin: Button „E-Mail senden" in der Smart Bar von Bestell- und Kundendetail (sichtbar nur mit Berechtigung „Freie E-Mails verfassen" und aktivem Feature-Toggle F1)
+- Compose-Modal mit Dual-Editor (WYSIWYG ⇄ Twig, Twig-Modus nur mit entsprechender Berechtigung), Variablen-Picker mit Suche, Vorlagen-Übernahme als Kopie in der Sprache der Bestellung, CC/BCC, Auswahl vorhandener Bestell-Dokumente als Anhang, Datei-Upload und serverseitiger Vorschau mit Twig-Fehleranzeige inkl. Zeilenangabe
+- Jest-Testsuite für die Admin-Komponenten (16 Tests inkl. Snapshots für Compose-Modal und Variablen-Picker)
 - F1-Backend: kompletter Versandpfad für manuelle E-Mails aus der Administration — Versand ausschließlich über den Core-Mailservice, Mail-Sprache immer aus der Bestellung/dem Kunden (nie Admin-Sprache), Dokumente als Anhänge, Audit-Eintrag nach jedem Versand, automatische Verknüpfung ins MailArchive (orderId/customerId/templateId)
 - Admin-API-Routen `/api/_action/hug-mail-cockpit/` → `send`, `preview` (mit Twig-Fehlern inkl. Zeilenangabe), `variables` (Variablen-Picker-Daten + Empfänger-Vorbelegung), `history` (liest FroshPlatformMailArchive)
 - Serverseitige Twig-Richtlinie: ohne das Privileg `twig_editor` sind nur einfache Variablen (`{{ order.orderNumber }}`) erlaubt — Tags, Filter und Funktionsaufrufe werden abgelehnt (Missbrauchsschutz, auch in der Vorschau)

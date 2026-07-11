@@ -45,3 +45,25 @@ jobs:
 
       - name: PHPUnit
         run: vendor/bin/phpunit -c phpunit.xml.dist
+
+  admin-js:
+    name: Admin JS (ESLint + Jest)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: https://code.forgejo.org/actions/checkout@v4
+
+      - name: Setup Node
+        uses: https://github.com/actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm ci --no-audit
+
+      - name: ESLint
+        run: npm run lint -- src/Resources/app/administration/src tests/administration
+
+      - name: Jest
+        run: npm run unit

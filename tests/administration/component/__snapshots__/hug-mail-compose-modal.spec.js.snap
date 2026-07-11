@@ -1,0 +1,33 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`hug-mail-compose-modal renders the compose form after loading the mail context (snapshot) 1`] = `
+"<div class="mt-modal-root-stub" is-open="true">
+  <div class="mt-modal-stub hug-mail-compose-modal" title="hug-mail-cockpit.composeModal.title" width="full" inset="">
+    <div class="hug-mail-compose-modal__layout">
+      <div class="hug-mail-compose-modal__form">
+        <div class="hug-mail-compose-modal__recipients"><label class="mt-text-field-stub" required="">hug-mail-cockpit.composeModal.recipientLabel<input value="max@example.com"></label><button class="mt-button-stub" variant="secondary" size="x-small">hug-mail-cockpit.composeModal.toggleCcBcc</button></div>
+        <!--v-if-->
+        <sw-entity-single-select-stub entity="mail_template" criteria="[object Object]" label-property="subject" label="hug-mail-cockpit.composeModal.templateLabel" help-text="hug-mail-cockpit.composeModal.templateHelp"></sw-entity-single-select-stub><label class="mt-text-field-stub" required="">hug-mail-cockpit.composeModal.subjectLabel<input value=""></label>
+        <div class="hug-mail-compose-modal__editor-toggle"><button class="mt-button-stub" variant="primary" size="small">hug-mail-cockpit.composeModal.editorModeSimple</button><button class="mt-button-stub" variant="secondary" size="small">hug-mail-cockpit.composeModal.editorModeTwig</button></div>
+        <!--v-if-->
+        <div class="hug-mail-compose-modal__editor"><textarea class="mt-text-editor-stub" value=""></textarea></div>
+        <div class="hug-mail-compose-modal__attachments">
+          <h3>hug-mail-cockpit.composeModal.attachmentsHeadline</h3>
+          <p class="hug-mail-compose-modal__no-documents">hug-mail-cockpit.composeModal.noDocuments</p>
+        </div>
+        <div class="hug-mail-compose-modal__upload">
+          <sw-media-upload-v2-stub upload-tag="hug-mail-cockpit-attachment" allow-multi-select="true" variant="compact" label="hug-mail-cockpit.composeModal.uploadLabel"></sw-media-upload-v2-stub>
+          <sw-upload-listener-stub upload-tag="hug-mail-cockpit-attachment" auto-upload=""></sw-upload-listener-stub>
+          <!--v-if-->
+        </div>
+        <p class="hug-mail-compose-modal__language">hug-mail-cockpit.composeModal.languageLabel: Deutsch</p>
+      </div>
+      <hug-mail-variable-picker-stub class="hug-mail-compose-modal__variables" variables="[object Object]"></hug-mail-variable-picker-stub>
+    </div>
+    <div class="hug-mail-compose-modal__footer"><button class="mt-button-stub" variant="secondary">hug-mail-cockpit.composeModal.previewButton</button>
+      <div class="hug-mail-compose-modal__footer-right"><button class="mt-button-stub" variant="secondary">global.default.cancel</button><button class="mt-button-stub" variant="primary" is-loading="false">hug-mail-cockpit.composeModal.sendButton</button></div>
+    </div>
+  </div>
+  <!--v-if-->
+</div>"
+`;
