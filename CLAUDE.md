@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **HugMailCockpit** — proprietäres Shopware-Admin-Plugin für manuellen E-Mail-Versand: freie E-Mails aus Bestell-/Kundendetail verfassen (F1), Mail-Historie-Tab (F2), Dokumente per Mail versenden (F3), Template-Preview mit echten Bestelldaten (F4). Das vollständige Detailkonzept inkl. Backend-Schnitt, UI-Entscheidungen und offener Risiken steht in `docs/konzept.md` — **vor Architekturentscheidungen immer dort nachlesen**, es ist die verbindliche Planungsgrundlage.
 
-Zielversion: **Shopware ≥ 6.7 only** (`shopware/core: ~6.7.0`), kein 6.6-Support. Konsequenz für den Admin-Code: **ausschließlich Meteor-Komponenten (`mt-*`)**, keine `sw-*`-Wrapper oder Kompatibilitätsbrücken.
+Zielversion: **Shopware ≥ 6.7 only** (`shopware/core: ~6.7.0`), kein 6.6-Support. Admin-Code (Entscheidung Phase 0, „pragmatisch"): **Meteor-Komponenten (`mt-*`) überall, wo sie im Admin verdrahtet sind** (`mt-button`, `mt-card`, `mt-modal`, `mt-text-editor`, …); strukturelle `sw-*`-Komponenten ohne Meteor-Pendant sind erlaubt (`sw-tabs-item`, `sw-context-menu-item`, `sw-entity-single-select`, `sw-entity-listing`, `sw-code-editor`). Keine 6.6-Kompatibilitätsbrücken.
 
 ## Umgebung
 
@@ -27,10 +27,10 @@ Größere Check-Läufe an den Subagenten `dev-tooling-runner` delegieren.
 
 ## Architektur (Kurzfassung aus dem Konzept)
 
-- **Backend-Services** (alle in §6 konzept.md spezifiziert): `HugMailSender` (wrappt `AbstractMailService`), `MailContextBuilder` (Order/Customer → Twig-Context, nutzt Core-`OrderConverter`; liefert auch die Variablen-Picker-Keys), `AttachmentResolver` (Dokumente via `DocumentGenerator::readDocument()` — Stream-Position beachten! — Uploads via `MediaService`), `TemplatePreviewRenderer` (`StringTemplateRenderer` + Twig-Fehler-Mapping), `MailReferenceWriter`, `DocumentMailTemplateMapper`
+- **Backend-Services** (alle in §6 konzept.md spezifiziert): `HugMailSender` (wrappt `AbstractMailService`; setzt immer `orderId`/`customerId`/`templateId` in `$data` für die MailArchive-Verknüpfung), `MailContextBuilder` (Order/Customer → Twig-Context, nutzt Core-`OrderConverter`; liefert auch die Variablen-Picker-Keys), `AttachmentResolver` (Dokumente via `DocumentGenerator::readDocument(..., fileType: null)` — liefert in 6.7 String-Blob, **kein** Stream-Handling nötig; Uploads via `MediaService`), `TemplatePreviewRenderer` (`StringTemplateRenderer` + Twig-Fehler-Mapping), `MailReferenceWriter`, `DocumentMailTemplateMapper`
 - **API-Routen:** `/api/_action/hug-mail-cockpit/` → `send`, `preview`, `variables`, `history`
-- **Einzige eigene Entity:** `hug_mail_reference` (Zuordnung Mail ↔ Order/Dokument — bewusst *kein* Mail-Log)
-- **FroshPlatformMailArchive** ist optionale Runtime-Dependency (composer `suggest` + Runtime-Guard): ohne MailArchive wird F2 ausgeblendet, F1/F3/F4 laufen weiter. Vor F2-Implementierung verifizieren, ob MailArchive eine `orderId` speichert (§1 konzept.md).
+- **Einzige eigene Entity:** `hug_mail_reference` (minimaler Audit-Layer: sent_by_user, source, Dokument-Zuordnung — bewusst *kein* Mail-Log; Inhalte leben in MailArchive)
+- **FroshPlatformMailArchive** ist optionale Runtime-Dependency (composer `suggest` + Runtime-Guard auf **Version ≥ 3.6**): ohne MailArchive wird F2 ausgeblendet, F1/F3/F4 laufen weiter. Verifiziert (Phase 0): `frosh_mail_archive` speichert `order_id` und `mail_template_id` (§1 konzept.md).
 - **Admin-Overrides:** `sw-order-detail`, `sw-customer-detail`, `sw-order-document-card`, `sw-mail-template-detail`; eigene Komponenten `hug-mail-compose-modal`, `hug-mail-variable-picker`, `hug-mail-history-grid`, `hug-mail-preview-card`
 - **ACL:** `hug_mail_cockpit.viewer` / `.sender` / `.free_sender` / `.twig_editor` (Twig-Editor ist ein eigenes Privileg — freier Mailversand ist ein Missbrauchsvektor)
 - **Sprache im Mail-Context:** immer `order.languageId` bzw. `customer.languageId`, nie die Admin-Sprache
