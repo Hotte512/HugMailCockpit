@@ -109,8 +109,8 @@ Leere Mails starten mit `<p></p>` (TipTap-stabil — sonst greift das Gate schon
 - **Kontextmenü in der Dokumenten-Grid-Zeile** (`sw-order-document-card`) → „Per E-Mail senden (Cockpit)" → öffnet **das F1-Modal** mit vorselektiertem Anhang und vorbelegter Vorlage.
 - **Verifiziert + Entscheidung (Phase 0):** Der Core hat im Kontextmenü bereits eine eigene „Senden"-Aktion (Block `sw_order_document_card_grid_action_send`, eigenes Modal). Unsere Aktion kommt **zusätzlich daneben** (klar benannt, kein Eingriff ins Core-Verhalten); Einhängepunkt: Block `sw_order_document_card_grid_actions`.
 - **Bulk:** Grid-Multiselect + Aktion „Markierte senden" → **eine** Mail mit n Anhängen (nicht n Mails). **Verifiziert (Phase 0):** Das Core-Grid (`sw-entity-listing`) hat `:show-selection="false"` hartkodiert — wir aktivieren die Selection per Template-Override (bewusst akzeptiertes, kleines Update-Risiko).
-- **Config:** Mapping-Card in der Plugin-Konfiguration, `documentType` → `mailTemplateId` (Dokumenttypen dynamisch geladen). Fallback: leere Vorlage.
-- F3 ist damit fast nur UI — der ganze Versandpfad ist F1.
+- **Config:** Mapping-Card in der Plugin-Konfiguration, `documentType` → `mailTemplateId` (Dokumenttypen dynamisch geladen). Fallback: leere Vorlage. *(Umgesetzt als Custom-Config-Komponente `hug-mail-document-type-mapping`, Speicherung als JSON-Objekt im System-Config-Key; Auflösung clientseitig beim Öffnen des Modals — der im Backend-Schnitt genannte `DocumentMailTemplateMapper` entfällt dadurch.)*
+- F3 ist damit fast nur UI — der ganze Versandpfad ist F1. Die vorbelegte Vorlage wird über den „gerendert bearbeiten"-Flow sofort mit den Bestelldaten gerendert.
 
 ---
 
@@ -133,7 +133,11 @@ Leere Mails starten mit `<p></p>` (TipTap-stabil — sonst greift das Gate schon
 | `AttachmentResolver` | `documentId` → `DocumentGenerator::readDocument(..., fileType: null)`. **Verifiziert (Phase 0):** liefert `RenderedDocument` mit String-Blob (`getContent()`), **kein Stream/Rewind in 6.7**; generiert fehlende PDFs on-the-fly. Muster wie Core `MailAttachmentsBuilder::mappingAttachments()`: `['content','fileName','mimeType']`. Uploads → `MediaService::getAttachment()`, privater Ordner `hug_mail_attachment`. |
 | `TemplatePreviewRenderer` | `StringTemplateRenderer` + Twig-Fehler-Mapping (F1-Vorschau + F4). |
 | `MailReferenceWriter` | Post-Send: schreibt `hug_mail_reference` (Verknüpfung Mail ↔ Order/Dokument). |
-| `DocumentMailTemplateMapper` | Config-Mapping documentType → mailTemplate. |
+| ~~`DocumentMailTemplateMapper`~~ | *Entfallen:* Config-Mapping documentType → mailTemplate wird clientseitig aufgelöst (Custom-Config-Komponente, §4). |
+| `MailTemplateGateway` | Lädt Vorlagen-Inhalt in der Mail-Sprache für den „gerendert bearbeiten"-Flow. |
+| `MailLetterheadLoader` | Briefpapier (mail_header_footer) des Sales Channels für die Vorschau. |
+| `MailArchiveGateway` | Runtime-Guard + Historie-Query gegen `frosh_mail_archive` (ohne Klassenabhängigkeit zu Frosh). |
+| `TwigContentPolicy` | Serverseitige Twig-Richtlinie: ohne `twig_editor` nur einfache Variablen-Interpolation. |
 
 **API-Routen (`/api/_action/hug-mail-cockpit/`):** `send`, `preview` (rendert inkl. Briefpapier des Sales Channels), `variables` (Keys + skalare Werte + Empfänger-Prefill), `history`, `render-template` (Vorlage serverseitig in Bestellsprache rendern — Basis des „gerendert bearbeiten"-Flows). Neue Services dafür: `MailTemplateGateway`, `MailLetterheadLoader`.
 

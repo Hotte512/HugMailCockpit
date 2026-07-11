@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`hug-mail-document-type-mapping renders a row per document type (snapshot) 1`] = `
+"<div class="hug-mail-document-type-mapping">
+  <p class="hug-mail-document-type-mapping__hint">hug-mail-cockpit.documentMapping.hint</p>
+  <div class="hug-mail-document-type-mapping__row"><span class="hug-mail-document-type-mapping__type">Rechnung</span><select class="sw-entity-single-select-stub" data-value="template-1">
+      <option value="template-1">t1</option>
+      <option value="">none</option>
+    </select></div>
+  <div class="hug-mail-document-type-mapping__row"><span class="hug-mail-document-type-mapping__type">Lieferschein</span><select class="sw-entity-single-select-stub">
+      <option value="template-1">t1</option>
+      <option value="">none</option>
+    </select></div>
+</div>"
+`;

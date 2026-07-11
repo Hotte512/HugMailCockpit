@@ -46,6 +46,14 @@
             "hintValues": "Click inserts the value from the order.",
             "hintExpressions": "Click inserts the Twig variable."
         },
+        "documentCard": {
+            "sendAction": "Send by e-mail (Cockpit)",
+            "bulkSendAction": "Send selected by e-mail ({count})"
+        },
+        "documentMapping": {
+            "hint": "Template preselected when sending a document of this type. Without a mapping the dispatch starts with an empty mail.",
+            "emptyTemplate": "No template (empty e-mail)"
+        },
         "tab": {
             "label": "E-mails",
             "cardTitle": "E-mails",

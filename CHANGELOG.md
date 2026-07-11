@@ -7,6 +7,8 @@ Format angelehnt an [Keep a Changelog](https://keepachangelog.com/de/1.1.0/); Ve
 ## [Unreleased]
 
 ### Hinzugefügt
+- F3 — Dokumente per E-Mail versenden: Kontextmenü-Aktion „Per E-Mail senden (Cockpit)" im Dokumenten-Grid der Bestellung sowie Mehrfachauswahl mit „Markierte per E-Mail senden" (eine Mail mit n Anhängen); öffnet das Compose-Modal mit vorselektierten Anhängen und der laut Zuordnung vorbelegten, sofort gerenderten Vorlage
+- Plugin-Konfiguration: Zuordnung Dokumenttyp → Mail-Vorlage (dynamisch aus den vorhandenen Dokumenttypen, Fallback: leere E-Mail)
 - Tab „E-Mails" an Bestell- und Kundendetail als zentrale Mail-Stelle: Mail-Historie aus FroshPlatformMailArchive (Datum, Betreff, Empfänger, Status, Anhänge; Detail-Ansicht als geschützte HTML-Vorschau; Hinweis, wenn MailArchive fehlt) plus „E-Mail senden"-Einstieg
 - Neue API-Route `render-template`: rendert eine Vorlage serverseitig mit echten Bestell-/Kundendaten in der Sprache des Empfängers
 - Vorschau zeigt jetzt das Briefpapier (Kopf-/Fußzeile) des Sales Channels — exakt wie beim Versand

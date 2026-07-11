@@ -1,0 +1,22 @@
+<div class="hug-mail-document-type-mapping">
+    <p class="hug-mail-document-type-mapping__hint">
+        {{ $tc('hug-mail-cockpit.documentMapping.hint') }}
+    </p>
+
+    <div
+        v-for="documentType in documentTypes"
+        :key="documentType.id"
+        class="hug-mail-document-type-mapping__row"
+    >
+        <span class="hug-mail-document-type-mapping__type">
+            {{ documentType.translated.name }}
+        </span>
+        <sw-entity-single-select
+            entity="mail_template"
+            label-property="subject"
+            :value="mappingValue(documentType.technicalName)"
+            :placeholder="$tc('hug-mail-cockpit.documentMapping.emptyTemplate')"
+            @update:value="setMapping(documentType.technicalName, $event)"
+        />
+    </div>
+</div>

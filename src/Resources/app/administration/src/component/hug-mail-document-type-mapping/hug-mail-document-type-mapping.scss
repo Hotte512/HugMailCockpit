@@ -1,0 +1,19 @@
+.hug-mail-document-type-mapping {
+    &__hint {
+        color: var(--color-text-tertiary-default, #8a8f98);
+        font-size: 13px;
+        margin-bottom: 12px;
+    }
+
+    &__row {
+        display: grid;
+        grid-template-columns: 220px 1fr;
+        gap: 12px;
+        align-items: center;
+        margin-bottom: 8px;
+    }
+
+    &__type {
+        font-weight: 600;
+    }
+}

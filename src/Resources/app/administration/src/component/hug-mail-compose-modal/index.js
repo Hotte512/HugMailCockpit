@@ -47,6 +47,11 @@ const hugMailComposeModal = {
             required: false,
             default: () => [],
         },
+        preselectedMailTemplateId: {
+            type: String,
+            required: false,
+            default: null,
+        },
     },
 
     data() {
@@ -132,6 +137,11 @@ const hugMailComposeModal = {
                     this.loadLanguageName(),
                     this.loadDocuments(),
                 ]);
+
+                // F3: document context menu preselects the mapped template.
+                if (this.preselectedMailTemplateId) {
+                    await this.onTemplateSelected(this.preselectedMailTemplateId);
+                }
             } catch (error) {
                 this.showApiError(error);
             } finally {

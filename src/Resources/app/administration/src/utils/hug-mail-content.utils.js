@@ -31,6 +31,29 @@ export function parseAddressList(value) {
     return map;
 }
 
+/**
+ * F3 mapping (documentType.technicalName => mailTemplateId, plugin config):
+ * returns the template of the first document whose type is mapped, null
+ * otherwise (= empty template as fallback, konzept.md §4).
+ */
+export function resolveDocumentTemplate(mapping, documents) {
+    if (!mapping || typeof mapping !== 'object' || !Array.isArray(documents)) {
+        return null;
+    }
+
+    for (const document of documents) {
+        const technicalName = document && document.documentType
+            ? document.documentType.technicalName
+            : null;
+
+        if (technicalName && typeof mapping[technicalName] === 'string' && mapping[technicalName] !== '') {
+            return mapping[technicalName];
+        }
+    }
+
+    return null;
+}
+
 export function buildRecipientMap(email, name) {
     const displayName = typeof name === 'string' && name.trim() !== '' ? name.trim() : email;
 

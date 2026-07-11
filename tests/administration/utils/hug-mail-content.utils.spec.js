@@ -2,6 +2,7 @@ import {
     containsTwigSyntax,
     parseAddressList,
     buildRecipientMap,
+    resolveDocumentTemplate,
 } from '../../../src/Resources/app/administration/src/utils/hug-mail-content.utils';
 
 describe('hug-mail-content.utils', () => {
@@ -34,6 +35,26 @@ describe('hug-mail-content.utils', () => {
         it('returns an empty map for empty input', () => {
             expect(parseAddressList('')).toEqual({});
             expect(parseAddressList(null)).toEqual({});
+        });
+    });
+
+    describe('resolveDocumentTemplate', () => {
+        const invoice = { documentType: { technicalName: 'invoice' } };
+        const deliveryNote = { documentType: { technicalName: 'delivery_note' } };
+
+        it('resolves the template of the first mapped document type', () => {
+            const mapping = { invoice: 'template-invoice', delivery_note: 'template-delivery' };
+
+            expect(resolveDocumentTemplate(mapping, [invoice, deliveryNote])).toBe('template-invoice');
+            expect(resolveDocumentTemplate(mapping, [deliveryNote, invoice])).toBe('template-delivery');
+        });
+
+        it('skips unmapped types and falls back to null', () => {
+            expect(resolveDocumentTemplate({ invoice: 'template-invoice' }, [deliveryNote])).toBeNull();
+            expect(resolveDocumentTemplate({}, [invoice])).toBeNull();
+            expect(resolveDocumentTemplate(null, [invoice])).toBeNull();
+            expect(resolveDocumentTemplate({ invoice: 'x' }, [])).toBeNull();
+            expect(resolveDocumentTemplate({ invoice: 'x' }, [{ documentType: null }])).toBeNull();
         });
     });
 

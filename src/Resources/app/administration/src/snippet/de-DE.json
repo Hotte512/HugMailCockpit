@@ -46,6 +46,14 @@
             "hintValues": "Klick fügt den Wert aus der Bestellung ein.",
             "hintExpressions": "Klick fügt die Twig-Variable ein."
         },
+        "documentCard": {
+            "sendAction": "Per E-Mail senden (Cockpit)",
+            "bulkSendAction": "Markierte per E-Mail senden ({count})"
+        },
+        "documentMapping": {
+            "hint": "Vorlage, die beim Versand eines Dokuments dieses Typs vorbelegt wird. Ohne Zuordnung startet der Versand mit leerer Mail.",
+            "emptyTemplate": "Keine Vorlage (leere E-Mail)"
+        },
         "tab": {
             "label": "E-Mails",
             "cardTitle": "E-Mails",
