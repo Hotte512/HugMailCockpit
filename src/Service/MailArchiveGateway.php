@@ -46,6 +46,29 @@ class MailArchiveGateway
     }
 
     /**
+     * Lightweight count for the tab label — no rows, no associations.
+     */
+    public function getHistoryCount(?string $orderId, ?string $customerId, Context $context): int
+    {
+        if ($this->mailArchiveRepository === null || ($orderId === null && $customerId === null)) {
+            return 0;
+        }
+
+        $criteria = new Criteria();
+        $criteria->addFilter(
+            $orderId !== null
+                ? new EqualsFilter('orderId', $orderId)
+                : new EqualsFilter('customerId', $customerId),
+        );
+        // limit 1, not 0: with limit 0 the DAL skips the query entirely and
+        // the exact total stays 0.
+        $criteria->setLimit(1);
+        $criteria->setTotalCountMode(Criteria::TOTAL_COUNT_MODE_EXACT);
+
+        return $this->mailArchiveRepository->search($criteria, $context)->getTotal();
+    }
+
+    /**
      * @return list<array<string, mixed>>
      */
     public function getHistory(?string $orderId, ?string $customerId, Context $context): array

@@ -52,6 +52,16 @@ const hugMailComposeModal = {
             required: false,
             default: null,
         },
+        initialRecipientEmail: {
+            type: String,
+            required: false,
+            default: null,
+        },
+        initialSubject: {
+            type: String,
+            required: false,
+            default: null,
+        },
     },
 
     data() {
@@ -141,6 +151,15 @@ const hugMailComposeModal = {
                 // F3: document context menu preselects the mapped template.
                 if (this.preselectedMailTemplateId) {
                     await this.onTemplateSelected(this.preselectedMailTemplateId);
+                }
+
+                // F2 "compose reply": explicit prefill wins over context data.
+                if (this.initialRecipientEmail) {
+                    this.recipientEmail = this.initialRecipientEmail;
+                }
+
+                if (this.initialSubject) {
+                    this.subject = this.initialSubject;
                 }
             } catch (error) {
                 this.showApiError(error);

@@ -11,6 +11,7 @@ export default {
                 freeMailEnabled: true,
                 historyEnabled: true,
             },
+            hugMailCount: 0,
         };
     },
 
@@ -25,6 +26,12 @@ export default {
 
             return canCompose || canView;
         },
+
+        hugMailTabLabel() {
+            const label = this.$tc('hug-mail-cockpit.tab.label');
+
+            return this.hugMailCount > 0 ? `${label} (${this.hugMailCount})` : label;
+        },
     },
 
     created() {
@@ -35,5 +42,29 @@ export default {
                 this.hugMailFeatures.historyEnabled = values['HugMailCockpit.config.historyEnabled'] ?? true;
             })
             .catch(() => {});
+
+        this.hugLoadMailCount();
+    },
+
+    methods: {
+        hugLoadMailCount() {
+            if (!Shopware.Service('acl').can('hug_mail_cockpit.viewer')) {
+                return;
+            }
+
+            const id = this.$route.params.id;
+            if (!id) {
+                return;
+            }
+
+            const isOrderPage = typeof this.$route.name === 'string' && this.$route.name.startsWith('sw.order.');
+
+            Shopware.Service('hugMailCockpitApiService')
+                .getHistoryCount(isOrderPage ? { orderId: id } : { customerId: id })
+                .then((total) => {
+                    this.hugMailCount = total;
+                })
+                .catch(() => {});
+        },
     },
 };

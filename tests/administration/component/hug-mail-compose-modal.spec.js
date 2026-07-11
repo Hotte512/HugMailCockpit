@@ -8,7 +8,7 @@ const slotStub = (name) => ({
     template: `<div class="${name}-stub"><slot /><slot name="footer" /></div>`,
 });
 
-function createWrapper({ acl = { can: () => true }, apiOverrides = {} } = {}) {
+function createWrapper({ acl = { can: () => true }, apiOverrides = {}, props = {} } = {}) {
     const apiService = {
         getMailContext: jest.fn().mockResolvedValue({
             variables: { order: { orderNumber: '10001', amountTotal: '99.9' } },
@@ -37,6 +37,7 @@ function createWrapper({ acl = { can: () => true }, apiOverrides = {} } = {}) {
     const wrapper = mount(hugMailComposeModal, {
         props: {
             orderId: ORDER_ID,
+            ...props,
         },
         global: {
             mocks: {
@@ -154,6 +155,19 @@ describe('hug-mail-compose-modal', () => {
         });
         expect(wrapper.vm.subject).toBe('Rendered subject 10001');
         expect(wrapper.vm.contentHtml).toBe('<p>Rendered body</p>');
+    });
+
+    it('applies the reply prefill over the context defaults', async () => {
+        const { wrapper } = createWrapper({
+            props: {
+                initialRecipientEmail: 'reply-to@example.com',
+                initialSubject: 'Re: Your invoice',
+            },
+        });
+        await flushPromises();
+
+        expect(wrapper.vm.recipientEmail).toBe('reply-to@example.com');
+        expect(wrapper.vm.subject).toBe('Re: Your invoice');
     });
 
     it('starts with tiptap-stable empty content', async () => {

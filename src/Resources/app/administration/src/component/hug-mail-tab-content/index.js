@@ -31,6 +31,10 @@ const hugMailTabContent = {
                 historyEnabled: true,
             },
             historyReloadKey: 0,
+            replyPrefill: {
+                recipientEmail: null,
+                subject: null,
+            },
         };
     },
 
@@ -60,8 +64,21 @@ const hugMailTabContent = {
             this.historyReloadKey += 1;
         },
 
-        onReply(_entry) {
+        onReply(entry) {
+            const receiver = entry && entry.receiver && typeof entry.receiver === 'object'
+                ? Object.keys(entry.receiver)[0] ?? null
+                : null;
+            const subject = entry && typeof entry.subject === 'string' && entry.subject !== ''
+                ? (entry.subject.startsWith('Re:') ? entry.subject : `Re: ${entry.subject}`)
+                : null;
+
+            this.replyPrefill = { recipientEmail: receiver, subject };
             this.composeOpen = true;
+        },
+
+        onComposeClose() {
+            this.composeOpen = false;
+            this.replyPrefill = { recipientEmail: null, subject: null };
         },
     },
 };

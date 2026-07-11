@@ -75,7 +75,8 @@
                 "pending": "Pending",
                 "failed": "Failed",
                 "unknown": "Unknown"
-            }
+            },
+            "actionOpenArchive": "Open in mail archive (EML, resend)"
         }
     }
 }

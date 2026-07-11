@@ -89,6 +89,12 @@ const hugMailHistoryGrid = {
             this.detailEntry = item;
         },
 
+        openInMailArchive(item) {
+            // EML download and resend live in the MailArchive module — deep
+            // link instead of rebuilding them (konzept.md §3).
+            this.$router.push({ name: 'frosh.mail.archive.detail', params: { id: item.id } });
+        },
+
         onDetailModalChange(isOpen) {
             if (!isOpen) {
                 this.detailEntry = null;

@@ -31,7 +31,9 @@
         v-if="composeOpen"
         :order-id="orderId"
         :customer-id="customerId"
-        @modal-close="composeOpen = false"
+        :initial-recipient-email="replyPrefill.recipientEmail"
+        :initial-subject="replyPrefill.subject"
+        @modal-close="onComposeClose"
         @mail-sent="onMailSent"
     />
 </div>

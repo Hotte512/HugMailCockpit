@@ -90,7 +90,7 @@ Leere Mails starten mit `<p></p>` (TipTap-stabil — sonst greift das Gate schon
 ## 3. Feature F2 — Historie-Tab
 
 - **Eigener Tab „E-Mails"** *(umgesetzt, vorgezogen mit dem F1-Umbau)*: Child-Routen `sw.order.detail.hugMails` / `sw.customer.detail.hugMails` via `routeMiddleware`; Tab-Items in den Extension-Blöcken. Der Tab enthält Historie-Grid **und** den „E-Mail senden"-Einstieg (F1).
-- Card im General-Tab wäre bei >5 Mails unbrauchbar. Tab-Badge (Anzahl) noch offen.
+- Card im General-Tab wäre bei >5 Mails unbrauchbar. Tab-Label zeigt die Anzahl („E-Mails (n)", via `countOnly`-Parameter der history-Route — kein Zeilen-Load).
 
 **Spalten:** Datum · Betreff · Empfänger · Vorlage (MailArchive ≥3.6: `mailTemplateId`) · Status/Fehler · 📎
 
@@ -98,9 +98,8 @@ Leere Mails starten mit `<p></p>` (TipTap-stabil — sonst greift das Gate schon
 | Aktion | Umsetzung |
 |---|---|
 | Ansehen | Modal mit HTML-Preview (iframe, sandboxed) |
-| EML herunterladen | Deep-Link MailArchive |
-| Erneut senden | Deep-Link ins MailArchive-Modul (nicht nachbauen) |
-| Antwort verfassen | öffnet F1-Modal, vorbefüllt (Empfänger, `Re:`-Betreff) |
+| EML herunterladen / Erneut senden | *(umgesetzt)* eine Aktion „Im Mail-Archiv öffnen" → Deep-Link `frosh.mail.archive.detail` (nicht nachbauen) |
+| Antwort verfassen | *(umgesetzt)* öffnet F1-Modal, vorbefüllt (Empfänger, `Re:`-Betreff) |
 
 ---
 

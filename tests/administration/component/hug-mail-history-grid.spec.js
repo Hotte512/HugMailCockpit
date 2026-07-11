@@ -98,4 +98,20 @@ describe('hug-mail-history-grid', () => {
 
         expect(wrapper.emitted('reply')).toEqual([[ENTRIES[0]]]);
     });
+
+    it('deep links into the mail archive module', async () => {
+        const { wrapper } = createWrapper();
+        await flushPromises();
+
+        const push = jest.fn();
+        wrapper.vm.$router = { push };
+
+        const buttons = wrapper.findAll('.sw-context-menu-item-stub');
+        await buttons[2].trigger('click');
+
+        expect(push).toHaveBeenCalledWith({
+            name: 'frosh.mail.archive.detail',
+            params: { id: 'entry-1' },
+        });
+    });
 });

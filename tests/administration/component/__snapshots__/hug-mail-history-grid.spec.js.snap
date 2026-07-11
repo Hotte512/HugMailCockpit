@@ -2,7 +2,7 @@
 
 exports[`hug-mail-history-grid loads and renders the history (snapshot) 1`] = `
 "<div class="hug-mail-history-grid">
-  <table class="sw-data-grid-stub" show-selection="false" show-actions="true" plain-appearance="true" identifier="hug-mail-history-grid"><button class="sw-context-menu-item-stub">hug-mail-cockpit.history.actionView</button><button class="sw-context-menu-item-stub">hug-mail-cockpit.history.actionReply</button></table>
+  <table class="sw-data-grid-stub" show-selection="false" show-actions="true" plain-appearance="true" identifier="hug-mail-history-grid"><button class="sw-context-menu-item-stub">hug-mail-cockpit.history.actionView</button><button class="sw-context-menu-item-stub">hug-mail-cockpit.history.actionReply</button><button class="sw-context-menu-item-stub">hug-mail-cockpit.history.actionOpenArchive</button></table>
   <!--v-if-->
 </div>"
 `;

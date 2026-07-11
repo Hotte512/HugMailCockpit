@@ -45,6 +45,9 @@
                 <sw-context-menu-item @click="$emit('reply', item)">
                     {{ $tc('hug-mail-cockpit.history.actionReply') }}
                 </sw-context-menu-item>
+                <sw-context-menu-item @click="openInMailArchive(item)">
+                    {{ $tc('hug-mail-cockpit.history.actionOpenArchive') }}
+                </sw-context-menu-item>
             </template>
         </sw-data-grid>
     </template>

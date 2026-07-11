@@ -207,11 +207,18 @@ class MailCockpitController
     )]
     public function history(Request $request, Context $context): JsonResponse
     {
-        $entries = $this->mailArchiveGateway->getHistory(
-            $this->queryString($request, 'orderId'),
-            $this->queryString($request, 'customerId'),
-            $context,
-        );
+        $orderId = $this->queryString($request, 'orderId');
+        $customerId = $this->queryString($request, 'customerId');
+
+        // countOnly powers the tab label without loading any rows.
+        if ($request->query->getBoolean('countOnly')) {
+            return new JsonResponse([
+                'entries' => [],
+                'total' => $this->mailArchiveGateway->getHistoryCount($orderId, $customerId, $context),
+            ]);
+        }
+
+        $entries = $this->mailArchiveGateway->getHistory($orderId, $customerId, $context);
 
         return new JsonResponse([
             'entries' => $entries,

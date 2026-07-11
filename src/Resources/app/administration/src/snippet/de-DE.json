@@ -75,7 +75,8 @@
                 "pending": "Ausstehend",
                 "failed": "Fehlgeschlagen",
                 "unknown": "Unbekannt"
-            }
+            },
+            "actionOpenArchive": "Im Mail-Archiv öffnen (EML, erneut senden)"
         }
     }
 }

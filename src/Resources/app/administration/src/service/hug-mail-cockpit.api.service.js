@@ -57,4 +57,17 @@ export default class HugMailCockpitApiService extends ApiService {
             })
             .then(ApiService.handleResponse);
     }
+
+    /**
+     * Lightweight count for the tab label.
+     */
+    getHistoryCount({ orderId = null, customerId = null }) {
+        return this.httpClient
+            .get(`_action/${this.getApiBasePath()}/history`, {
+                params: { orderId, customerId, countOnly: 1 },
+                headers: this.getBasicHeaders(),
+            })
+            .then(ApiService.handleResponse)
+            .then((result) => result.total ?? 0);
+    }
 }
