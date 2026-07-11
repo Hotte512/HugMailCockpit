@@ -5,8 +5,14 @@
         :placeholder="$tc('hug-mail-cockpit.variablePicker.searchPlaceholder')"
     />
 
+    <p class="hug-mail-variable-picker__hint">
+        {{ mode === 'values'
+            ? $tc('hug-mail-cockpit.variablePicker.hintValues')
+            : $tc('hug-mail-cockpit.variablePicker.hintExpressions') }}
+    </p>
+
     <div
-        v-for="(keys, rootKey) in filteredVariables"
+        v-for="(entries, rootKey) in filteredVariables"
         :key="rootKey"
         class="hug-mail-variable-picker__group"
     >
@@ -23,23 +29,15 @@
         </button>
 
         <ul v-if="isGroupOpen(rootKey)" class="hug-mail-variable-picker__list">
-            <li v-if="keys.length === 0">
+            <li v-for="(value, key) in entries" :key="key">
                 <button
                     type="button"
                     class="hug-mail-variable-picker__variable"
-                    @click="selectVariable(rootKey)"
-                >
-                    {{ rootKey }}
-                </button>
-            </li>
-            <li v-for="key in keys" :key="key">
-                <button
-                    type="button"
-                    class="hug-mail-variable-picker__variable"
-                    :title="buildExpression(rootKey, key)"
-                    @click="selectVariable(rootKey + '.' + key)"
+                    :title="value !== null ? value : buildExpression(rootKey, key)"
+                    @click="selectVariable(rootKey, key, value)"
                 >
                     {{ key }}
+                    <span v-if="value !== null" class="hug-mail-variable-picker__value">{{ shorten(value) }}</span>
                 </button>
             </li>
         </ul>

@@ -38,10 +38,19 @@ Das ist **kein Log-Duplikat** — Inhalte bleiben in MailArchive, wir speichern 
 
 ## 2. Feature F1 — Freie E-Mail verfassen
 
-### UI-Platzierung
-- **Bestelldetail:** Button in der Smart Bar (`sw-order-detail__smart-bar-actions`), Label „E-Mail senden". Kein Kontextmenü — die Aktion ist zu prominent für ein Untermenü.
-- **Kundendetail:** identischer Button in `sw-customer-detail__actions`. Gleiches Modal, Kontext = Customer (ohne Order-Variablen).
-- **Modal statt eigener Route:** Bestellung ist bereits geladen, kein Kontextverlust, kein Zurück-Navigations-Problem. Größe: `full` (Editor braucht Platz).
+### UI-Platzierung *(revidiert nach Nutzer-Feedback, 11.07.2026)*
+- **Zentrale Stelle ist der Tab „E-Mails"** an Bestell- und Kundendetail (gemeinsam mit der F2-Historie): Historie-Grid + Button „E-Mail senden" im Card-Header. **Kein Smart-Bar-Button** (bewusste Entscheidung: aufgeräumter, alles an einem Ort).
+- **Modal statt eigener Route:** Bestellung ist bereits geladen, kein Kontextverlust. Größe: `full` (Editor braucht Platz).
+
+### Compose-Flow „gerendert bearbeiten" *(revidiert nach Nutzer-Feedback)*
+Der ursprüngliche Flow (Vorlage als Twig-Kopie laden, erst beim Senden rendern) ist am Meteor-Editor gescheitert: `mt-text-editor` macht beim Mount einen TipTap-Roundtrip-Diff und schaltet bei nicht verlustfrei darstellbarem HTML/Twig in ein read-only „Code-Gate". Neuer Flow:
+
+1. Vorlage wählen → Backend rendert sie **sofort serverseitig** gegen die echte Bestellung (`/render-template`, in der Bestellsprache; ohne Twig-Policy, denn der Inhalt kommt aus der DB)
+2. Der User bearbeitet das **fertige Ergebnis** im WYSIWYG (kein Twig sichtbar)
+3. Senden schickt den bearbeiteten Inhalt 1:1
+4. Twig-Rohmodus bleibt als Expertenmodus hinter dem `twig_editor`-Privileg
+
+Leere Mails starten mit `<p></p>` (TipTap-stabil — sonst greift das Gate schon bei leerem Inhalt).
 
 ### Modal-Aufbau
 ```
@@ -66,9 +75,12 @@ Das ist **kein Log-Duplikat** — Inhalte bleiben in MailArchive, wir speichern 
 ```
 
 - **Dual-Editor:** beide Modi schreiben auf dasselbe `contentHtml`. Umschalten HTML→Twig verlustfrei; Twig→WYSIWYG mit Warnung („Twig-Blöcke werden als Text angezeigt"). `contentPlain` wird beim Senden aus HTML generiert.
-- **Variablen-Picker:** Sidebar-Panel, Klick fügt `{{ order.orderNumber }}` an Cursorposition ein. Quelle: Root-Keys des tatsächlich gebauten Twig-Contexts (§5, `MailContextBuilder`) — nicht hartkodiert.
-- **Vorlagenauswahl = Kopie**, keine Live-Bindung. Änderungen im Modal ändern nie die Vorlage.
+- **Variablen-Picker:** Sidebar-Panel. Im einfachen Modus fügt ein Klick den **echten Wert** aus der Bestellung an der Cursorposition ein (nur skalare Properties werden angeboten); im Twig-Modus die Expression `{{ order.orderNumber }}`. Quelle: der tatsächlich gebaute Twig-Context — nicht hartkodiert. Der Context enthält wie beim echten Versand auch `salesChannel` (inkl. `domains`) und `salesChannelId`.
+- **Vorlagenauswahl = gerenderte Kopie**, keine Live-Bindung. Änderungen im Modal ändern nie die Vorlage.
 - **Vorschau-Button** rendert den aktuellen Editor-Inhalt gegen den echten Order-Context (teilt Code mit F4).
+
+### Textvorlagen (Textbausteine)
+**Auf 1.1 verschoben** (Entscheidung 11.07.2026): kleine eigene Entity + Pflege-UI + Einfüge-Dropdown im Modal. Übergangsweise decken einfache Mail-Templates ohne Twig den Bedarf.
 
 ### Bulk-Mail aus der Bestellliste
 **Nein in 1.0.** Begründung: DSGVO/Newsletter-Abgrenzung, Missbrauchsrisiko bei Store-Verkauf, braucht MessageQueue + Rate-Limiting. Kandidat für 1.1.
@@ -77,8 +89,8 @@ Das ist **kein Log-Duplikat** — Inhalte bleiben in MailArchive, wir speichern 
 
 ## 3. Feature F2 — Historie-Tab
 
-- **Eigener Tab**, keine Card: `sw-order-detail` → Child-Route `sw.order.detail.mails`; analog `sw.customer.detail.mails`. Tab-Label mit Badge (Anzahl).
-- Card im General-Tab wäre bei >5 Mails unbrauchbar.
+- **Eigener Tab „E-Mails"** *(umgesetzt, vorgezogen mit dem F1-Umbau)*: Child-Routen `sw.order.detail.hugMails` / `sw.customer.detail.hugMails` via `routeMiddleware`; Tab-Items in den Extension-Blöcken. Der Tab enthält Historie-Grid **und** den „E-Mail senden"-Einstieg (F1).
+- Card im General-Tab wäre bei >5 Mails unbrauchbar. Tab-Badge (Anzahl) noch offen.
 
 **Spalten:** Datum · Betreff · Empfänger · Vorlage (MailArchive ≥3.6: `mailTemplateId`) · Status/Fehler · 📎
 
@@ -123,7 +135,7 @@ Das ist **kein Log-Duplikat** — Inhalte bleiben in MailArchive, wir speichern 
 | `MailReferenceWriter` | Post-Send: schreibt `hug_mail_reference` (Verknüpfung Mail ↔ Order/Dokument). |
 | `DocumentMailTemplateMapper` | Config-Mapping documentType → mailTemplate. |
 
-**API-Routen (`/api/_action/hug-mail-cockpit/`):** `send`, `preview`, `variables`, `history`.
+**API-Routen (`/api/_action/hug-mail-cockpit/`):** `send`, `preview` (rendert inkl. Briefpapier des Sales Channels), `variables` (Keys + skalare Werte + Empfänger-Prefill), `history`, `render-template` (Vorlage serverseitig in Bestellsprache rendern — Basis des „gerendert bearbeiten"-Flows). Neue Services dafür: `MailTemplateGateway`, `MailLetterheadLoader`.
 
 **Sprache:** Mail-Context immer mit `order.languageId` bzw. `customer.languageId` — **nie** Admin-Sprache. Anzeige im Modal („Sprache: DE (aus Bestellung)"). Kein manuelles Override in 1.0.
 

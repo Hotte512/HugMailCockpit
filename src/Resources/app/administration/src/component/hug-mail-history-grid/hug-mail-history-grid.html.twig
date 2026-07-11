@@ -1,0 +1,66 @@
+<div class="hug-mail-history-grid">
+    <sw-loader v-if="isLoading" />
+
+    <mt-banner
+        v-else-if="archiveUnavailable"
+        variant="attention"
+        :title="$tc('hug-mail-cockpit.history.unavailableTitle')"
+    >
+        {{ $tc('hug-mail-cockpit.history.unavailableText') }}
+    </mt-banner>
+
+    <template v-else>
+        <mt-empty-state
+            v-if="entries.length === 0"
+            :headline="$tc('hug-mail-cockpit.history.emptyHeadline')"
+            :description="$tc('hug-mail-cockpit.history.emptyText')"
+            icon="regular-envelope"
+        />
+
+        <sw-data-grid
+            v-else
+            :data-source="entries"
+            :columns="columns"
+            :show-selection="false"
+            :show-actions="true"
+            :plain-appearance="true"
+            identifier="hug-mail-history-grid"
+        >
+            <template #column-createdAt="{ item }">
+                {{ dateFilter(item.createdAt) }}
+            </template>
+
+            <template #column-receiver="{ item }">
+                {{ formatAddresses(item.receiver) }}
+            </template>
+
+            <template #column-transportState="{ item }">
+                {{ $tc('hug-mail-cockpit.history.state.' + (item.transportState || 'unknown')) }}
+            </template>
+
+            <template #actions="{ item }">
+                <sw-context-menu-item @click="openDetail(item)">
+                    {{ $tc('hug-mail-cockpit.history.actionView') }}
+                </sw-context-menu-item>
+                <sw-context-menu-item @click="$emit('reply', item)">
+                    {{ $tc('hug-mail-cockpit.history.actionReply') }}
+                </sw-context-menu-item>
+            </template>
+        </sw-data-grid>
+    </template>
+
+    <mt-modal-root v-if="detailEntry" :is-open="true" @change="onDetailModalChange">
+        <mt-modal :title="detailEntry.subject || ''" width="l">
+            <template #default>
+                <p class="hug-mail-history-grid__detail-meta">
+                    {{ formatAddresses(detailEntry.receiver) }} · {{ dateFilter(detailEntry.createdAt) }}
+                </p>
+                <iframe
+                    class="hug-mail-history-grid__detail-frame"
+                    sandbox=""
+                    :srcdoc="detailEntry.htmlText || ''"
+                ></iframe>
+            </template>
+        </mt-modal>
+    </mt-modal-root>
+</div>

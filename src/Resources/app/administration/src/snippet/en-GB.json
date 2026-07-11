@@ -42,7 +42,32 @@
         },
         "variablePicker": {
             "searchPlaceholder": "Search variable …",
-            "empty": "No variables found."
+            "empty": "No variables found.",
+            "hintValues": "Click inserts the value from the order.",
+            "hintExpressions": "Click inserts the Twig variable."
+        },
+        "tab": {
+            "label": "E-mails",
+            "cardTitle": "E-mails",
+            "noHistoryPermission": "No permission to view the mail history."
+        },
+        "history": {
+            "columnDate": "Date",
+            "columnSubject": "Subject",
+            "columnReceiver": "Recipient",
+            "columnState": "Status",
+            "actionView": "View",
+            "actionReply": "Compose reply",
+            "emptyHeadline": "No e-mails yet",
+            "emptyText": "No e-mails have been archived for this record yet.",
+            "unavailableTitle": "Mail history not available",
+            "unavailableText": "The FroshPlatformMailArchive plugin (≥ 3.6) is not installed or inactive.",
+            "state": {
+                "sent": "Sent",
+                "pending": "Pending",
+                "failed": "Failed",
+                "unknown": "Unknown"
+            }
         }
     }
 }

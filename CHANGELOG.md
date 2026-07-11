@@ -7,6 +7,18 @@ Format angelehnt an [Keep a Changelog](https://keepachangelog.com/de/1.1.0/); Ve
 ## [Unreleased]
 
 ### Hinzugefügt
+- Tab „E-Mails" an Bestell- und Kundendetail als zentrale Mail-Stelle: Mail-Historie aus FroshPlatformMailArchive (Datum, Betreff, Empfänger, Status, Anhänge; Detail-Ansicht als geschützte HTML-Vorschau; Hinweis, wenn MailArchive fehlt) plus „E-Mail senden"-Einstieg
+- Neue API-Route `render-template`: rendert eine Vorlage serverseitig mit echten Bestell-/Kundendaten in der Sprache des Empfängers
+- Vorschau zeigt jetzt das Briefpapier (Kopf-/Fußzeile) des Sales Channels — exakt wie beim Versand
+
+### Geändert (Nutzer-Feedback 11.07.2026)
+- Compose-Flow vereinfacht auf „gerendert bearbeiten": Vorlage wählen → sofort mit echten Daten gerendert → Ergebnis im Editor bearbeiten → 1:1 senden; kein Twig mehr im Editor für normale Nutzer
+- Variablen-Picker fügt im einfachen Modus echte Werte aus der Bestellung ein (Twig-Expressions nur noch im Experten-Modus)
+- Smart-Bar-Buttons entfernt — Einstieg ausschließlich über den Tab „E-Mails"
+- Mail-Kontext enthält jetzt `salesChannel`/`salesChannelId` wie beim echten Versand (behebt Render-Fehler bei Standard-Templates)
+
+### Behoben
+- Leerer Editor war nicht beschreibbar (Meteor-Editor-Gate bei TipTap-instabilem Inhalt) — Inhalt startet jetzt TipTap-stabil
 - F1-Admin: Button „E-Mail senden" in der Smart Bar von Bestell- und Kundendetail (sichtbar nur mit Berechtigung „Freie E-Mails verfassen" und aktivem Feature-Toggle F1)
 - Compose-Modal mit Dual-Editor (WYSIWYG ⇄ Twig, Twig-Modus nur mit entsprechender Berechtigung), Variablen-Picker mit Suche, Vorlagen-Übernahme als Kopie in der Sprache der Bestellung, CC/BCC, Auswahl vorhandener Bestell-Dokumente als Anhang, Datei-Upload und serverseitiger Vorschau mit Twig-Fehleranzeige inkl. Zeilenangabe
 - Jest-Testsuite für die Admin-Komponenten (16 Tests inkl. Snapshots für Compose-Modal und Variablen-Picker)

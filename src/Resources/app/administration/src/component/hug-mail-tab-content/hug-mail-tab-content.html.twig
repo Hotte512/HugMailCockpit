@@ -1,0 +1,37 @@
+<div class="hug-mail-tab-content">
+    <mt-card
+        position-identifier="hug-mail-cockpit-tab"
+        :title="$tc('hug-mail-cockpit.tab.cardTitle')"
+    >
+        <template #headerRight>
+            <mt-button
+                v-if="canCompose"
+                variant="primary"
+                size="small"
+                @click="composeOpen = true"
+            >
+                {{ $tc('hug-mail-cockpit.smartBar.sendMail') }}
+            </mt-button>
+        </template>
+
+        <hug-mail-history-grid
+            v-if="canViewHistory"
+            :key="historyReloadKey"
+            :order-id="orderId"
+            :customer-id="customerId"
+            @reply="onReply"
+        />
+
+        <p v-else class="hug-mail-tab-content__no-history">
+            {{ $tc('hug-mail-cockpit.tab.noHistoryPermission') }}
+        </p>
+    </mt-card>
+
+    <hug-mail-compose-modal
+        v-if="composeOpen"
+        :order-id="orderId"
+        :customer-id="customerId"
+        @modal-close="composeOpen = false"
+        @mail-sent="onMailSent"
+    />
+</div>

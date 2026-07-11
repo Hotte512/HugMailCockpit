@@ -37,11 +37,15 @@ class MailContextBuilder
         'addresses.countryState',
         'tags',
         'documents',
+        // MailService loads the sales channel with domains for $templateData —
+        // templates build storefront links from salesChannel.domains.
+        'salesChannel.domains',
     ];
 
     private const CUSTOMER_ASSOCIATIONS = [
         'salutation',
         'group',
+        'salesChannel.domains',
         'defaultBillingAddress.country',
         'defaultBillingAddress.countryState',
         'defaultShippingAddress.country',
@@ -103,7 +107,13 @@ class MailContextBuilder
         $orderCustomer = $fullOrder->getOrderCustomer();
 
         return new MailContext(
-            templateData: ['order' => $fullOrder],
+            // salesChannel/salesChannelId mirror what MailService injects into
+            // the template data at send time — templates rely on them.
+            templateData: [
+                'order' => $fullOrder,
+                'salesChannel' => $fullOrder->getSalesChannel(),
+                'salesChannelId' => $order->getSalesChannelId(),
+            ],
             context: $orderContext,
             salesChannelId: $order->getSalesChannelId(),
             languageId: $order->getLanguageId(),
@@ -148,7 +158,11 @@ class MailContextBuilder
         }
 
         return new MailContext(
-            templateData: ['customer' => $fullCustomer],
+            templateData: [
+                'customer' => $fullCustomer,
+                'salesChannel' => $fullCustomer->getSalesChannel(),
+                'salesChannelId' => $customer->getSalesChannelId(),
+            ],
             context: $customerContext,
             salesChannelId: $customer->getSalesChannelId(),
             languageId: $customer->getLanguageId(),
@@ -159,9 +173,11 @@ class MailContextBuilder
 
     /**
      * Variable keys for the picker, derived from the actually built template
-     * data (konzept.md §2) — never hardcoded.
+     * data (konzept.md §2) — never hardcoded. Scalar properties carry their
+     * rendered value so the picker can insert real values in the simple
+     * editor; non-scalar properties map to null (usable in twig mode only).
      *
-     * @return array<string, list<string>>
+     * @return array<string, array<string, string|null>>
      */
     public function getVariables(MailContext $mailContext): array
     {
@@ -174,13 +190,39 @@ class MailContextBuilder
                 continue;
             }
 
-            $keys = array_keys($value->getVars());
-            $keys = array_values(array_diff($keys, self::INTERNAL_VARIABLE_KEYS));
+            $vars = $value->getVars();
+            $keys = array_values(array_diff(array_keys($vars), self::INTERNAL_VARIABLE_KEYS));
             sort($keys);
 
-            $variables[$rootKey] = $keys;
+            $entries = [];
+            foreach ($keys as $key) {
+                $entries[$key] = $this->toScalarPreview($vars[$key]);
+            }
+
+            $variables[$rootKey] = $entries;
         }
 
         return $variables;
+    }
+
+    private function toScalarPreview(mixed $value): ?string
+    {
+        if (\is_string($value)) {
+            return $value;
+        }
+
+        if (\is_int($value) || \is_float($value)) {
+            return (string) $value;
+        }
+
+        if (\is_bool($value)) {
+            return $value ? '1' : '0';
+        }
+
+        if ($value instanceof \DateTimeInterface) {
+            return $value->format('Y-m-d H:i');
+        }
+
+        return null;
     }
 }

@@ -6,8 +6,8 @@ Shopware-6-Plugin für manuellen E-Mail-Versand aus der Administration — freie
 
 ## Features (geplanter MVP 1.0)
 
-- **F1 — Freie E-Mail verfassen:** Button im Bestell- und Kundendetail öffnet ein Modal mit Dual-Editor (WYSIWYG ⇄ Twig), Variablen-Picker, Vorlagen als Kopie, Dokument-Anhängen und Vorschau
-- **F2 — Historie-Tab:** Mail-Historie je Bestellung/Kunde (erfordert das Plugin FroshPlatformMailArchive; ohne dieses wird der Tab ausgeblendet)
+- **F1 — Freie E-Mail verfassen:** Tab „E-Mails" im Bestell- und Kundendetail; Vorlagen werden sofort mit echten Daten gerendert und das Ergebnis im WYSIWYG bearbeitet („gerendert bearbeiten"), Variablen-Picker fügt echte Werte ein, Dokument-Anhänge, Upload, Vorschau inkl. Briefpapier; Twig-Rohmodus als Experten-Feature
+- **F2 — Historie:** Mail-Historie je Bestellung/Kunde im selben Tab (erfordert FroshPlatformMailArchive; ohne dieses erscheint ein Hinweis)
 - **F3 — Dokumente einzeln mailen:** „Per E-Mail senden" direkt aus dem Dokumenten-Grid, inkl. Bulk (eine Mail mit n Anhängen) und konfigurierbarem Vorlagen-Mapping je Dokumenttyp
 - **F4 — Preview mit echten Daten:** Mail-Templates gegen echte Bestellungen rendern, Twig-Fehler mit Zeilenangabe sichtbar, Testversand
 

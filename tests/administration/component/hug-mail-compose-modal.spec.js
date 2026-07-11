@@ -11,11 +11,16 @@ const slotStub = (name) => ({
 function createWrapper({ acl = { can: () => true }, apiOverrides = {} } = {}) {
     const apiService = {
         getMailContext: jest.fn().mockResolvedValue({
-            variables: { order: ['orderNumber', 'amountTotal'] },
+            variables: { order: { orderNumber: '10001', amountTotal: '99.9' } },
             languageId: 'lang-id',
             salesChannelId: 'sales-channel-id',
             recipientEmail: 'max@example.com',
             recipientName: 'Max Mustermann',
+        }),
+        renderTemplate: jest.fn().mockResolvedValue({
+            subject: 'Rendered subject 10001',
+            contentHtml: '<p>Rendered body</p>',
+            errors: [],
         }),
         preview: jest.fn().mockResolvedValue({ subject: 'S', contentHtml: '<p>x</p>', errors: [] }),
         send: jest.fn().mockResolvedValue(null),
@@ -134,6 +139,28 @@ describe('hug-mail-compose-modal', () => {
         expect(apiService.send).toHaveBeenCalledTimes(1);
         expect(wrapper.emitted('mail-sent')).toHaveLength(1);
         expect(wrapper.emitted('modal-close')).toHaveLength(1);
+    });
+
+    it('renders the selected template server-side and adopts the result', async () => {
+        const { wrapper, apiService } = createWrapper();
+        await flushPromises();
+
+        await wrapper.vm.onTemplateSelected('template-id');
+
+        expect(apiService.renderTemplate).toHaveBeenCalledWith({
+            mailTemplateId: 'template-id',
+            orderId: ORDER_ID,
+            customerId: null,
+        });
+        expect(wrapper.vm.subject).toBe('Rendered subject 10001');
+        expect(wrapper.vm.contentHtml).toBe('<p>Rendered body</p>');
+    });
+
+    it('starts with tiptap-stable empty content', async () => {
+        const { wrapper } = createWrapper();
+        await flushPromises();
+
+        expect(wrapper.vm.contentHtml).toBe('<p></p>');
     });
 
     it('shows the twig warning in simple mode when content contains twig blocks', async () => {

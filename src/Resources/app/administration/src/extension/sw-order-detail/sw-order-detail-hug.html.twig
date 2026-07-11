@@ -1,19 +1,12 @@
-{% block sw_order_detail_actions_slot_smart_bar_actions %}
+{% block sw_order_detail_content_tabs_extension %}
     {% parent %}
 
-    <mt-button
-        v-if="hugMailButtonVisible"
-        class="hug-mail-cockpit__smart-bar-button"
-        variant="secondary"
-        size="default"
-        @click="hugMailModalOpen = true"
+    <sw-tabs-item
+        v-if="hugMailTabVisible"
+        class="hug-mail-cockpit__tab"
+        :route="{ name: 'sw.order.detail.hugMails', params: { id: $route.params.id } }"
+        :title="$tc('hug-mail-cockpit.tab.label')"
     >
-        {{ $tc('hug-mail-cockpit.smartBar.sendMail') }}
-    </mt-button>
-
-    <hug-mail-compose-modal
-        v-if="hugMailModalOpen"
-        :order-id="$route.params.id"
-        @modal-close="hugMailModalOpen = false"
-    />
+        {{ $tc('hug-mail-cockpit.tab.label') }}
+    </sw-tabs-item>
 {% endblock %}

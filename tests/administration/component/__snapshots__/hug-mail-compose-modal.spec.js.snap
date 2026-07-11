@@ -10,7 +10,7 @@ exports[`hug-mail-compose-modal renders the compose form after loading the mail 
         <sw-entity-single-select-stub entity="mail_template" criteria="[object Object]" label-property="subject" label="hug-mail-cockpit.composeModal.templateLabel" help-text="hug-mail-cockpit.composeModal.templateHelp"></sw-entity-single-select-stub><label class="mt-text-field-stub" required="">hug-mail-cockpit.composeModal.subjectLabel<input value=""></label>
         <div class="hug-mail-compose-modal__editor-toggle"><button class="mt-button-stub" variant="primary" size="small">hug-mail-cockpit.composeModal.editorModeSimple</button><button class="mt-button-stub" variant="secondary" size="small">hug-mail-cockpit.composeModal.editorModeTwig</button></div>
         <!--v-if-->
-        <div class="hug-mail-compose-modal__editor"><textarea class="mt-text-editor-stub" value=""></textarea></div>
+        <div class="hug-mail-compose-modal__editor"><textarea class="mt-text-editor-stub" value="<p></p>"></textarea></div>
         <div class="hug-mail-compose-modal__attachments">
           <h3>hug-mail-cockpit.composeModal.attachmentsHeadline</h3>
           <p class="hug-mail-compose-modal__no-documents">hug-mail-cockpit.composeModal.noDocuments</p>
@@ -22,7 +22,7 @@ exports[`hug-mail-compose-modal renders the compose form after loading the mail 
         </div>
         <p class="hug-mail-compose-modal__language">hug-mail-cockpit.composeModal.languageLabel: Deutsch</p>
       </div>
-      <hug-mail-variable-picker-stub class="hug-mail-compose-modal__variables" variables="[object Object]"></hug-mail-variable-picker-stub>
+      <hug-mail-variable-picker-stub class="hug-mail-compose-modal__variables" variables="[object Object]" mode="values"></hug-mail-variable-picker-stub>
     </div>
     <div class="hug-mail-compose-modal__footer"><button class="mt-button-stub" variant="secondary">hug-mail-cockpit.composeModal.previewButton</button>
       <div class="hug-mail-compose-modal__footer-right"><button class="mt-button-stub" variant="secondary">global.default.cancel</button><button class="mt-button-stub" variant="primary" is-loading="false">hug-mail-cockpit.composeModal.sendButton</button></div>

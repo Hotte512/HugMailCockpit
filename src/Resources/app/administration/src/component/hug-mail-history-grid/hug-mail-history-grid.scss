@@ -1,0 +1,13 @@
+.hug-mail-history-grid {
+    &__detail-meta {
+        margin-bottom: 8px;
+        color: var(--color-text-tertiary-default, #8a8f98);
+    }
+
+    &__detail-frame {
+        width: 100%;
+        min-height: 420px;
+        border: 1px solid var(--color-border-primary-default, #d1d9e0);
+        background: #fff;
+    }
+}

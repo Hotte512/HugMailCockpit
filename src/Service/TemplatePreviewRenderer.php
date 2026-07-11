@@ -23,9 +23,21 @@ class TemplatePreviewRenderer
     /**
      * @param array<string, mixed> $templateData
      */
-    public function render(string $subject, string $contentHtml, array $templateData, Context $context): PreviewResult
-    {
+    public function render(
+        string $subject,
+        string $contentHtml,
+        array $templateData,
+        Context $context,
+        ?string $headerHtml = null,
+        ?string $footerHtml = null,
+    ): PreviewResult {
         $errors = [];
+
+        // Letterhead is wrapped around the content BEFORE the twig pass —
+        // the exact behavior of MailService::buildContents().
+        if ($headerHtml !== null || $footerHtml !== null) {
+            $contentHtml = \sprintf('%s%s%s', $headerHtml ?? '', $contentHtml, $footerHtml ?? '');
+        }
 
         // Subject is rendered without HTML escaping, content with — the exact
         // behavior of MailService::send() (subject via render(..., false)).

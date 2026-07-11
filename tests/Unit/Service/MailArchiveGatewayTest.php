@@ -56,6 +56,7 @@ class MailArchiveGatewayTest extends TestCase
             'receiver' => ['max@example.com' => 'Max'],
             'transportState' => 'sent',
             'mailTemplateId' => $templateId,
+            'htmlText' => '<p>Mail body</p>',
             'createdAt' => $createdAt,
         ]);
         $entry->setUniqueIdentifier($archiveId);
@@ -85,6 +86,7 @@ class MailArchiveGatewayTest extends TestCase
         static::assertSame(['max@example.com' => 'Max'], $rows[0]['receiver']);
         static::assertSame('sent', $rows[0]['transportState']);
         static::assertSame($templateId, $rows[0]['mailTemplateId']);
+        static::assertSame('<p>Mail body</p>', $rows[0]['htmlText']);
         static::assertSame($createdAt->format(\DateTimeInterface::ATOM), $rows[0]['createdAt']);
     }
 

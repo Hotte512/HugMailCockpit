@@ -15,6 +15,7 @@ use Shopware\Core\Framework\Api\Context\SystemSource;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\Uuid\Uuid;
+use Shopware\Core\System\SalesChannel\SalesChannelEntity;
 use Shopware\Core\Test\Stub\DataAbstractionLayer\StaticEntityRepository;
 
 class MailContextBuilderTest extends TestCase
@@ -78,6 +79,10 @@ class MailContextBuilderTest extends TestCase
         $mailContext = $builder->buildOrderContext($this->orderId, new Context(new SystemSource()));
 
         static::assertSame($fullOrder, $mailContext->templateData['order']);
+        // Templates rely on `salesChannel` — MailService injects it at send
+        // time, so render/preview must see it as well.
+        static::assertSame($fullOrder->getSalesChannel(), $mailContext->templateData['salesChannel']);
+        static::assertSame($this->salesChannelId, $mailContext->templateData['salesChannelId']);
         static::assertSame($this->salesChannelId, $mailContext->salesChannelId);
         static::assertSame('max@example.com', $mailContext->recipientEmail);
         static::assertSame('Max Mustermann', $mailContext->recipientName);
@@ -99,7 +104,7 @@ class MailContextBuilderTest extends TestCase
         $builder->buildOrderContext($this->orderId, new Context(new SystemSource()));
 
         static::assertInstanceOf(Criteria::class, $capturedCriteria);
-        foreach (['lineItems', 'deliveries', 'transactions', 'orderCustomer', 'currency', 'addresses', 'documents'] as $association) {
+        foreach (['lineItems', 'deliveries', 'transactions', 'orderCustomer', 'currency', 'addresses', 'documents', 'salesChannel'] as $association) {
             static::assertTrue(
                 $capturedCriteria->hasAssociation($association),
                 sprintf('Association %s must be loaded for the mail context', $association)
@@ -157,7 +162,7 @@ class MailContextBuilderTest extends TestCase
         $builder->buildCustomerContext($this->customerId, new Context(new SystemSource()));
     }
 
-    public function testVariablesAreDerivedFromBuiltContext(): void
+    public function testVariablesAreDerivedFromBuiltContextWithScalarValues(): void
     {
         $orderRepository = new StaticEntityRepository([
             [$this->createOrder()],
@@ -170,14 +175,42 @@ class MailContextBuilderTest extends TestCase
         $variables = $builder->getVariables($mailContext);
 
         static::assertArrayHasKey('order', $variables);
-        static::assertContains('orderNumber', $variables['order']);
-        static::assertContains('amountTotal', $variables['order']);
-        static::assertNotContains('extensions', $variables['order']);
+        // Scalar properties expose their rendered value for the picker …
+        static::assertSame('10001', $variables['order']['orderNumber']);
+        static::assertSame('99.9', $variables['order']['amountTotal']);
+        // … non-scalar properties are listed without a value (twig mode only).
+        static::assertArrayHasKey('orderCustomer', $variables['order']);
+        static::assertNull($variables['order']['orderCustomer']);
+        static::assertArrayNotHasKey('extensions', $variables['order']);
+    }
+
+    public function testVariableValuesFormatDates(): void
+    {
+        $orderDate = new \DateTimeImmutable('2026-07-01 10:30:00');
+        $order = $this->createOrder();
+        $order->setOrderDateTime($orderDate);
+
+        $orderRepository = new StaticEntityRepository([
+            [$this->createOrder()],
+            [$order],
+        ]);
+
+        $builder = new MailContextBuilder($orderRepository, new StaticEntityRepository([]));
+        $mailContext = $builder->buildOrderContext($this->orderId, new Context(new SystemSource()));
+
+        $variables = $builder->getVariables($mailContext);
+
+        static::assertSame('2026-07-01 10:30', $variables['order']['orderDateTime']);
     }
 
     private function createOrder(): OrderEntity
     {
+        $salesChannel = new SalesChannelEntity();
+        $salesChannel->setId($this->salesChannelId);
+        $salesChannel->setUniqueIdentifier($this->salesChannelId);
+
         $order = new OrderEntity();
+        $order->setSalesChannel($salesChannel);
         $order->setId($this->orderId);
         $order->setUniqueIdentifier($this->orderId);
         $order->setVersionId(Uuid::randomHex());

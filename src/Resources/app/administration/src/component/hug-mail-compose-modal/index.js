@@ -60,7 +60,9 @@ const hugMailComposeModal = {
             bcc: '',
             mailTemplateId: null,
             subject: '',
-            contentHtml: '',
+            // TipTap round-trips '' to '<p></p>' — starting with the stable
+            // form keeps the mt-text-editor out of its read-only gate.
+            contentHtml: '<p></p>',
             editorMode: 'simple',
             variables: {},
             languageId: null,
@@ -104,10 +106,6 @@ const hugMailComposeModal = {
 
         languageRepository() {
             return this.repositoryFactory.create('language');
-        },
-
-        mailTemplateRepository() {
-            return this.repositoryFactory.create('mail_template');
         },
     },
 
@@ -203,25 +201,26 @@ const hugMailComposeModal = {
                 return;
             }
 
-            // Load the template copy in the mail language (order/customer
-            // language), never the admin language — konzept.md §6.
-            const templateContext = { ...Shopware.Context.api };
-            if (this.languageId) {
-                templateContext.languageId = this.languageId;
-            }
+            // "Render, then edit": the backend renders the template against
+            // the real order/customer data in the mail language. The user
+            // edits the final result — no Twig reaches the editor.
+            try {
+                const result = await this.hugMailCockpitApiService.renderTemplate({
+                    mailTemplateId,
+                    orderId: this.orderId,
+                    customerId: this.orderId ? null : this.customerId,
+                });
 
-            const mailTemplate = await this.mailTemplateRepository.get(mailTemplateId, templateContext);
+                if (Array.isArray(result.errors) && result.errors.length > 0) {
+                    this.createNotificationError({ message: result.errors[0].message });
 
-            if (!mailTemplate) {
-                return;
-            }
+                    return;
+                }
 
-            // Copy, never a live binding: editing here must not change the template.
-            this.subject = mailTemplate.translated.subject ?? mailTemplate.subject ?? '';
-            this.contentHtml = mailTemplate.translated.contentHtml ?? mailTemplate.contentHtml ?? '';
-
-            if (containsTwigSyntax(this.contentHtml) && this.canUseTwigEditor) {
-                this.editorMode = 'twig';
+                this.subject = result.subject ?? '';
+                this.contentHtml = result.contentHtml ?? '<p></p>';
+            } catch (error) {
+                this.showApiError(error);
             }
         },
 
@@ -248,7 +247,9 @@ const hugMailComposeModal = {
                 : null;
 
             if (tiptap) {
-                tiptap.commands.insertContent(expression);
+                // focus() restores the last selection so the value lands at
+                // the cursor position instead of a new block at the end.
+                tiptap.chain().focus().insertContent(expression).run();
 
                 return;
             }

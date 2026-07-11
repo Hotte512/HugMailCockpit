@@ -38,8 +38,15 @@
         }
     }
 
-    &__empty {
+    &__empty,
+    &__hint {
         margin-top: 8px;
         color: var(--color-text-tertiary-default, #8a8f98);
+        font-size: 12px;
+    }
+
+    &__value {
+        color: var(--color-text-tertiary-default, #8a8f98);
+        margin-left: 4px;
     }
 }

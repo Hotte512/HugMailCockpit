@@ -10,6 +10,8 @@ use Hug\MailCockpit\Service\HugMailSender;
 use Hug\MailCockpit\Service\MailArchiveGateway;
 use Hug\MailCockpit\Service\MailContext;
 use Hug\MailCockpit\Service\MailContextBuilder;
+use Hug\MailCockpit\Service\MailLetterheadLoader;
+use Hug\MailCockpit\Service\MailTemplateGateway;
 use Hug\MailCockpit\Service\SendMailCommand;
 use Hug\MailCockpit\Service\TemplatePreviewRenderer;
 use Hug\MailCockpit\Service\TwigContentPolicy;
@@ -40,6 +42,8 @@ class MailCockpitController
         private readonly TemplatePreviewRenderer $previewRenderer,
         private readonly TwigContentPolicy $twigContentPolicy,
         private readonly MailArchiveGateway $mailArchiveGateway,
+        private readonly MailTemplateGateway $mailTemplateGateway,
+        private readonly MailLetterheadLoader $letterheadLoader,
     ) {
     }
 
@@ -111,7 +115,57 @@ class MailCockpitController
             $context,
         );
 
-        $result = $this->previewRenderer->render($subject, $contentHtml, $mailContext->templateData, $mailContext->context);
+        // The preview must show exactly what will be sent — including the
+        // sales channel letterhead that MailService wraps around the content.
+        $letterhead = $this->letterheadLoader->getLetterhead($mailContext->salesChannelId, $mailContext->context);
+
+        $result = $this->previewRenderer->render(
+            $subject,
+            $contentHtml,
+            $mailContext->templateData,
+            $mailContext->context,
+            $letterhead['headerHtml'],
+            $letterhead['footerHtml'],
+        );
+
+        return new JsonResponse([
+            'subject' => $result->subject,
+            'contentHtml' => $result->contentHtml,
+            'errors' => $result->errors,
+        ]);
+    }
+
+    #[Route(
+        path: '/api/_action/hug-mail-cockpit/render-template',
+        name: 'api.action.hug-mail-cockpit.render-template',
+        defaults: ['auth_required' => true],
+        methods: ['POST'],
+    )]
+    public function renderTemplate(Request $request, Context $context): JsonResponse
+    {
+        $this->ensureAnyPrivilege($context, [self::PRIVILEGE_FREE_SENDER, self::PRIVILEGE_SENDER]);
+
+        $payload = $this->decodePayload($request);
+        $mailTemplateId = $this->requireStringValue($payload, 'mailTemplateId');
+
+        $mailContext = $this->buildMailContext(
+            $this->stringValue($payload, 'orderId'),
+            $this->stringValue($payload, 'customerId'),
+            $context,
+        );
+
+        // No twig policy here on purpose: the template content comes from the
+        // database (maintained via the mail template module with its own ACL),
+        // not from user input. The rendered result is returned WITHOUT the
+        // letterhead so editing and re-sending never duplicates it.
+        $template = $this->mailTemplateGateway->getTemplateContent($mailTemplateId, $mailContext->context);
+
+        $result = $this->previewRenderer->render(
+            $template['subject'],
+            $template['contentHtml'],
+            $mailContext->templateData,
+            $mailContext->context,
+        );
 
         return new JsonResponse([
             'subject' => $result->subject,

@@ -92,6 +92,29 @@ class TemplatePreviewRendererTest extends TestCase
         static::assertSame('contentHtml', $result->errors[0]['field']);
     }
 
+    public function testLetterheadWrapsContentBeforeRendering(): void
+    {
+        $order = new OrderEntity();
+        $order->setOrderNumber('10001');
+
+        $result = $this->renderer->render(
+            'Subject',
+            '<p>Body {{ order.orderNumber }}</p>',
+            ['order' => $order],
+            $this->context,
+            headerHtml: '<div>Header {{ order.orderNumber }}</div>',
+            footerHtml: '<div>Footer</div>',
+        );
+
+        static::assertTrue($result->isSuccessful());
+        // Header/footer are wrapped around the content BEFORE the twig pass —
+        // exactly like MailService::buildContents().
+        static::assertSame(
+            '<div>Header 10001</div><p>Body 10001</p><div>Footer</div>',
+            $result->contentHtml,
+        );
+    }
+
     public function testSubjectErrorIsReportedWithSubjectField(): void
     {
         $result = $this->renderer->render(

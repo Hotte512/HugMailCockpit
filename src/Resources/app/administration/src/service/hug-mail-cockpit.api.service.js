@@ -21,6 +21,18 @@ export default class HugMailCockpitApiService extends ApiService {
             .then(ApiService.handleResponse);
     }
 
+    /**
+     * Server-side render of an unmodified mail template against the order/
+     * customer context ("render, then edit" flow).
+     */
+    renderTemplate(payload) {
+        return this.httpClient
+            .post(`_action/${this.getApiBasePath()}/render-template`, payload, {
+                headers: this.getBasicHeaders(),
+            })
+            .then(ApiService.handleResponse);
+    }
+
     preview(payload) {
         return this.httpClient
             .post(`_action/${this.getApiBasePath()}/preview`, payload, {

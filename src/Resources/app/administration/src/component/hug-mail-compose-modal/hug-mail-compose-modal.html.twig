@@ -136,6 +136,7 @@
                 <hug-mail-variable-picker
                     class="hug-mail-compose-modal__variables"
                     :variables="variables"
+                    :mode="editorMode === 'twig' ? 'expressions' : 'values'"
                     @variable-selected="onVariableSelected"
                 />
             </div>

@@ -43,6 +43,14 @@
             <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
         </service>
 
+        <service id="Hug\MailCockpit\Service\MailTemplateGateway">
+            <argument type="service" id="mail_template.repository"/>
+        </service>
+
+        <service id="Hug\MailCockpit\Service\MailLetterheadLoader">
+            <argument type="service" id="sales_channel.repository"/>
+        </service>
+
         <!-- Optional runtime dependency: repository only exists while
              FroshPlatformMailArchive is installed and active. -->
         <service id="Hug\MailCockpit\Service\MailArchiveGateway">
@@ -58,6 +66,8 @@
             <argument type="service" id="Hug\MailCockpit\Service\TemplatePreviewRenderer"/>
             <argument type="service" id="Hug\MailCockpit\Service\TwigContentPolicy"/>
             <argument type="service" id="Hug\MailCockpit\Service\MailArchiveGateway"/>
+            <argument type="service" id="Hug\MailCockpit\Service\MailTemplateGateway"/>
+            <argument type="service" id="Hug\MailCockpit\Service\MailLetterheadLoader"/>
         </service>
     </services>
 </container>

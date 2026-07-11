@@ -11,6 +11,8 @@ use Hug\MailCockpit\Service\HugMailSender;
 use Hug\MailCockpit\Service\MailArchiveGateway;
 use Hug\MailCockpit\Service\MailContext;
 use Hug\MailCockpit\Service\MailContextBuilder;
+use Hug\MailCockpit\Service\MailLetterheadLoader;
+use Hug\MailCockpit\Service\MailTemplateGateway;
 use Hug\MailCockpit\Service\PreviewResult;
 use Hug\MailCockpit\Service\SendMailCommand;
 use Hug\MailCockpit\Service\TemplatePreviewRenderer;
@@ -34,6 +36,10 @@ class MailCockpitControllerTest extends TestCase
 
     private MailArchiveGateway&MockObject $archiveGateway;
 
+    private MailTemplateGateway&MockObject $templateGateway;
+
+    private MailLetterheadLoader&MockObject $letterheadLoader;
+
     private MailCockpitController $controller;
 
     private string $orderId;
@@ -44,6 +50,8 @@ class MailCockpitControllerTest extends TestCase
         $this->contextBuilder = $this->createMock(MailContextBuilder::class);
         $this->previewRenderer = $this->createMock(TemplatePreviewRenderer::class);
         $this->archiveGateway = $this->createMock(MailArchiveGateway::class);
+        $this->templateGateway = $this->createMock(MailTemplateGateway::class);
+        $this->letterheadLoader = $this->createMock(MailLetterheadLoader::class);
 
         $this->controller = new MailCockpitController(
             $this->sender,
@@ -51,6 +59,8 @@ class MailCockpitControllerTest extends TestCase
             $this->previewRenderer,
             new TwigContentPolicy(),
             $this->archiveGateway,
+            $this->templateGateway,
+            $this->letterheadLoader,
         );
 
         $this->orderId = Uuid::randomHex();
@@ -207,9 +217,12 @@ class MailCockpitControllerTest extends TestCase
             ->with($this->orderId, $context)
             ->willReturn($mailContext);
 
+        $this->letterheadLoader->method('getLetterhead')
+            ->willReturn(['headerHtml' => null, 'footerHtml' => null]);
+
         $this->previewRenderer->expects(static::once())
             ->method('render')
-            ->with('Subject', '<p>Body</p>', ['order' => $order], $mailContext->context)
+            ->with('Subject', '<p>Body</p>', ['order' => $order], $mailContext->context, null, null)
             ->willReturn(new PreviewResult('Subject', '<p>Body</p>', []));
 
         $response = $this->controller->preview(
@@ -300,6 +313,95 @@ class MailCockpitControllerTest extends TestCase
         static::assertIsArray($body);
         static::assertSame($rows, $body['entries']);
         static::assertSame(1, $body['total']);
+    }
+
+    public function testRenderTemplateRendersDatabaseTemplateWithoutTwigPolicy(): void
+    {
+        $context = $this->contextWithPrivileges(['hug_mail_cockpit.free_sender']);
+        $templateId = Uuid::randomHex();
+
+        $order = new OrderEntity();
+        $mailContext = new MailContext(
+            templateData: ['order' => $order],
+            context: $context,
+            salesChannelId: null,
+            languageId: Uuid::randomHex(),
+            recipientEmail: null,
+            recipientName: null,
+        );
+
+        $this->contextBuilder->method('buildOrderContext')->willReturn($mailContext);
+        $this->letterheadLoader->method('getLetterhead')
+            ->willReturn(['headerHtml' => null, 'footerHtml' => null]);
+
+        // Template content comes from the database and may contain arbitrary
+        // Twig — no twig_editor privilege must be required to render it.
+        $this->templateGateway->expects(static::once())
+            ->method('getTemplateContent')
+            ->with($templateId, $mailContext->context)
+            ->willReturn([
+                'subject' => 'Order {% if true %}{{ order.orderNumber }}{% endif %}',
+                'contentHtml' => '<p>{{ order.orderNumber }}</p>',
+            ]);
+
+        $this->previewRenderer->expects(static::once())
+            ->method('render')
+            ->willReturn(new PreviewResult('Order 10001', '<p>10001</p>', []));
+
+        $response = $this->controller->renderTemplate(
+            $this->jsonRequest([
+                'orderId' => $this->orderId,
+                'mailTemplateId' => $templateId,
+            ]),
+            $context,
+        );
+
+        $body = json_decode((string) $response->getContent(), true);
+        static::assertIsArray($body);
+        static::assertSame('Order 10001', $body['subject']);
+        static::assertSame('<p>10001</p>', $body['contentHtml']);
+        static::assertSame([], $body['errors']);
+    }
+
+    public function testRenderTemplateRequiresPrivilege(): void
+    {
+        $this->expectException(MissingPrivilegeException::class);
+
+        $this->controller->renderTemplate(
+            $this->jsonRequest(['orderId' => $this->orderId, 'mailTemplateId' => Uuid::randomHex()]),
+            $this->contextWithPrivileges(['hug_mail_cockpit.viewer']),
+        );
+    }
+
+    public function testPreviewPassesLetterheadToRenderer(): void
+    {
+        $context = $this->contextWithPrivileges(['hug_mail_cockpit.free_sender']);
+        $salesChannelId = Uuid::randomHex();
+
+        $mailContext = new MailContext(
+            templateData: [],
+            context: $context,
+            salesChannelId: $salesChannelId,
+            languageId: Uuid::randomHex(),
+            recipientEmail: null,
+            recipientName: null,
+        );
+
+        $this->contextBuilder->method('buildOrderContext')->willReturn($mailContext);
+        $this->letterheadLoader->expects(static::once())
+            ->method('getLetterhead')
+            ->with($salesChannelId, $mailContext->context)
+            ->willReturn(['headerHtml' => '<div>H</div>', 'footerHtml' => '<div>F</div>']);
+
+        $this->previewRenderer->expects(static::once())
+            ->method('render')
+            ->with('S', '<p>B</p>', [], $mailContext->context, '<div>H</div>', '<div>F</div>')
+            ->willReturn(new PreviewResult('S', '<div>H</div><p>B</p><div>F</div>', []));
+
+        $this->controller->preview(
+            $this->jsonRequest(['orderId' => $this->orderId, 'subject' => 'S', 'contentHtml' => '<p>B</p>']),
+            $context,
+        );
     }
 
     public function testSendRejectsMalformedRecipients(): void

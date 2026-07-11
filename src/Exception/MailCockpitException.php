@@ -19,6 +19,7 @@ class MailCockpitException extends HttpException
     final public const TWIG_EDITOR_PRIVILEGE_REQUIRED = 'HUG_MAIL_COCKPIT__TWIG_EDITOR_PRIVILEGE_REQUIRED';
     final public const MAIL_ARCHIVE_NOT_AVAILABLE = 'HUG_MAIL_COCKPIT__MAIL_ARCHIVE_NOT_AVAILABLE';
     final public const INVALID_PAYLOAD = 'HUG_MAIL_COCKPIT__INVALID_PAYLOAD';
+    final public const MAIL_TEMPLATE_NOT_FOUND = 'HUG_MAIL_COCKPIT__MAIL_TEMPLATE_NOT_FOUND';
 
     public static function orderNotFound(string $orderId): self
     {
@@ -93,6 +94,16 @@ class MailCockpitException extends HttpException
             Response::HTTP_FORBIDDEN,
             self::TWIG_EDITOR_PRIVILEGE_REQUIRED,
             'The content contains Twig expressions that require the "hug_mail_cockpit.twig_editor" privilege.',
+        );
+    }
+
+    public static function mailTemplateNotFound(string $mailTemplateId): self
+    {
+        return new self(
+            Response::HTTP_NOT_FOUND,
+            self::MAIL_TEMPLATE_NOT_FOUND,
+            'Mail template "{{ mailTemplateId }}" not found.',
+            ['mailTemplateId' => $mailTemplateId],
         );
     }
 

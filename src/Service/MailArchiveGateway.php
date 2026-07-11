@@ -84,6 +84,7 @@ class MailArchiveGateway
                 'receiver' => $vars['receiver'] ?? null,
                 'transportState' => $vars['transportState'] ?? null,
                 'mailTemplateId' => $vars['mailTemplateId'] ?? null,
+                'htmlText' => $vars['htmlText'] ?? null,
                 'createdAt' => $createdAt instanceof \DateTimeInterface
                     ? $createdAt->format(\DateTimeInterface::ATOM)
                     : null,
