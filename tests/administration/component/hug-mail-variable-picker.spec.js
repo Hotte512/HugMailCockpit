@@ -33,6 +33,10 @@ function createWrapper(props = {}) {
                     template: '<input class="mt-text-field-stub" :value="modelValue" @input="$emit(\'update:modelValue\', $event.target.value)" />',
                     props: ['modelValue', 'size', 'placeholder'],
                 },
+                'mt-checkbox': {
+                    template: '<input type="checkbox" class="mt-checkbox-stub" :checked="checked" @change="$emit(\'update:checked\', $event.target.checked)" />',
+                    props: ['checked', 'label'],
+                },
                 'mt-icon': true,
             },
         },
@@ -66,6 +70,26 @@ describe('hug-mail-variable-picker', () => {
         expect(visible.some((label) => label.includes('billingAddressId'))).toBe(false);
         expect(visible.some((label) => label.includes('deepLinkCode'))).toBe(false);
         expect(visible.some((label) => label.includes('orderCustomer'))).toBe(false);
+    });
+
+    it('reveals all scalar variables when the expert checkbox is checked', async () => {
+        const wrapper = createWrapper();
+
+        await wrapper.find('.mt-checkbox-stub').setValue(true);
+
+        const visible = wrapper.findAll('.hug-mail-variable-picker__variable').map((b) => b.text());
+        expect(visible.some((label) => label.startsWith('billingAddressId'))).toBe(true);
+        expect(visible.some((label) => label.startsWith('deepLinkCode'))).toBe(true);
+        // non-scalar entries stay hidden — inserting them makes no sense
+        expect(visible.some((label) => label.startsWith('orderCustomer'))).toBe(false);
+
+        const technicalButton = wrapper
+            .findAll('.hug-mail-variable-picker__variable')
+            .find((button) => button.text().startsWith('deepLinkCode'));
+        await technicalButton.trigger('click');
+
+        // still inserts the VALUE, not a twig expression
+        expect(wrapper.emitted('variable-selected')).toEqual([['xYz']]);
     });
 
     it('shows all technical keys and inserts expressions in expressions mode', async () => {

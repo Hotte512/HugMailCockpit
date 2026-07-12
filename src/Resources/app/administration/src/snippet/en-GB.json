@@ -38,13 +38,18 @@
             "previewError": "Twig error",
             "previewErrorLine": "Twig error at line {line}",
             "missingFields": "Recipient, subject and content must not be empty.",
-            "sendSuccess": "The e-mail has been sent."
+            "sendSuccess": "The e-mail has been sent.",
+            "saveAsSnippet": "Save as text snippet",
+            "saveAsSnippetTitle": "Save as text snippet",
+            "saveAsSnippetHint": "The current content is saved as-is — values already inserted (e.g. an order number) will appear literally in the snippet.",
+            "saveAsSnippetSuccess": "The text snippet has been saved."
         },
         "variablePicker": {
             "searchPlaceholder": "Search variable …",
             "empty": "No variables found.",
             "hintValues": "Click inserts the value from the order.",
-            "hintExpressions": "Click inserts the Twig variable."
+            "hintExpressions": "Click inserts the Twig variable.",
+            "showAll": "Show all variables (expert view)"
         },
         "documentCard": {
             "sendAction": "Send by e-mail (Cockpit)",

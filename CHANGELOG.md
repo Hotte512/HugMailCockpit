@@ -7,6 +7,8 @@ Format angelehnt an [Keep a Changelog](https://keepachangelog.com/de/1.1.0/); Ve
 ## [Unreleased]
 
 ### Hinzugefügt
+- Variablen-Picker: Schalter „Alle Variablen anzeigen (Expertenansicht)" blendet bei Bedarf sämtliche Variablen mit technischem Namen ein — eingefügt wird weiterhin der echte Wert (kein Twig-Recht nötig)
+- „Als Textvorlage speichern" im E-Mail-Fenster: aktuellen Inhalt unter einem Namen als Textbaustein ablegen (mit Hinweis, dass bereits eingefügte Werte wörtlich übernommen werden); die neue Vorlage steht sofort im Einfüge-Dropdown bereit
 - Variablen-Picker zeigt im einfachen Modus verständliche, übersetzte Namen (Bestellnummer, Gesamtbetrag, Versandkosten, …) statt technischer Feldnamen — nur kuratierte, für den Alltag sinnvolle Variablen; der Twig-Expertenmodus behält weiterhin alle technischen Variablen
 - Textvorlagen (Textbausteine): Pflege in der Plugin-Konfiguration (anlegen, bearbeiten, löschen) und Einfüge-Dropdown im E-Mail-Editor — Bausteine landen an der Cursorposition; einfache Variablen wie {{ order.orderNumber }} werden beim Versand ersetzt
 - Benutzeranleitung (docs/benutzerhandbuch.md) für Shop-Mitarbeiter und Admins; README für Veröffentlichung überarbeitet

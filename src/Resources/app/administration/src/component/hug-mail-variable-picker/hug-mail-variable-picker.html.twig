@@ -11,6 +11,14 @@
             : $tc('hug-mail-cockpit.variablePicker.hintExpressions') }}
     </p>
 
+    <mt-checkbox
+        v-if="mode === 'values'"
+        class="hug-mail-variable-picker__show-all"
+        :label="$tc('hug-mail-cockpit.variablePicker.showAll')"
+        :checked="showAll"
+        @update:checked="showAll = $event"
+    />
+
     <div
         v-for="(entries, rootKey) in filteredVariables"
         :key="rootKey"

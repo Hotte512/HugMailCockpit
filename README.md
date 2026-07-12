@@ -64,7 +64,7 @@ composer phpunit          # 72 Tests
 composer phpstan          # Level max
 composer ecs
 npm ci                    # Admin-Tooling (Jest, ESLint)
-npm run unit              # 45 Tests inkl. Snapshots
+npm run unit              # 48 Tests inkl. Snapshots
 npm run lint -- src/Resources/app/administration/src tests/administration
 ```
 

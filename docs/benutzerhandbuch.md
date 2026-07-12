@@ -49,7 +49,7 @@ Jede Zeile hat rechts ein Kontextmenü („…") mit drei Aktionen:
 4. **Vorlage (optional):** Wähle eine E-Mail-Vorlage aus. Sie wird **sofort** mit den echten Daten der Bestellung ausgefüllt — in der Sprache der Bestellung. Du siehst und bearbeitest also direkt das fertige Ergebnis, keine Platzhalter. Keine Sorge: *„Die Vorlage wird als Kopie geladen – Änderungen hier verändern die Vorlage nicht."*
 5. **Betreff:** wird von der Vorlage vorbefüllt oder frei eingetippt.
 6. **Text schreiben:** Im Editor-Modus **„Einfach"** schreibst du wie in einem normalen Textprogramm (fett, kursiv, Listen …). Den Modus **„Twig"** gibt es nur für Nutzer mit Spezialrecht — für den Alltag brauchst du ihn nicht.
-7. **Variablen einfügen:** Rechts neben dem Editor sitzt der Variablen-Picker. Ein Klick auf einen Eintrag (z. B. die Bestellnummer) **fügt den echten Wert aus der Bestellung an der Cursorposition ein**. Mit dem Suchfeld *„Variable suchen …"* findest du schnell die passende Variable.
+7. **Variablen einfügen:** Rechts neben dem Editor sitzt der Variablen-Picker. Ein Klick auf einen Eintrag (z. B. die Bestellnummer) **fügt den echten Wert aus der Bestellung an der Cursorposition ein**. Mit dem Suchfeld *„Variable suchen …"* findest du schnell die passende Variable. Standardmäßig siehst du die wichtigsten Variablen mit verständlichen Namen (Bestellnummer, Gesamtbetrag, …) — der Haken „Alle Variablen anzeigen (Expertenansicht)" blendet bei Bedarf alle weiteren ein.
 8. **Anhänge:** Unter „Anhänge" kannst du vorhandene Bestell-Dokumente (Rechnung, Lieferschein …) einfach ankreuzen. Über **„Datei hochladen"** hängst du eigene Dateien an — sie landen im Medien-Ordner „Mail-Cockpit Anhänge".
 9. **Sprache:** Das Feld „Sprache" zeigt dir, in welcher Sprache die Mail rausgeht — sie kommt aus der Bestellung bzw. dem Kunden, nicht aus deinen Admin-Einstellungen.
 10. **„Vorschau"** zeigt dir die E-Mail so, wie sie beim Kunden ankommt — inklusive Kopf- und Fußzeile (Briefpapier) deines Verkaufskanals, sofern im Shop eingerichtet.
@@ -68,6 +68,8 @@ Für wiederkehrende Formulierungen (Grußformeln, Standardantworten, Rückgabe-H
 1. Öffne beim Schreiben einer E-Mail das Dropdown **„Textvorlage einfügen …"** (rechts neben den Editor-Schaltflächen „Einfach"/„Twig").
 2. Wähle eine Vorlage aus — der Text wird an der aktuellen Cursorposition eingefügt.
 3. Du kannst den eingefügten Text danach frei bearbeiten.
+
+**Eigene Textvorlage direkt beim Schreiben anlegen:** Klicke unten im E-Mail-Fenster auf „Als Textvorlage speichern", vergib einen Namen — fertig. Achtung: Der Inhalt wird genau so gespeichert, wie er gerade im Editor steht; bereits eingefügte Werte (z. B. eine Bestellnummer) stehen dann wörtlich in der Vorlage.
 
 💡 Textvorlagen dürfen einfache Variablen enthalten (z. B. `{{ order.orderNumber }}`) — sie werden beim Versand automatisch durch die echten Werte ersetzt.
 

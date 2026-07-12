@@ -29,6 +29,8 @@ function createWrapper({ acl = { can: () => true }, apiOverrides = {}, props = {
 
     const snippetRepository = {
         get: jest.fn().mockResolvedValue({ id: 'snippet-1', name: 'Gruß', content: '<p>Viele Grüße</p>' }),
+        create: jest.fn().mockReturnValue({}),
+        save: jest.fn().mockResolvedValue(null),
     };
 
     const repositoryFactory = {
@@ -80,7 +82,7 @@ function createWrapper({ acl = { can: () => true }, apiOverrides = {}, props = {
         },
     });
 
-    return { wrapper, apiService };
+    return { wrapper, apiService, snippetRepository };
 }
 
 describe('hug-mail-compose-modal', () => {
@@ -193,6 +195,33 @@ describe('hug-mail-compose-modal', () => {
         // jsdom has no editor refs — the fallback appends the snippet.
         expect(wrapper.vm.contentHtml).toBe('<p>Hallo</p><p>Viele Grüße</p>');
         expect(wrapper.vm.snippetPickerKey).toBe(1);
+    });
+
+    it('saves the current content as a new text snippet', async () => {
+        const { wrapper, snippetRepository } = createWrapper();
+        await flushPromises();
+
+        wrapper.vm.contentHtml = '<p>Standardantwort</p>';
+        wrapper.vm.saveSnippetDialogOpen = true;
+        wrapper.vm.saveSnippetName = ' Meine Antwort ';
+        await wrapper.vm.saveAsSnippet();
+
+        expect(snippetRepository.save).toHaveBeenCalledWith(
+            expect.objectContaining({ name: 'Meine Antwort', content: '<p>Standardantwort</p>' }),
+            expect.anything(),
+        );
+        expect(wrapper.vm.saveSnippetDialogOpen).toBe(false);
+        expect(wrapper.vm.snippetPickerKey).toBe(1);
+    });
+
+    it('does not save a snippet without a name', async () => {
+        const { wrapper, snippetRepository } = createWrapper();
+        await flushPromises();
+
+        wrapper.vm.saveSnippetName = '   ';
+        await wrapper.vm.saveAsSnippet();
+
+        expect(snippetRepository.save).not.toHaveBeenCalled();
     });
 
     it('ignores an empty snippet selection', async () => {

@@ -67,9 +67,16 @@
         width: 100%;
     }
 
+    &__footer-left,
     &__footer-right {
         display: flex;
         gap: 8px;
+    }
+
+    &__snippet-hint {
+        color: var(--color-text-tertiary-default, #8a8f98);
+        font-size: 13px;
+        margin-bottom: 12px;
     }
 
     &__preview-frame {

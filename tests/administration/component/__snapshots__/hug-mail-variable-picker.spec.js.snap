@@ -2,7 +2,7 @@
 
 exports[`hug-mail-variable-picker renders translated labels sorted alphabetically (snapshot) 1`] = `
 "<div class="hug-mail-variable-picker"><input class="mt-text-field-stub" value="">
-  <p class="hug-mail-variable-picker__hint">hug-mail-cockpit.variablePicker.hintValues</p>
+  <p class="hug-mail-variable-picker__hint">hug-mail-cockpit.variablePicker.hintValues</p><input type="checkbox" class="mt-checkbox-stub hug-mail-variable-picker__show-all">
   <div class="hug-mail-variable-picker__group"><button type="button" class="hug-mail-variable-picker__root">
       <mt-icon-stub name="regular-chevron-down-xxs" size="12px"></mt-icon-stub> order
     </button>

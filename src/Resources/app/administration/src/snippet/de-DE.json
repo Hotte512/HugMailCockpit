@@ -38,13 +38,18 @@
             "previewError": "Twig-Fehler",
             "previewErrorLine": "Twig-Fehler in Zeile {line}",
             "missingFields": "Empfänger, Betreff und Inhalt dürfen nicht leer sein.",
-            "sendSuccess": "Die E-Mail wurde versendet."
+            "sendSuccess": "Die E-Mail wurde versendet.",
+            "saveAsSnippet": "Als Textvorlage speichern",
+            "saveAsSnippetTitle": "Als Textvorlage speichern",
+            "saveAsSnippetHint": "Der aktuelle Inhalt wird unverändert gespeichert — bereits eingefügte Werte (z. B. eine Bestellnummer) stehen dann wörtlich in der Vorlage.",
+            "saveAsSnippetSuccess": "Die Textvorlage wurde gespeichert."
         },
         "variablePicker": {
             "searchPlaceholder": "Variable suchen …",
             "empty": "Keine Variablen gefunden.",
             "hintValues": "Klick fügt den Wert aus der Bestellung ein.",
-            "hintExpressions": "Klick fügt die Twig-Variable ein."
+            "hintExpressions": "Klick fügt die Twig-Variable ein.",
+            "showAll": "Alle Variablen anzeigen (Expertenansicht)"
         },
         "documentCard": {
             "sendAction": "Per E-Mail senden (Cockpit)",

@@ -33,6 +33,7 @@ const hugMailVariablePicker = {
         return {
             searchTerm: '',
             openGroups: [],
+            showAll: false,
         };
     },
 
@@ -48,7 +49,7 @@ const hugMailVariablePicker = {
                             return true;
                         }
 
-                        return value !== null && this.hasCuratedLabel(rootKey, key);
+                        return value !== null && (this.showAll || this.hasCuratedLabel(rootKey, key));
                     })
                     .map(([key, value]) => ({
                         key,

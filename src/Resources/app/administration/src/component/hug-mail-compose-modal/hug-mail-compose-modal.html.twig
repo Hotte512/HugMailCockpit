@@ -155,13 +155,23 @@
 
         <template #footer>
             <div class="hug-mail-compose-modal__footer">
-                <mt-button
-                    variant="secondary"
-                    :disabled="isLoading || isSending"
-                    @click="openPreview"
-                >
-                    {{ $tc('hug-mail-cockpit.composeModal.previewButton') }}
-                </mt-button>
+                <div class="hug-mail-compose-modal__footer-left">
+                    <mt-button
+                        variant="secondary"
+                        :disabled="isLoading || isSending"
+                        @click="openPreview"
+                    >
+                        {{ $tc('hug-mail-cockpit.composeModal.previewButton') }}
+                    </mt-button>
+                    <mt-button
+                        v-if="canSaveSnippet"
+                        variant="secondary"
+                        :disabled="isLoading || isSending || contentHtml.trim() === '' || contentHtml === '<p></p>'"
+                        @click="saveSnippetDialogOpen = true"
+                    >
+                        {{ $tc('hug-mail-cockpit.composeModal.saveAsSnippet') }}
+                    </mt-button>
+                </div>
                 <div class="hug-mail-compose-modal__footer-right">
                     <mt-button variant="secondary" :disabled="isSending" @click="close">
                         {{ $tc('global.default.cancel') }}
@@ -178,6 +188,35 @@
             </div>
         </template>
     </mt-modal>
+
+    <mt-modal-root v-if="saveSnippetDialogOpen" :is-open="true" @change="onSaveSnippetDialogChange">
+        <mt-modal :title="$tc('hug-mail-cockpit.composeModal.saveAsSnippetTitle')" width="s">
+            <template #default>
+                <p class="hug-mail-compose-modal__snippet-hint">
+                    {{ $tc('hug-mail-cockpit.composeModal.saveAsSnippetHint') }}
+                </p>
+                <mt-text-field
+                    v-model="saveSnippetName"
+                    required
+                    :label="$tc('hug-mail-cockpit.textSnippets.nameLabel')"
+                />
+            </template>
+            <template #footer>
+                <div class="hug-mail-compose-modal__footer-right">
+                    <mt-button variant="secondary" @click="onSaveSnippetDialogChange(false)">
+                        {{ $tc('global.default.cancel') }}
+                    </mt-button>
+                    <mt-button
+                        variant="primary"
+                        :disabled="saveSnippetName.trim() === ''"
+                        @click="saveAsSnippet"
+                    >
+                        {{ $tc('hug-mail-cockpit.textSnippets.save') }}
+                    </mt-button>
+                </div>
+            </template>
+        </mt-modal>
+    </mt-modal-root>
 
     <mt-modal-root v-if="preview.open" :is-open="true" @change="onPreviewModalChange">
         <mt-modal :title="$tc('hug-mail-cockpit.composeModal.previewTitle')" width="l">

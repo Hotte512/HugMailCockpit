@@ -87,6 +87,8 @@ const hugMailComposeModal = {
             uploadedMedia: [],
             uploadTag: 'hug-mail-cockpit-attachment',
             snippetPickerKey: 0,
+            saveSnippetDialogOpen: false,
+            saveSnippetName: '',
             preview: {
                 open: false,
                 subject: null,
@@ -103,6 +105,10 @@ const hugMailComposeModal = {
 
         canUseTwigEditor() {
             return this.acl.can('hug_mail_cockpit.twig_editor');
+        },
+
+        canSaveSnippet() {
+            return this.acl.can('hug_mail_text_snippet:create');
         },
 
         twigContentWarningVisible() {
@@ -393,6 +399,40 @@ const hugMailComposeModal = {
                 : String(error);
 
             this.createNotificationError({ message });
+        },
+
+        async saveAsSnippet() {
+            const name = this.saveSnippetName.trim();
+
+            if (name === '') {
+                return;
+            }
+
+            try {
+                const repository = this.repositoryFactory.create('hug_mail_text_snippet');
+                const entity = repository.create(Shopware.Context.api);
+                entity.name = name;
+                entity.content = this.contentHtml;
+                await repository.save(entity, Shopware.Context.api);
+
+                this.saveSnippetDialogOpen = false;
+                this.saveSnippetName = '';
+                // Remount the picker so the new snippet appears immediately.
+                this.snippetPickerKey += 1;
+
+                this.createNotificationSuccess({
+                    message: this.$tc('hug-mail-cockpit.composeModal.saveAsSnippetSuccess'),
+                });
+            } catch (error) {
+                this.showApiError(error);
+            }
+        },
+
+        onSaveSnippetDialogChange(isOpen) {
+            if (!isOpen) {
+                this.saveSnippetDialogOpen = false;
+                this.saveSnippetName = '';
+            }
         },
 
         onModalChange(isOpen) {
