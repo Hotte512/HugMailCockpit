@@ -3,11 +3,11 @@
   "entryPoints": {
     "hug-mail-cockpit": {
       "css": [
-        "/bundles/hugmailcockpit/administration/assets/hug-mail-cockpit-Cn5c2ozK.css"
+        "/bundles/hugmailcockpit/administration/assets/hug-mail-cockpit-B9x8wNmn.css"
       ],
       "dynamic": [],
       "js": [
-        "/bundles/hugmailcockpit/administration/assets/hug-mail-cockpit-BEiQzl9b.js"
+        "/bundles/hugmailcockpit/administration/assets/hug-mail-cockpit-B77LAoO9.js"
       ],
       "legacy": false,
       "preload": []
