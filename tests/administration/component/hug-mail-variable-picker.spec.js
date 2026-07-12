@@ -5,6 +5,8 @@ const VARIABLES = {
     order: {
         orderNumber: '10001',
         amountTotal: '99.9',
+        billingAddressId: 'a0b1c2d3e4f5a0b1c2d3e4f5a0b1c2d3',
+        deepLinkCode: 'xYz',
         orderCustomer: null,
     },
     salesChannel: {
@@ -12,12 +14,19 @@ const VARIABLES = {
     },
 };
 
+const LABELS = {
+    'hug-mail-cockpit.variables.order.orderNumber': 'Bestellnummer',
+    'hug-mail-cockpit.variables.order.amountTotal': 'Gesamtbetrag (brutto)',
+    'hug-mail-cockpit.variables.salesChannel.name': 'Verkaufskanal',
+};
+
 function createWrapper(props = {}) {
     return mount(hugMailVariablePicker, {
         props: { variables: VARIABLES, ...props },
         global: {
             mocks: {
-                $tc: (key) => key,
+                $tc: (key) => LABELS[key] ?? key,
+                $te: (key) => key in LABELS,
             },
             stubs: {
                 'mt-text-field': {
@@ -31,33 +40,40 @@ function createWrapper(props = {}) {
 }
 
 describe('hug-mail-variable-picker', () => {
-    it('renders all variable groups (snapshot)', () => {
+    it('renders translated labels sorted alphabetically (snapshot)', () => {
         const wrapper = createWrapper();
 
         expect(wrapper.html()).toMatchSnapshot();
     });
 
-    it('inserts the real value in values mode', async () => {
+    it('shows translated labels and inserts the real value in values mode', async () => {
         const wrapper = createWrapper();
 
         const orderNumberButton = wrapper
             .findAll('.hug-mail-variable-picker__variable')
-            .find((button) => button.text().startsWith('orderNumber'));
+            .find((button) => button.text().startsWith('Bestellnummer'));
 
+        expect(orderNumberButton).toBeDefined();
         await orderNumberButton.trigger('click');
 
         expect(wrapper.emitted('variable-selected')).toEqual([['10001']]);
     });
 
-    it('hides non-scalar variables in values mode', () => {
-        const wrapper = createWrapper();
+    it('shows only curated (translated) entries in values mode', () => {
+        const visible = createWrapper().findAll('.hug-mail-variable-picker__variable').map((b) => b.text());
 
-        const labels = wrapper.findAll('.hug-mail-variable-picker__variable').map((b) => b.text());
-        expect(labels.some((label) => label.startsWith('orderCustomer'))).toBe(false);
+        expect(visible).toHaveLength(3);
+        expect(visible.some((label) => label.includes('billingAddressId'))).toBe(false);
+        expect(visible.some((label) => label.includes('deepLinkCode'))).toBe(false);
+        expect(visible.some((label) => label.includes('orderCustomer'))).toBe(false);
     });
 
-    it('inserts the twig expression in expressions mode', async () => {
+    it('shows all technical keys and inserts expressions in expressions mode', async () => {
         const wrapper = createWrapper({ mode: 'expressions' });
+
+        const labels = wrapper.findAll('.hug-mail-variable-picker__variable').map((b) => b.text());
+        expect(labels.some((label) => label.startsWith('billingAddressId'))).toBe(true);
+        expect(labels.some((label) => label.startsWith('orderCustomer'))).toBe(true);
 
         const customerButton = wrapper
             .findAll('.hug-mail-variable-picker__variable')
@@ -68,13 +84,17 @@ describe('hug-mail-variable-picker', () => {
         expect(wrapper.emitted('variable-selected')).toEqual([['{{ order.orderCustomer }}']]);
     });
 
-    it('filters variables by search term', async () => {
+    it('filters by translated label and by technical key', async () => {
         const wrapper = createWrapper();
 
-        await wrapper.find('.mt-text-field-stub').setValue('amount');
-
-        const visible = wrapper.findAll('.hug-mail-variable-picker__variable').map((b) => b.text());
+        await wrapper.find('.mt-text-field-stub').setValue('Gesamtbetrag');
+        let visible = wrapper.findAll('.hug-mail-variable-picker__variable').map((b) => b.text());
         expect(visible).toHaveLength(1);
-        expect(visible[0].startsWith('amountTotal')).toBe(true);
+        expect(visible[0].startsWith('Gesamtbetrag')).toBe(true);
+
+        await wrapper.find('.mt-text-field-stub').setValue('amountTot');
+        visible = wrapper.findAll('.hug-mail-variable-picker__variable').map((b) => b.text());
+        expect(visible).toHaveLength(1);
+        expect(visible[0].startsWith('Gesamtbetrag')).toBe(true);
     });
 });

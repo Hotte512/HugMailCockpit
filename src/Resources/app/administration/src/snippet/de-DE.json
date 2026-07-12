@@ -99,6 +99,34 @@
             "nameLabel": "Name",
             "saveSuccess": "Die Textvorlage wurde gespeichert.",
             "insertPlaceholder": "Textvorlage einfügen …"
+        },
+        "variables": {
+            "order": {
+                "orderNumber": "Bestellnummer",
+                "orderDate": "Bestelldatum",
+                "orderDateTime": "Bestelldatum (mit Uhrzeit)",
+                "amountTotal": "Gesamtbetrag (brutto)",
+                "amountNet": "Gesamtbetrag (netto)",
+                "shippingTotal": "Versandkosten",
+                "positionPrice": "Summe der Positionen",
+                "customerComment": "Kundenkommentar",
+                "affiliateCode": "Partner-Code",
+                "campaignCode": "Aktions-Code",
+                "createdAt": "Erstellt am"
+            },
+            "customer": {
+                "firstName": "Vorname",
+                "lastName": "Nachname",
+                "email": "E-Mail-Adresse",
+                "customerNumber": "Kundennummer",
+                "company": "Firma",
+                "title": "Titel",
+                "birthday": "Geburtstag",
+                "createdAt": "Kunde seit"
+            },
+            "salesChannel": {
+                "name": "Verkaufskanal"
+            }
         }
     }
 }

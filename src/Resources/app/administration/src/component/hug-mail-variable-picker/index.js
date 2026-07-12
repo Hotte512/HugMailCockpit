@@ -5,9 +5,11 @@ import './hug-mail-variable-picker.scss';
  * Sidebar panel of the compose modal. `variables` maps root keys to
  * key => scalar value entries (value null for non-scalar properties).
  *
- * mode 'values' (default, simple editor): clicking inserts the real value;
- * entries without a value are hidden — the user works with final content.
- * mode 'expressions' (twig editor): clicking inserts `{{ root.key }}`.
+ * mode 'values' (default, simple editor): clicking inserts the real value.
+ * Only curated variables (with a translated label under
+ * hug-mail-cockpit.variables.*) are shown — everything technical stays out.
+ * mode 'expressions' (twig editor): all keys, technical names, clicking
+ * inserts `{{ root.key }}`.
  */
 const hugMailVariablePicker = {
     template,
@@ -40,19 +42,26 @@ const hugMailVariablePicker = {
             const filtered = {};
 
             Object.entries(this.variables).forEach(([rootKey, entries]) => {
-                const matches = {};
+                const matches = Object.entries(entries)
+                    .filter(([key, value]) => {
+                        if (this.mode !== 'values') {
+                            return true;
+                        }
 
-                Object.entries(entries).forEach(([key, value]) => {
-                    if (this.mode === 'values' && value === null) {
-                        return;
-                    }
+                        return value !== null && this.hasCuratedLabel(rootKey, key);
+                    })
+                    .map(([key, value]) => ({
+                        key,
+                        value,
+                        label: this.labelFor(rootKey, key),
+                    }))
+                    .filter((entry) => term === ''
+                        || entry.label.toLowerCase().includes(term)
+                        || entry.key.toLowerCase().includes(term)
+                        || rootKey.toLowerCase().includes(term))
+                    .sort((a, b) => a.label.localeCompare(b.label));
 
-                    if (term === '' || key.toLowerCase().includes(term) || rootKey.toLowerCase().includes(term)) {
-                        matches[key] = value;
-                    }
-                });
-
-                if (Object.keys(matches).length > 0) {
+                if (matches.length > 0) {
                     filtered[rootKey] = matches;
                 }
             });
@@ -66,6 +75,19 @@ const hugMailVariablePicker = {
     },
 
     methods: {
+        hasCuratedLabel(rootKey, key) {
+            return typeof this.$te === 'function'
+                && this.$te(`hug-mail-cockpit.variables.${rootKey}.${key}`);
+        },
+
+        labelFor(rootKey, key) {
+            if (this.mode !== 'values' || !this.hasCuratedLabel(rootKey, key)) {
+                return key;
+            }
+
+            return this.$tc(`hug-mail-cockpit.variables.${rootKey}.${key}`);
+        },
+
         isGroupOpen(rootKey) {
             return this.openGroups.includes(rootKey);
         },
@@ -88,14 +110,14 @@ const hugMailVariablePicker = {
             return value.length > 24 ? `${value.slice(0, 24)}…` : value;
         },
 
-        selectVariable(rootKey, key, value) {
-            if (this.mode === 'values' && value !== null) {
-                this.$emit('variable-selected', value);
+        selectVariable(rootKey, entry) {
+            if (this.mode === 'values' && entry.value !== null) {
+                this.$emit('variable-selected', entry.value);
 
                 return;
             }
 
-            this.$emit('variable-selected', this.buildExpression(rootKey, key));
+            this.$emit('variable-selected', this.buildExpression(rootKey, entry.key));
         },
     },
 };

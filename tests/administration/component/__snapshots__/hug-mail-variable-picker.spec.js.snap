@@ -1,21 +1,21 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`hug-mail-variable-picker renders all variable groups (snapshot) 1`] = `
+exports[`hug-mail-variable-picker renders translated labels sorted alphabetically (snapshot) 1`] = `
 "<div class="hug-mail-variable-picker"><input class="mt-text-field-stub" value="">
   <p class="hug-mail-variable-picker__hint">hug-mail-cockpit.variablePicker.hintValues</p>
   <div class="hug-mail-variable-picker__group"><button type="button" class="hug-mail-variable-picker__root">
       <mt-icon-stub name="regular-chevron-down-xxs" size="12px"></mt-icon-stub> order
     </button>
     <ul class="hug-mail-variable-picker__list">
-      <li><button type="button" class="hug-mail-variable-picker__variable" title="10001">orderNumber <span class="hug-mail-variable-picker__value">10001</span></button></li>
-      <li><button type="button" class="hug-mail-variable-picker__variable" title="99.9">amountTotal <span class="hug-mail-variable-picker__value">99.9</span></button></li>
+      <li><button type="button" class="hug-mail-variable-picker__variable" title="10001">Bestellnummer <span class="hug-mail-variable-picker__value">10001</span></button></li>
+      <li><button type="button" class="hug-mail-variable-picker__variable" title="99.9">Gesamtbetrag (brutto) <span class="hug-mail-variable-picker__value">99.9</span></button></li>
     </ul>
   </div>
   <div class="hug-mail-variable-picker__group"><button type="button" class="hug-mail-variable-picker__root">
       <mt-icon-stub name="regular-chevron-down-xxs" size="12px"></mt-icon-stub> salesChannel
     </button>
     <ul class="hug-mail-variable-picker__list">
-      <li><button type="button" class="hug-mail-variable-picker__variable" title="Storefront">name <span class="hug-mail-variable-picker__value">Storefront</span></button></li>
+      <li><button type="button" class="hug-mail-variable-picker__variable" title="Storefront">Verkaufskanal <span class="hug-mail-variable-picker__value">Storefront</span></button></li>
     </ul>
   </div>
   <!--v-if-->

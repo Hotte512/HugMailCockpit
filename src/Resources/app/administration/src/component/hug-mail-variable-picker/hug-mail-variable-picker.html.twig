@@ -29,15 +29,15 @@
         </button>
 
         <ul v-if="isGroupOpen(rootKey)" class="hug-mail-variable-picker__list">
-            <li v-for="(value, key) in entries" :key="key">
+            <li v-for="entry in entries" :key="entry.key">
                 <button
                     type="button"
                     class="hug-mail-variable-picker__variable"
-                    :title="value !== null ? value : buildExpression(rootKey, key)"
-                    @click="selectVariable(rootKey, key, value)"
+                    :title="entry.value !== null ? entry.value : buildExpression(rootKey, entry.key)"
+                    @click="selectVariable(rootKey, entry)"
                 >
-                    {{ key }}
-                    <span v-if="value !== null" class="hug-mail-variable-picker__value">{{ shorten(value) }}</span>
+                    {{ entry.label }}
+                    <span v-if="entry.value !== null" class="hug-mail-variable-picker__value">{{ shorten(entry.value) }}</span>
                 </button>
             </li>
         </ul>

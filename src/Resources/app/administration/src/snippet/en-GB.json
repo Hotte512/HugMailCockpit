@@ -99,6 +99,34 @@
             "nameLabel": "Name",
             "saveSuccess": "The text snippet has been saved.",
             "insertPlaceholder": "Insert text snippet …"
+        },
+        "variables": {
+            "order": {
+                "orderNumber": "Order number",
+                "orderDate": "Order date",
+                "orderDateTime": "Order date (with time)",
+                "amountTotal": "Total (gross)",
+                "amountNet": "Total (net)",
+                "shippingTotal": "Shipping costs",
+                "positionPrice": "Sum of positions",
+                "customerComment": "Customer comment",
+                "affiliateCode": "Affiliate code",
+                "campaignCode": "Campaign code",
+                "createdAt": "Created at"
+            },
+            "customer": {
+                "firstName": "First name",
+                "lastName": "Last name",
+                "email": "E-mail address",
+                "customerNumber": "Customer number",
+                "company": "Company",
+                "title": "Title",
+                "birthday": "Birthday",
+                "createdAt": "Customer since"
+            },
+            "salesChannel": {
+                "name": "Sales channel"
+            }
         }
     }
 }
