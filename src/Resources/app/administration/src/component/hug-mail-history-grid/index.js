@@ -32,6 +32,7 @@ const hugMailHistoryGrid = {
             archiveUnavailable: false,
             entries: [],
             detailEntry: null,
+            selectedEntry: null,
         };
     },
 
@@ -55,7 +56,47 @@ const hugMailHistoryGrid = {
         this.loadHistory();
     },
 
+    mounted() {
+        // sw-data-grid has no row-click event — delegate on the component
+        // root and resolve the entry via the row index class. Single click
+        // fills the inline preview pane, double click opens the modal.
+        this.$el.addEventListener('click', this.onGridClick);
+        this.$el.addEventListener('dblclick', this.onGridDoubleClick);
+    },
+
+    beforeUnmount() {
+        this.$el.removeEventListener('click', this.onGridClick);
+        this.$el.removeEventListener('dblclick', this.onGridDoubleClick);
+    },
+
     methods: {
+        resolveRowEntry(event) {
+            const row = event.target.closest('.sw-data-grid__body .sw-data-grid__row');
+
+            if (!row || !this.$el.contains(row)) {
+                return null;
+            }
+
+            const match = row.className.match(/sw-data-grid__row--(\d+)/);
+
+            return match ? this.entries[Number(match[1])] ?? null : null;
+        },
+
+        onGridClick(event) {
+            const entry = this.resolveRowEntry(event);
+
+            if (entry) {
+                this.selectedEntry = entry;
+            }
+        },
+
+        onGridDoubleClick(event) {
+            const entry = this.resolveRowEntry(event);
+
+            if (entry) {
+                this.detailEntry = entry;
+            }
+        },
         async loadHistory() {
             this.isLoading = true;
 
@@ -66,6 +107,8 @@ const hugMailHistoryGrid = {
                 });
 
                 this.entries = result.entries ?? [];
+                // Preview pane starts with the most recent mail.
+                this.selectedEntry = this.entries[0] ?? null;
             } catch (error) {
                 if (error && error.response && error.response.status === 404) {
                     this.archiveUnavailable = true;

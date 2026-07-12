@@ -76,7 +76,8 @@
                 "failed": "Failed",
                 "unknown": "Unknown"
             },
-            "actionOpenArchive": "Open in mail archive (EML, resend)"
+            "actionOpenArchive": "Open in mail archive (EML, resend)",
+            "previewPlaceholder": "Click a mail in the list to see the preview — double click opens the full view."
         },
         "previewCard": {
             "title": "Test with a real order",

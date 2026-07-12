@@ -17,39 +17,59 @@
             icon="regular-envelope"
         />
 
-        <sw-data-grid
-            v-else
-            :data-source="entries"
-            :columns="columns"
-            :show-selection="false"
-            :show-actions="true"
-            :plain-appearance="true"
-            identifier="hug-mail-history-grid"
-        >
-            <template #column-createdAt="{ item }">
-                {{ dateFilter(item.createdAt) }}
-            </template>
+        <div v-else class="hug-mail-history-grid__layout">
+            <div class="hug-mail-history-grid__list">
+                <sw-data-grid
+                    :data-source="entries"
+                    :columns="columns"
+                    :show-selection="false"
+                    :show-actions="true"
+                    :plain-appearance="true"
+                    identifier="hug-mail-history-grid"
+                >
+                    <template #column-createdAt="{ item }">
+                        {{ dateFilter(item.createdAt) }}
+                    </template>
 
-            <template #column-receiver="{ item }">
-                {{ formatAddresses(item.receiver) }}
-            </template>
+                    <template #column-receiver="{ item }">
+                        {{ formatAddresses(item.receiver) }}
+                    </template>
 
-            <template #column-transportState="{ item }">
-                {{ $tc('hug-mail-cockpit.history.state.' + (item.transportState || 'unknown')) }}
-            </template>
+                    <template #column-transportState="{ item }">
+                        {{ $tc('hug-mail-cockpit.history.state.' + (item.transportState || 'unknown')) }}
+                    </template>
 
-            <template #actions="{ item }">
-                <sw-context-menu-item @click="openDetail(item)">
-                    {{ $tc('hug-mail-cockpit.history.actionView') }}
-                </sw-context-menu-item>
-                <sw-context-menu-item @click="$emit('reply', item)">
-                    {{ $tc('hug-mail-cockpit.history.actionReply') }}
-                </sw-context-menu-item>
-                <sw-context-menu-item @click="openInMailArchive(item)">
-                    {{ $tc('hug-mail-cockpit.history.actionOpenArchive') }}
-                </sw-context-menu-item>
-            </template>
-        </sw-data-grid>
+                    <template #actions="{ item }">
+                        <sw-context-menu-item @click="openDetail(item)">
+                            {{ $tc('hug-mail-cockpit.history.actionView') }}
+                        </sw-context-menu-item>
+                        <sw-context-menu-item @click="$emit('reply', item)">
+                            {{ $tc('hug-mail-cockpit.history.actionReply') }}
+                        </sw-context-menu-item>
+                        <sw-context-menu-item @click="openInMailArchive(item)">
+                            {{ $tc('hug-mail-cockpit.history.actionOpenArchive') }}
+                        </sw-context-menu-item>
+                    </template>
+                </sw-data-grid>
+            </div>
+
+            <aside class="hug-mail-history-grid__preview">
+                <template v-if="selectedEntry">
+                    <p class="hug-mail-history-grid__preview-meta">
+                        <strong>{{ selectedEntry.subject }}</strong><br>
+                        {{ formatAddresses(selectedEntry.receiver) }} · {{ dateFilter(selectedEntry.createdAt) }}
+                    </p>
+                    <iframe
+                        class="hug-mail-history-grid__preview-frame"
+                        sandbox=""
+                        :srcdoc="selectedEntry.htmlText || ''"
+                    ></iframe>
+                </template>
+                <p v-else class="hug-mail-history-grid__preview-placeholder">
+                    {{ $tc('hug-mail-cockpit.history.previewPlaceholder') }}
+                </p>
+            </aside>
+        </div>
     </template>
 
     <mt-modal-root v-if="detailEntry" :is-open="true" @change="onDetailModalChange">

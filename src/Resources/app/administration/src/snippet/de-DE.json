@@ -76,7 +76,8 @@
                 "failed": "Fehlgeschlagen",
                 "unknown": "Unbekannt"
             },
-            "actionOpenArchive": "Im Mail-Archiv öffnen (EML, erneut senden)"
+            "actionOpenArchive": "Im Mail-Archiv öffnen (EML, erneut senden)",
+            "previewPlaceholder": "E-Mail in der Liste anklicken, um die Vorschau zu sehen — Doppelklick öffnet die Großansicht."
         },
         "previewCard": {
             "title": "Test mit echter Bestellung",

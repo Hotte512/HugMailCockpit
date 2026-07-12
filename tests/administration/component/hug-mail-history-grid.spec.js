@@ -14,6 +14,16 @@ const ENTRIES = [
         attachmentCount: 1,
         createdAt: '2026-07-01T10:00:00+00:00',
     },
+    {
+        id: 'entry-2',
+        subject: 'Order confirmation',
+        receiver: { 'max@example.com': 'Max' },
+        transportState: 'sent',
+        mailTemplateId: null,
+        htmlText: '<p>Older body</p>',
+        attachmentCount: 0,
+        createdAt: '2026-06-01T10:00:00+00:00',
+    },
 ];
 
 function createWrapper({ apiOverrides = {} } = {}) {
@@ -34,7 +44,14 @@ function createWrapper({ apiOverrides = {} } = {}) {
             stubs: {
                 'sw-loader': true,
                 'sw-data-grid': {
-                    template: '<table class="sw-data-grid-stub"><slot name="actions" :item="dataSource[0]" /></table>',
+                    template: `<table class="sw-data-grid-stub">
+                        <tbody class="sw-data-grid__body">
+                            <tr v-for="(item, index) in dataSource" :key="item.id" :class="'sw-data-grid__row sw-data-grid__row--' + index">
+                                <td>{{ item.subject }}</td>
+                            </tr>
+                        </tbody>
+                        <slot name="actions" :item="dataSource[0]" />
+                    </table>`,
                     props: ['dataSource', 'columns'],
                 },
                 'sw-context-menu-item': {
@@ -78,6 +95,32 @@ describe('hug-mail-history-grid', () => {
 
         expect(wrapper.vm.archiveUnavailable).toBe(true);
         expect(wrapper.find('.mt-banner-stub').exists()).toBe(true);
+    });
+
+    it('preselects the most recent mail for the preview pane', async () => {
+        const { wrapper } = createWrapper();
+        await flushPromises();
+
+        expect(wrapper.vm.selectedEntry).toEqual(ENTRIES[0]);
+        expect(wrapper.find('.hug-mail-history-grid__preview-frame').exists()).toBe(true);
+    });
+
+    it('shows the clicked row in the preview pane', async () => {
+        const { wrapper } = createWrapper();
+        await flushPromises();
+
+        await wrapper.findAll('.sw-data-grid__row')[1].trigger('click');
+
+        expect(wrapper.vm.selectedEntry).toEqual(ENTRIES[1]);
+    });
+
+    it('opens the modal on double click', async () => {
+        const { wrapper } = createWrapper();
+        await flushPromises();
+
+        await wrapper.findAll('.sw-data-grid__row')[1].trigger('dblclick');
+
+        expect(wrapper.vm.detailEntry).toEqual(ENTRIES[1]);
     });
 
     it('opens the detail modal via the view action', async () => {

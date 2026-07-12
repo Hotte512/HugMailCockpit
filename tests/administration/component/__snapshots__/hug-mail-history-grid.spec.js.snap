@@ -2,7 +2,23 @@
 
 exports[`hug-mail-history-grid loads and renders the history (snapshot) 1`] = `
 "<div class="hug-mail-history-grid">
-  <table class="sw-data-grid-stub" show-selection="false" show-actions="true" plain-appearance="true" identifier="hug-mail-history-grid"><button class="sw-context-menu-item-stub">hug-mail-cockpit.history.actionView</button><button class="sw-context-menu-item-stub">hug-mail-cockpit.history.actionReply</button><button class="sw-context-menu-item-stub">hug-mail-cockpit.history.actionOpenArchive</button></table>
+  <div class="hug-mail-history-grid__layout">
+    <div class="hug-mail-history-grid__list">
+      <table class="sw-data-grid-stub" show-selection="false" show-actions="true" plain-appearance="true" identifier="hug-mail-history-grid">
+        <tbody class="sw-data-grid__body">
+          <tr class="sw-data-grid__row sw-data-grid__row--0">
+            <td>Your invoice</td>
+          </tr>
+          <tr class="sw-data-grid__row sw-data-grid__row--1">
+            <td>Order confirmation</td>
+          </tr>
+        </tbody><button class="sw-context-menu-item-stub">hug-mail-cockpit.history.actionView</button><button class="sw-context-menu-item-stub">hug-mail-cockpit.history.actionReply</button><button class="sw-context-menu-item-stub">hug-mail-cockpit.history.actionOpenArchive</button>
+      </table>
+    </div>
+    <aside class="hug-mail-history-grid__preview">
+      <p class="hug-mail-history-grid__preview-meta"><strong>Your invoice</strong><br> max@example.com · 2026-07-01T10:00:00+00:00</p><iframe class="hug-mail-history-grid__preview-frame" sandbox="" srcdoc="<p>Body</p>"></iframe>
+    </aside>
+  </div>
   <!--v-if-->
 </div>"
 `;

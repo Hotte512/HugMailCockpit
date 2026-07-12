@@ -1,4 +1,43 @@
 .hug-mail-history-grid {
+    &__layout {
+        display: grid;
+        grid-template-columns: minmax(420px, 1.2fr) minmax(320px, 1fr);
+        gap: 16px;
+        align-items: start;
+
+        @media (max-width: 1200px) {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    &__list {
+        .sw-data-grid__body .sw-data-grid__row {
+            cursor: pointer;
+        }
+    }
+
+    &__preview {
+        border: 1px solid var(--color-border-primary-default, #d1d9e0);
+        border-radius: 8px;
+        padding: 12px;
+        min-height: 320px;
+    }
+
+    &__preview-meta {
+        margin-bottom: 8px;
+    }
+
+    &__preview-frame {
+        width: 100%;
+        min-height: 380px;
+        border: none;
+        background: #fff;
+    }
+
+    &__preview-placeholder {
+        color: var(--color-text-tertiary-default, #8a8f98);
+    }
+
     &__detail-meta {
         margin-bottom: 8px;
         color: var(--color-text-tertiary-default, #8a8f98);
