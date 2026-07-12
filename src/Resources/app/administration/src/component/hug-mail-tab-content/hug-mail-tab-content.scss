@@ -1,11 +1,8 @@
 .hug-mail-tab-content {
-    // Cards are capped at ~960px by default — the mail-client layout
-    // (list + preview) should use the full tab width.
-    .mt-card,
-    .sw-card {
-        max-width: none;
-        width: 100%;
-    }
+    // The card itself carries mt-card--future-ignore-max-width (Meteor's
+    // official escape from the scoped 60rem cap — a plain CSS override
+    // loses against the scoped rule by source order).
+    width: 100%;
 
     &__no-history {
         color: var(--color-text-tertiary-default, #8a8f98);

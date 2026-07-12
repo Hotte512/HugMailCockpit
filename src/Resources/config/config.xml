@@ -10,8 +10,8 @@
             <name>freeMailEnabled</name>
             <label lang="de-DE">F1: Freie E-Mails verfassen</label>
             <label lang="en-GB">F1: Compose free e-mails</label>
-            <helpText lang="de-DE">Button „E-Mail senden" in der Smart Bar von Bestell- und Kundendetail. Benötigt das ACL-Recht „Freie Mails verfassen".</helpText>
-            <helpText lang="en-GB">"Send e-mail" button in the smart bar of order and customer detail. Requires the "compose free mails" ACL privilege.</helpText>
+            <helpText lang="de-DE">Button „E-Mail senden" im Tab „E-Mails" von Bestell- und Kundendetail. Benötigt das ACL-Recht „Freie E-Mails verfassen".</helpText>
+            <helpText lang="en-GB">"Send e-mail" button in the "E-mails" tab of order and customer detail. Requires the "compose free e-mails" ACL privilege.</helpText>
             <defaultValue>true</defaultValue>
         </input-field>
 

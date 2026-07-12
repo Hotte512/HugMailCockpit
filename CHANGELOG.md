@@ -7,6 +7,7 @@ Format angelehnt an [Keep a Changelog](https://keepachangelog.com/de/1.1.0/); Ve
 ## [Unreleased]
 
 ### Hinzugefügt
+- Benutzeranleitung (docs/benutzerhandbuch.md) für Shop-Mitarbeiter und Admins; README für Veröffentlichung überarbeitet
 - Mail-Tab mit integriertem Vorschau-Bereich (Mail-Client-Layout): Liste links, Vorschau rechts; Klick auf eine Zeile zeigt die Mail sofort an, Doppelklick öffnet die Großansicht; die neueste Mail ist vorausgewählt
 - Uploads aus dem Compose-Modal landen im dedizierten Media-Ordner „Mail-Cockpit Anhänge" (wird bei Installation/Update angelegt) statt im Wurzelverzeichnis der Medienverwaltung
 - Plugin-Icon (Store-Vorbereitung)
@@ -40,6 +41,8 @@ Format angelehnt an [Keep a Changelog](https://keepachangelog.com/de/1.1.0/); Ve
 - Mail-Kontext enthält jetzt `salesChannel`/`salesChannelId` wie beim echten Versand (behebt Render-Fehler bei Standard-Templates)
 
 ### Behoben
+- Card im E-Mails-Tab nutzt jetzt wirklich die volle Content-Breite (Meteor-Card-Deckel von 60rem via offizieller Escape-Klasse aufgehoben)
+- Veralteter Smart-Bar-Hinweis im Hilfetext der Plugin-Konfiguration korrigiert
 - Leerer Editor war nicht beschreibbar (Meteor-Editor-Gate bei TipTap-instabilem Inhalt) — Inhalt startet jetzt TipTap-stabil
 
 ### Geändert
