@@ -61,6 +61,20 @@ Jede Zeile hat rechts ein Kontextmenü („…") mit drei Aktionen:
 
 ---
 
+## Textvorlagen: Textbausteine wiederverwenden
+
+Für wiederkehrende Formulierungen (Grußformeln, Standardantworten, Rückgabe-Hinweise) gibt es **Textvorlagen**:
+
+1. Öffne beim Schreiben einer E-Mail das Dropdown **„Textvorlage einfügen …"** (rechts neben den Editor-Schaltflächen „Einfach"/„Twig").
+2. Wähle eine Vorlage aus — der Text wird an der aktuellen Cursorposition eingefügt.
+3. Du kannst den eingefügten Text danach frei bearbeiten.
+
+💡 Textvorlagen dürfen einfache Variablen enthalten (z. B. `{{ order.orderNumber }}`) — sie werden beim Versand automatisch durch die echten Werte ersetzt.
+
+**Textvorlagen anlegen und pflegen** (Admin): *Erweiterungen → Meine Erweiterungen → Mail-Cockpit → Konfiguration* → Bereich **„Textvorlagen (Textbausteine)"**. Dort kannst du Vorlagen anlegen („Neue Textvorlage"), bearbeiten und löschen.
+
+---
+
 ## 3. Dokumente per E-Mail versenden
 
 Rechnung oder Lieferschein an den Kunden schicken — direkt aus der Dokumentenliste:

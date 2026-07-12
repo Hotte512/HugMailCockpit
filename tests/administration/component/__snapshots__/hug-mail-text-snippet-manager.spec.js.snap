@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`hug-mail-text-snippet-manager lists the snippets sorted (snapshot) 1`] = `
+"<div class="hug-mail-text-snippet-manager">
+  <p class="hug-mail-text-snippet-manager__hint">hug-mail-cockpit.textSnippets.hint</p>
+  <table class="hug-mail-text-snippet-manager__list">
+    <tr>
+      <td class="hug-mail-text-snippet-manager__name">Grußformel</td>
+      <td class="hug-mail-text-snippet-manager__row-actions"><button class="mt-button-stub">hug-mail-cockpit.textSnippets.edit</button><button class="mt-button-stub">global.default.delete</button></td>
+    </tr>
+    <tr>
+      <td class="hug-mail-text-snippet-manager__name">Rückgabe-Hinweis</td>
+      <td class="hug-mail-text-snippet-manager__row-actions"><button class="mt-button-stub">hug-mail-cockpit.textSnippets.edit</button><button class="mt-button-stub">global.default.delete</button></td>
+    </tr>
+  </table><button class="mt-button-stub">hug-mail-cockpit.textSnippets.add</button>
+</div>"
+`;

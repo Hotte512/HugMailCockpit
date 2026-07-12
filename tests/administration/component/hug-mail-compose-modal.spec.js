@@ -27,11 +27,17 @@ function createWrapper({ acl = { can: () => true }, apiOverrides = {}, props = {
         ...apiOverrides,
     };
 
+    const snippetRepository = {
+        get: jest.fn().mockResolvedValue({ id: 'snippet-1', name: 'Gruß', content: '<p>Viele Grüße</p>' }),
+    };
+
     const repositoryFactory = {
-        create: () => ({
-            search: jest.fn().mockResolvedValue([]),
-            get: jest.fn().mockResolvedValue({ name: 'Deutsch' }),
-        }),
+        create: (entityName) => (entityName === 'hug_mail_text_snippet'
+            ? snippetRepository
+            : {
+                search: jest.fn().mockResolvedValue([]),
+                get: jest.fn().mockResolvedValue({ name: 'Deutsch' }),
+            }),
     };
 
     const wrapper = mount(hugMailComposeModal, {
@@ -175,6 +181,29 @@ describe('hug-mail-compose-modal', () => {
         await flushPromises();
 
         expect(wrapper.vm.contentHtml).toBe('<p></p>');
+    });
+
+    it('inserts a selected text snippet into the content', async () => {
+        const { wrapper } = createWrapper();
+        await flushPromises();
+
+        wrapper.vm.contentHtml = '<p>Hallo</p>';
+        await wrapper.vm.onSnippetSelected('snippet-1');
+
+        // jsdom has no editor refs — the fallback appends the snippet.
+        expect(wrapper.vm.contentHtml).toBe('<p>Hallo</p><p>Viele Grüße</p>');
+        expect(wrapper.vm.snippetPickerKey).toBe(1);
+    });
+
+    it('ignores an empty snippet selection', async () => {
+        const { wrapper } = createWrapper();
+        await flushPromises();
+
+        wrapper.vm.contentHtml = '<p>Hallo</p>';
+        await wrapper.vm.onSnippetSelected(null);
+
+        expect(wrapper.vm.contentHtml).toBe('<p>Hallo</p>');
+        expect(wrapper.vm.snippetPickerKey).toBe(0);
     });
 
     it('shows the twig warning in simple mode when content contains twig blocks', async () => {

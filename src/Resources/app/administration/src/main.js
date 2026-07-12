@@ -5,6 +5,7 @@ import './component/hug-mail-compose-modal';
 import './component/hug-mail-history-grid';
 import './component/hug-mail-tab-content';
 import './component/hug-mail-document-type-mapping';
+import './component/hug-mail-text-snippet-manager';
 import './component/hug-mail-preview-card';
 import './module/hug-mail-cockpit';
 import './extension/sw-order-detail';

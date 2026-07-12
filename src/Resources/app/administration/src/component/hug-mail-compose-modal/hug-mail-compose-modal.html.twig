@@ -70,6 +70,16 @@
                         >
                             {{ $tc('hug-mail-cockpit.composeModal.editorModeTwig') }}
                         </mt-button>
+
+                        <sw-entity-single-select
+                            :key="'snippet-picker-' + snippetPickerKey"
+                            class="hug-mail-compose-modal__snippet-picker"
+                            entity="hug_mail_text_snippet"
+                            label-property="name"
+                            :value="null"
+                            :placeholder="$tc('hug-mail-cockpit.textSnippets.insertPlaceholder')"
+                            @update:value="onSnippetSelected"
+                        />
                     </div>
 
                     <mt-banner

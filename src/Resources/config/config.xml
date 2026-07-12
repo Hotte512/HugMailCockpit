@@ -39,6 +39,12 @@
             <label lang="en-GB">Template mapping per document type (F3)</label>
         </component>
 
+        <component name="hug-mail-text-snippet-manager">
+            <name>textSnippetsPlaceholder</name>
+            <label lang="de-DE">Textvorlagen (Textbausteine)</label>
+            <label lang="en-GB">Text snippets (building blocks)</label>
+        </component>
+
         <input-field type="bool">
             <name>templatePreviewEnabled</name>
             <label lang="de-DE">F4: Template-Vorschau mit echten Bestelldaten</label>

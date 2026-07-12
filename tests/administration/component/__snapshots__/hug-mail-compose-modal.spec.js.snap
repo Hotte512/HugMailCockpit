@@ -8,7 +8,9 @@ exports[`hug-mail-compose-modal renders the compose form after loading the mail 
         <div class="hug-mail-compose-modal__recipients"><label class="mt-text-field-stub" required="">hug-mail-cockpit.composeModal.recipientLabel<input value="max@example.com"></label><button class="mt-button-stub" variant="secondary" size="x-small">hug-mail-cockpit.composeModal.toggleCcBcc</button></div>
         <!--v-if-->
         <sw-entity-single-select-stub entity="mail_template" criteria="[object Object]" label-property="subject" label="hug-mail-cockpit.composeModal.templateLabel" help-text="hug-mail-cockpit.composeModal.templateHelp"></sw-entity-single-select-stub><label class="mt-text-field-stub" required="">hug-mail-cockpit.composeModal.subjectLabel<input value=""></label>
-        <div class="hug-mail-compose-modal__editor-toggle"><button class="mt-button-stub" variant="primary" size="small">hug-mail-cockpit.composeModal.editorModeSimple</button><button class="mt-button-stub" variant="secondary" size="small">hug-mail-cockpit.composeModal.editorModeTwig</button></div>
+        <div class="hug-mail-compose-modal__editor-toggle"><button class="mt-button-stub" variant="primary" size="small">hug-mail-cockpit.composeModal.editorModeSimple</button><button class="mt-button-stub" variant="secondary" size="small">hug-mail-cockpit.composeModal.editorModeTwig</button>
+          <sw-entity-single-select-stub class="hug-mail-compose-modal__snippet-picker" entity="hug_mail_text_snippet" label-property="name" placeholder="hug-mail-cockpit.textSnippets.insertPlaceholder"></sw-entity-single-select-stub>
+        </div>
         <!--v-if-->
         <div class="hug-mail-compose-modal__editor"><textarea class="mt-text-editor-stub" value="<p></p>"></textarea></div>
         <div class="hug-mail-compose-modal__attachments">

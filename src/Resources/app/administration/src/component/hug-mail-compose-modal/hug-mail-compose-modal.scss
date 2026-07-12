@@ -31,6 +31,12 @@
     &__editor-toggle {
         display: flex;
         gap: 4px;
+        align-items: center;
+    }
+
+    &__snippet-picker {
+        margin-left: auto;
+        min-width: 260px;
     }
 
     &__editor {

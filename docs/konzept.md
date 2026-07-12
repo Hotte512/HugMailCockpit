@@ -80,7 +80,7 @@ Leere Mails starten mit `<p></p>` (TipTap-stabil — sonst greift das Gate schon
 - **Vorschau-Button** rendert den aktuellen Editor-Inhalt gegen den echten Order-Context (teilt Code mit F4).
 
 ### Textvorlagen (Textbausteine)
-**Auf 1.1 verschoben** (Entscheidung 11.07.2026): kleine eigene Entity + Pflege-UI + Einfüge-Dropdown im Modal. Übergangsweise decken einfache Mail-Templates ohne Twig den Bedarf.
+**Umgesetzt (12.07.2026, v0.3.0):** Entity `hug_mail_text_snippet` (name, content — bewusst nicht übersetzbar), Pflege als eigene Card in der Plugin-Konfiguration (`hug-mail-text-snippet-manager`, CRUD direkt auf dem Repository), Einfüge-Dropdown im Compose-Modal (fügt an der Cursorposition ein). Einfache Variablen im Baustein (`{{ order.orderNumber }}`) passieren die Twig-Policy und werden beim Versand ersetzt. Leserecht via sender/free_sender-Rollen; Pflege setzt Schreibrechte auf die Entity voraus (Admin).
 
 ### Bulk-Mail aus der Bestellliste
 **Nein in 1.0.** Begründung: DSGVO/Newsletter-Abgrenzung, Missbrauchsrisiko bei Store-Verkauf, braucht MessageQueue + Rate-Limiting. Kandidat für 1.1.

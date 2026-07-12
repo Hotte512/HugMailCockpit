@@ -1,0 +1,53 @@
+<div class="hug-mail-text-snippet-manager">
+    <p class="hug-mail-text-snippet-manager__hint">
+        {{ $tc('hug-mail-cockpit.textSnippets.hint') }}
+    </p>
+
+    <sw-loader v-if="isLoading" />
+
+    <template v-else>
+        <table v-if="snippets.length > 0" class="hug-mail-text-snippet-manager__list">
+            <tr v-for="snippet in snippets" :key="snippet.id">
+                <td class="hug-mail-text-snippet-manager__name">{{ snippet.name }}</td>
+                <td class="hug-mail-text-snippet-manager__row-actions">
+                    <mt-button variant="secondary" size="x-small" @click="startEdit(snippet)">
+                        {{ $tc('hug-mail-cockpit.textSnippets.edit') }}
+                    </mt-button>
+                    <mt-button variant="critical" size="x-small" @click="remove(snippet.id)">
+                        {{ $tc('global.default.delete') }}
+                    </mt-button>
+                </td>
+            </tr>
+        </table>
+
+        <p v-else class="hug-mail-text-snippet-manager__empty">
+            {{ $tc('hug-mail-cockpit.textSnippets.empty') }}
+        </p>
+
+        <div v-if="editing" class="hug-mail-text-snippet-manager__form">
+            <mt-text-field
+                v-model="editing.name"
+                required
+                :label="$tc('hug-mail-cockpit.textSnippets.nameLabel')"
+            />
+            <mt-text-editor v-model="editing.content" />
+            <div class="hug-mail-text-snippet-manager__form-actions">
+                <mt-button variant="secondary" size="small" @click="cancelEdit">
+                    {{ $tc('global.default.cancel') }}
+                </mt-button>
+                <mt-button
+                    variant="primary"
+                    size="small"
+                    :disabled="editing.name.trim() === ''"
+                    @click="save"
+                >
+                    {{ $tc('hug-mail-cockpit.textSnippets.save') }}
+                </mt-button>
+            </div>
+        </div>
+
+        <mt-button v-else variant="secondary" size="small" @click="startCreate">
+            {{ $tc('hug-mail-cockpit.textSnippets.add') }}
+        </mt-button>
+    </template>
+</div>

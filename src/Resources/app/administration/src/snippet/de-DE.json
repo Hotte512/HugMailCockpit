@@ -89,6 +89,16 @@
             "sendTestButton": "Testmail senden",
             "sendTestSuccess": "Die Testmail wurde versendet.",
             "renderFailed": "Die Vorlage konnte nicht gerendert werden."
+        },
+        "textSnippets": {
+            "hint": "Wiederverwendbare Textbausteine (Grußformeln, Standardantworten) für das E-Mail-Schreiben. Einfache Variablen (z. B. die Bestellnummer aus dem Variablen-Picker) sind erlaubt und werden beim Versand ersetzt.",
+            "empty": "Noch keine Textvorlagen angelegt.",
+            "add": "Neue Textvorlage",
+            "edit": "Bearbeiten",
+            "save": "Speichern",
+            "nameLabel": "Name",
+            "saveSuccess": "Die Textvorlage wurde gespeichert.",
+            "insertPlaceholder": "Textvorlage einfügen …"
         }
     }
 }

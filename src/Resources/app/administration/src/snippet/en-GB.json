@@ -89,6 +89,16 @@
             "sendTestButton": "Send test mail",
             "sendTestSuccess": "The test mail has been sent.",
             "renderFailed": "The template could not be rendered."
+        },
+        "textSnippets": {
+            "hint": "Reusable text building blocks (greetings, standard answers) for composing e-mails. Simple variables (e.g. the order number from the variable picker) are allowed and replaced on dispatch.",
+            "empty": "No text snippets created yet.",
+            "add": "New text snippet",
+            "edit": "Edit",
+            "save": "Save",
+            "nameLabel": "Name",
+            "saveSuccess": "The text snippet has been saved.",
+            "insertPlaceholder": "Insert text snippet …"
         }
     }
 }

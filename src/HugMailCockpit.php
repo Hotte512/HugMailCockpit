@@ -78,6 +78,7 @@ class HugMailCockpit extends Plugin
         $connection = $this->container?->get(Connection::class);
         \assert($connection instanceof Connection);
 
+        $connection->executeStatement('DROP TABLE IF EXISTS `hug_mail_text_snippet`');
         $connection->executeStatement('DROP TABLE IF EXISTS `hug_mail_reference`');
     }
 }

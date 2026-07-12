@@ -24,6 +24,7 @@ Shopware.Service('privileges').addPrivilegeMappingEntry({
             privileges: [
                 'hug_mail_reference:read',
                 'hug_mail_reference:create',
+                'hug_mail_text_snippet:read',
                 'document:read',
                 'mail_template:read',
             ],
@@ -33,6 +34,7 @@ Shopware.Service('privileges').addPrivilegeMappingEntry({
             privileges: [
                 'hug_mail_reference:read',
                 'hug_mail_reference:create',
+                'hug_mail_text_snippet:read',
                 'mail_template:read',
                 'media:read',
                 'media:create',

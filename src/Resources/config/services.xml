@@ -11,6 +11,10 @@
             <tag name="shopware.entity.definition" entity="hug_mail_reference"/>
         </service>
 
+        <service id="Hug\MailCockpit\Core\Content\TextSnippet\TextSnippetDefinition">
+            <tag name="shopware.entity.definition" entity="hug_mail_text_snippet"/>
+        </service>
+
         <!-- ============================================================
              F1 backend services (docs/konzept.md §6)
              ============================================================ -->

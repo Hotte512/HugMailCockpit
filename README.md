@@ -8,6 +8,7 @@ Das Herzstück ist der Tab **„E-Mails"** im Bestell- und Kundendetail — mit 
 
 ## Features
 
+- **Textvorlagen** — wiederverwendbare Textbausteine (Grußformeln, Standardantworten), gepflegt in der Plugin-Konfiguration, eingefügt per Dropdown direkt im Editor.
 - **Freie E-Mails verfassen** — aus Bestell- oder Kundendetail; Empfänger vorbefüllt, CC/BCC, Variablen-Picker mit echten Werten (an der Cursorposition), Dokument-Anhänge und Datei-Upload, serverseitige Vorschau inkl. Briefpapier des Verkaufskanals. Twig-Rohmodus als separat berechtigtes Experten-Feature.
 - **Mail-Historie** — je Bestellung und Kunde im Tab „E-Mails" (Anzahl im Tab-Label): Liste links, Live-Vorschau rechts, Doppelklick für die Großansicht; „Antwort verfassen" (vorbefüllt) und Deep-Link ins Mail-Archiv (EML-Download, erneut senden). Basiert auf [FroshPlatformMailArchive](https://github.com/FriendsOfShopware/FroshPlatformMailArchive).
 - **Dokumente mailen** — Kontextmenü-Aktion im Dokumenten-Grid sowie Mehrfachauswahl („Markierte per E-Mail senden" = eine Mail mit n Anhängen); Vorlage je Dokumenttyp konfigurierbar, wird sofort gerendert vorbelegt.

@@ -86,6 +86,7 @@ const hugMailComposeModal = {
             selectedDocumentIds: [...this.preselectedDocumentIds],
             uploadedMedia: [],
             uploadTag: 'hug-mail-cockpit-attachment',
+            snippetPickerKey: 0,
             preview: {
                 open: false,
                 subject: null,
@@ -258,11 +259,32 @@ const hugMailComposeModal = {
         },
 
         onVariableSelected(expression) {
+            this.insertIntoEditor(expression);
+        },
+
+        async onSnippetSelected(snippetId) {
+            if (!snippetId) {
+                return;
+            }
+
+            const snippet = await this.repositoryFactory
+                .create('hug_mail_text_snippet')
+                .get(snippetId, Shopware.Context.api);
+
+            if (snippet && snippet.content) {
+                this.insertIntoEditor(snippet.content);
+            }
+
+            // Remount the select so it is ready for the next insertion.
+            this.snippetPickerKey += 1;
+        },
+
+        insertIntoEditor(content) {
             if (this.editorMode === 'twig') {
                 const aceEditor = this.$refs.codeEditor ? this.$refs.codeEditor.editor : null;
 
                 if (aceEditor) {
-                    aceEditor.session.insert(aceEditor.getCursorPosition(), expression);
+                    aceEditor.session.insert(aceEditor.getCursorPosition(), content);
                     this.contentHtml = aceEditor.getValue();
 
                     return;
@@ -276,15 +298,15 @@ const hugMailComposeModal = {
                 : null;
 
             if (tiptap) {
-                // focus() restores the last selection so the value lands at
+                // focus() restores the last selection so the content lands at
                 // the cursor position instead of a new block at the end.
-                tiptap.chain().focus().insertContent(expression).run();
+                tiptap.chain().focus().insertContent(content).run();
 
                 return;
             }
 
-            // Fallback: append at the end so the variable is never lost.
-            this.contentHtml = `${this.contentHtml}${expression}`;
+            // Fallback: append at the end so the content is never lost.
+            this.contentHtml = `${this.contentHtml}${content}`;
         },
 
         buildPayload() {
