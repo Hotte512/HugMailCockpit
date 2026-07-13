@@ -39,6 +39,9 @@ Format angelehnt an [Keep a Changelog](https://keepachangelog.com/de/1.1.0/); Ve
 - Detailkonzept (`docs/konzept.md`) mit Featureschnitt F1–F4, Backend-Architektur und Aufwandsschätzung
 - Projekt-Setup: CLAUDE.md, README, Changelog, Git-Repository, dev-tooling-Anbindung (DDEV/MCP)
 
+### Geändert
+- Herstellerangaben in composer.json auf die GitHub-Veröffentlichung umgestellt (Autor/Links); firmenspezifische Beispieldaten in Tests neutralisiert
+
 ### Geändert (Nutzer-Feedback 11.07.2026)
 - Compose-Flow vereinfacht auf „gerendert bearbeiten": Vorlage wählen → sofort mit echten Daten gerendert → Ergebnis im Editor bearbeiten → 1:1 senden; kein Twig mehr im Editor für normale Nutzer
 - Variablen-Picker fügt im einfachen Modus echte Werte aus der Bestellung ein (Twig-Expressions nur noch im Experten-Modus)
