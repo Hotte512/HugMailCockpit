@@ -6,6 +6,13 @@ Das Herzstück ist der Tab **„E-Mails"** im Bestell- und Kundendetail — mit 
 
 📖 **[Benutzeranleitung](docs/benutzerhandbuch.md)** · 🧭 [Detailkonzept](docs/konzept.md)
 
+> **Kurz vorab:** Dieses Plugin wurde überwiegend **KI-gestützt** entwickelt
+> („Agentic Coding" / „Vibe Coding" mit Claude Code) und wird **ohne
+> Gewährleistung** bereitgestellt. Es versendet E-Mails an echte Kunden —
+> die Verantwortung für Konfiguration, Inhalte und Empfänger liegt beim
+> Shop-Betreiber. Details: [KI-gestützte Entwicklung](#entstehung-ki-gestützte-entwicklung-agentic-coding)
+> und [Haftungsausschluss](#haftungsausschluss).
+
 ## Features
 
 - **Textvorlagen** — wiederverwendbare Textbausteine (Grußformeln, Standardantworten), gepflegt in der Plugin-Konfiguration, eingefügt per Dropdown direkt im Editor.
@@ -69,6 +76,38 @@ npm run lint -- src/Resources/app/administration/src tests/administration
 ```
 
 CI (Forgejo/GitHub Actions-kompatibel): composer validate, ECS, PHPStan, PHPUnit (PHP 8.2/8.3), ESLint + Jest (Node 20) — siehe [.forgejo/workflows/ci.yml](.forgejo/workflows/ci.yml).
+
+## Entstehung: KI-gestützte Entwicklung (Agentic Coding)
+
+Dieses Plugin wurde überwiegend **KI-gestützt** entwickelt („Agentic
+Coding" bzw. „Vibe Coding" mit [Claude Code](https://claude.com/claude-code)):
+Ein KI-Agent hat Konzeption, Implementierung, Tests und Dokumentation unter
+menschlicher Anleitung und Review erstellt. Der Code wurde funktional
+getestet (Unit-Tests für Backend und Admin-Komponenten, End-to-End-Tests im
+Browser gegen eine echte Shopware-Installation), aber nicht Zeile für Zeile
+von Hand geschrieben.
+
+Was das für dich bedeutet:
+
+- Prüfe den Code vor dem Produktiveinsatz selbst — wie bei jedem
+  Fremd-Plugin, hier aber ausdrücklich empfohlen.
+- Trotz sorgfältiger Tests können Fehler enthalten sein, die ein
+  menschlicher Autor so nicht gemacht hätte (und umgekehrt).
+- Issues und Pull Requests sind willkommen, es besteht aber **kein
+  Anspruch auf Support, Fehlerbehebung oder Weiterentwicklung**.
+
+## Haftungsausschluss
+
+- **E-Mail-Versand an echte Empfänger:** Dieses Plugin verschickt E-Mails
+  an Kunden. Die Verantwortung für Inhalte, Empfängerauswahl, Anhänge
+  (inkl. personenbezogener Daten in Rechnungen & Co.), die Vergabe der
+  ACL-Berechtigungen sowie die datenschutzkonforme Nutzung liegt allein
+  beim Shop-Betreiber. Vor dem Produktiveinsatz in einer Testumgebung
+  prüfen (z. B. mit deaktivierter Zustellung / Mail-Catcher).
+- **Keine Gewährleistung:** Die Software wird „wie besehen" bereitgestellt,
+  ohne Gewährleistung jeglicher Art. Einsatz auf eigenes Risiko —
+  insbesondere gibt es keine Garantie für die Zustellung, Darstellung oder
+  rechtliche Eignung der versendeten E-Mails im konkreten Shop.
 
 ## Lizenz
 

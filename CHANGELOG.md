@@ -7,6 +7,7 @@ Format angelehnt an [Keep a Changelog](https://keepachangelog.com/de/1.1.0/); Ve
 ## [Unreleased]
 
 ### Hinzugefügt
+- README: Abschnitte „Entstehung: KI-gestützte Entwicklung (Agentic Coding)" und „Haftungsausschluss" (inkl. Kurzhinweis am Seitenanfang) für die Veröffentlichung
 - Variablen-Picker: Schalter „Alle Variablen anzeigen (Expertenansicht)" blendet bei Bedarf sämtliche Variablen mit technischem Namen ein — eingefügt wird weiterhin der echte Wert (kein Twig-Recht nötig)
 - „Als Textvorlage speichern" im E-Mail-Fenster: aktuellen Inhalt unter einem Namen als Textbaustein ablegen (mit Hinweis, dass bereits eingefügte Werte wörtlich übernommen werden); die neue Vorlage steht sofort im Einfüge-Dropdown bereit
 - Variablen-Picker zeigt im einfachen Modus verständliche, übersetzte Namen (Bestellnummer, Gesamtbetrag, Versandkosten, …) statt technischer Feldnamen — nur kuratierte, für den Alltag sinnvolle Variablen; der Twig-Expertenmodus behält weiterhin alle technischen Variablen
