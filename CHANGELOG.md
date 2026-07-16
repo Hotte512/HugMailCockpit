@@ -6,9 +6,6 @@ Format angelehnt an [Keep a Changelog](https://keepachangelog.com/de/1.1.0/); Ve
 
 ## [Unreleased]
 
-### Geändert
-- Plugin-Icon neu gestaltet: Umschlag in einem Instrumenten-Ring („Cockpit"), Grün/Amber — als SVG und PNG (transparente Ecken)
-
 ## [1.0.0] - 2026-07-16
 
 ### Sicherheit
@@ -51,6 +48,7 @@ Format angelehnt an [Keep a Changelog](https://keepachangelog.com/de/1.1.0/); Ve
 - Projekt-Setup: CLAUDE.md, README, Changelog, Git-Repository, dev-tooling-Anbindung (DDEV/MCP)
 
 ### Geändert
+- Plugin-Icon neu gestaltet: Umschlag in einem Instrumenten-Ring („Cockpit"), Grün/Amber — als SVG und PNG (transparente Ecken)
 - Lizenz von „proprietär" auf **GPL-3.0-or-later** umgestellt (LICENSE-Datei, composer.json, README)
 - Herstellerangaben in composer.json auf die GitHub-Veröffentlichung umgestellt (Autor/Links); firmenspezifische Beispieldaten in Tests neutralisiert
 
