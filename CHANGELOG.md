@@ -6,6 +6,9 @@ Format angelehnt an [Keep a Changelog](https://keepachangelog.com/de/1.1.0/); Ve
 
 ## [Unreleased]
 
+### Geändert
+- Plugin-Icon neu gestaltet: Umschlag in einem Instrumenten-Ring („Cockpit"), Grün/Amber — als SVG und PNG (transparente Ecken)
+
 ## [1.0.0] - 2026-07-16
 
 ### Sicherheit
