@@ -40,6 +40,7 @@ Format angelehnt an [Keep a Changelog](https://keepachangelog.com/de/1.1.0/); Ve
 - Projekt-Setup: CLAUDE.md, README, Changelog, Git-Repository, dev-tooling-Anbindung (DDEV/MCP)
 
 ### Geändert
+- Lizenz von „proprietär" auf **GPL-3.0-or-later** umgestellt (LICENSE-Datei, composer.json, README)
 - Herstellerangaben in composer.json auf die GitHub-Veröffentlichung umgestellt (Autor/Links); firmenspezifische Beispieldaten in Tests neutralisiert
 
 ### Geändert (Nutzer-Feedback 11.07.2026)

@@ -8,7 +8,7 @@ Das Herzstück ist der Tab **„E-Mails"** im Bestell- und Kundendetail — mit 
 
 > **Kurz vorab:** Dieses Plugin wurde überwiegend **KI-gestützt** entwickelt
 > („Agentic Coding" / „Vibe Coding" mit Claude Code) und wird **ohne
-> Gewährleistung** bereitgestellt. Es versendet E-Mails an echte Kunden —
+> Gewährleistung** bereitgestellt (GPL-3.0). Es versendet E-Mails an echte Kunden —
 > die Verantwortung für Konfiguration, Inhalte und Empfänger liegt beim
 > Shop-Betreiber. Details: [KI-gestützte Entwicklung](#entstehung-ki-gestützte-entwicklung-agentic-coding)
 > und [Haftungsausschluss](#haftungsausschluss).
@@ -105,10 +105,12 @@ Was das für dich bedeutet:
   beim Shop-Betreiber. Vor dem Produktiveinsatz in einer Testumgebung
   prüfen (z. B. mit deaktivierter Zustellung / Mail-Catcher).
 - **Keine Gewährleistung:** Die Software wird „wie besehen" bereitgestellt,
-  ohne Gewährleistung jeglicher Art. Einsatz auf eigenes Risiko —
+  ohne Gewährleistung jeglicher Art und mit Haftungsbeschränkung gemäß
+  **GPL-3.0 §§ 15–16** (siehe [LICENSE](LICENSE)). Einsatz auf eigenes Risiko —
   insbesondere gibt es keine Garantie für die Zustellung, Darstellung oder
   rechtliche Eignung der versendeten E-Mails im konkreten Shop.
 
 ## Lizenz
 
-Proprietär. Alle Rechte vorbehalten.
+GNU General Public License v3.0 oder später (GPL-3.0-or-later) —
+Volltext in [LICENSE](LICENSE). Copyright (C) 2026 Hotte512.
