@@ -67,7 +67,7 @@ Empfehlung für eine Kundenservice-Rolle: die ersten drei, **ohne** `twig_editor
 
 ```bash
 composer install          # Tooling (PHPUnit, PHPStan, ECS, Rector)
-composer phpunit          # 72 Tests
+composer phpunit          # 82 Tests
 composer phpstan          # Level max
 composer ecs
 npm ci                    # Admin-Tooling (Jest, ESLint)

@@ -17,6 +17,10 @@ Shopware.Service('privileges').addPrivilegeMappingEntry({
             privileges: [
                 'hug_mail_reference:read',
                 'frosh_mail_archive:read',
+                // The backend enforces order:read/customer:read before returning
+                // any order/customer mail history — grant them with the role.
+                'order:read',
+                'customer:read',
             ],
             dependencies: [],
         },
@@ -28,6 +32,8 @@ Shopware.Service('privileges').addPrivilegeMappingEntry({
                 'hug_mail_text_snippet:create',
                 'document:read',
                 'mail_template:read',
+                'order:read',
+                'customer:read',
             ],
             dependencies: [],
         },
@@ -41,6 +47,8 @@ Shopware.Service('privileges').addPrivilegeMappingEntry({
                 'media:read',
                 'media:create',
                 'media_folder:read',
+                'order:read',
+                'customer:read',
             ],
             dependencies: [],
         },

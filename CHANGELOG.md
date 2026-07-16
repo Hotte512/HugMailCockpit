@@ -6,6 +6,14 @@ Format angelehnt an [Keep a Changelog](https://keepachangelog.com/de/1.1.0/); Ve
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-07-16
+
+### Sicherheit
+- **Dokument-Anhänge an die Bestellung gebunden:** Es lassen sich nur noch Dokumente anhängen, die zur adressierten Bestellung gehören — vorher konnte ein Nutzer mit Versandrecht per Dokument-ID beliebige fremde Belege (z. B. Rechnungen anderer Bestellungen) anhängen und versenden.
+- **Datei-Anhänge auf den Plugin-Upload-Ordner beschränkt:** Als hochgeladener Anhang werden nur Medien aus dem dedizierten „Mail-Cockpit Anhänge"-Ordner akzeptiert — vorher war jede beliebige Media-ID der Installation anhängbar.
+- **Bestell-/Kundendaten erfordern jetzt `order:read`/`customer:read`:** Vorschau, Variablen, Template-Rendern, Historie und Versand prüfen serverseitig die Lese-Berechtigung für die adressierte Bestellung bzw. den Kunden; die vier Cockpit-Rollen bringen diese Rechte automatisch mit. Vorher waren fremde Bestell-PII und der komplette Mail-Verlauf über die reine ID abrufbar.
+- **Benötigtes Versandrecht wird aus dem Inhalt abgeleitet, nicht aus einem Client-Feld:** Freitext-Mails erfordern immer `free_sender`; das Umgehen über ein manipuliertes `source=document`-Feld ohne Dokument ist nicht mehr möglich.
+
 ### Hinzugefügt
 - README: Abschnitte „Entstehung: KI-gestützte Entwicklung (Agentic Coding)" und „Haftungsausschluss" (inkl. Kurzhinweis am Seitenanfang) für die Veröffentlichung
 - Variablen-Picker: Schalter „Alle Variablen anzeigen (Expertenansicht)" blendet bei Bedarf sämtliche Variablen mit technischem Namen ein — eingefügt wird weiterhin der echte Wert (kein Twig-Recht nötig)

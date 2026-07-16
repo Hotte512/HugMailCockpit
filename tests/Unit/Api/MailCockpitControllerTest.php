@@ -150,7 +150,7 @@ class MailCockpitControllerTest extends TestCase
             $this->jsonRequest($this->sendPayload([
                 'contentHtml' => '{% if order %}x{% endif %}',
             ])),
-            $this->contextWithPrivileges(['hug_mail_cockpit.free_sender', 'hug_mail_cockpit.twig_editor']),
+            $this->contextWithPrivileges(['hug_mail_cockpit.free_sender', 'hug_mail_cockpit.twig_editor', 'order:read']),
         );
 
         static::assertSame(204, $response->getStatusCode());
@@ -168,7 +168,7 @@ class MailCockpitControllerTest extends TestCase
                 $captured = $command;
             });
 
-        $context = $this->contextWithPrivileges(['hug_mail_cockpit.sender']);
+        $context = $this->contextWithPrivileges(['hug_mail_cockpit.sender', 'order:read']);
 
         $response = $this->controller->send(
             $this->jsonRequest([
@@ -200,7 +200,7 @@ class MailCockpitControllerTest extends TestCase
 
     public function testPreviewRendersAgainstOrderContext(): void
     {
-        $context = $this->contextWithPrivileges(['hug_mail_cockpit.free_sender']);
+        $context = $this->contextWithPrivileges(['hug_mail_cockpit.free_sender', 'order:read']);
 
         $order = new OrderEntity();
         $mailContext = new MailContext(
@@ -267,7 +267,7 @@ class MailCockpitControllerTest extends TestCase
 
     public function testVariablesReturnsPickerDataAndPrefill(): void
     {
-        $context = $this->contextWithPrivileges(['hug_mail_cockpit.free_sender']);
+        $context = $this->contextWithPrivileges(['hug_mail_cockpit.free_sender', 'order:read']);
         $languageId = Uuid::randomHex();
 
         $mailContext = new MailContext(
@@ -300,7 +300,7 @@ class MailCockpitControllerTest extends TestCase
     public function testHistoryDelegatesToGateway(): void
     {
         $rows = [['id' => Uuid::randomHex(), 'subject' => 'S']];
-        $context = $this->contextWithPrivileges(['hug_mail_cockpit.viewer']);
+        $context = $this->contextWithPrivileges(['hug_mail_cockpit.viewer', 'order:read']);
 
         $this->archiveGateway->expects(static::once())
             ->method('getHistory')
@@ -317,7 +317,7 @@ class MailCockpitControllerTest extends TestCase
 
     public function testRenderTemplateRendersDatabaseTemplateWithoutTwigPolicy(): void
     {
-        $context = $this->contextWithPrivileges(['hug_mail_cockpit.free_sender']);
+        $context = $this->contextWithPrivileges(['hug_mail_cockpit.free_sender', 'order:read']);
         $templateId = Uuid::randomHex();
 
         $order = new OrderEntity();
@@ -375,7 +375,7 @@ class MailCockpitControllerTest extends TestCase
 
     public function testPreviewPassesLetterheadToRenderer(): void
     {
-        $context = $this->contextWithPrivileges(['hug_mail_cockpit.free_sender']);
+        $context = $this->contextWithPrivileges(['hug_mail_cockpit.free_sender', 'order:read']);
         $salesChannelId = Uuid::randomHex();
 
         $mailContext = new MailContext(
@@ -415,6 +415,64 @@ class MailCockpitControllerTest extends TestCase
                 'recipients' => 'max@example.com',
             ])),
             $this->contextWithPrivileges(['hug_mail_cockpit.free_sender']),
+        );
+    }
+
+    /**
+     * The required privilege must derive from the actual payload, never from the
+     * client-set `source` label: a `sender` without documents is a free mail and
+     * must be rejected without `free_sender`, even when it claims source=document.
+     */
+    public function testSendWithoutDocumentsRequiresFreeSenderEvenWhenSourceClaimsDocument(): void
+    {
+        $this->sender->expects(static::never())->method('send');
+
+        $this->expectException(MissingPrivilegeException::class);
+
+        $this->controller->send(
+            $this->jsonRequest($this->sendPayload([
+                'source' => MailReferenceDefinition::SOURCE_DOCUMENT,
+                'documentIds' => [],
+                'contentHtml' => '<p>Arbitrary free text</p>',
+            ])),
+            $this->contextWithPrivileges(['hug_mail_cockpit.sender', 'order:read']),
+        );
+    }
+
+    public function testSendRequiresOrderReadCapability(): void
+    {
+        $this->sender->expects(static::never())->method('send');
+
+        $this->expectException(MissingPrivilegeException::class);
+
+        // free_sender may compose, but reading the order requires order:read.
+        $this->controller->send(
+            $this->jsonRequest($this->sendPayload()),
+            $this->contextWithPrivileges(['hug_mail_cockpit.free_sender']),
+        );
+    }
+
+    public function testVariablesRequireOrderReadCapability(): void
+    {
+        $this->contextBuilder->expects(static::never())->method('buildOrderContext');
+
+        $this->expectException(MissingPrivilegeException::class);
+
+        $this->controller->variables(
+            new Request(['orderId' => $this->orderId]),
+            $this->contextWithPrivileges(['hug_mail_cockpit.free_sender']),
+        );
+    }
+
+    public function testHistoryRequiresOrderReadCapability(): void
+    {
+        $this->archiveGateway->expects(static::never())->method('getHistory');
+
+        $this->expectException(MissingPrivilegeException::class);
+
+        $this->controller->history(
+            new Request(['orderId' => $this->orderId]),
+            $this->contextWithPrivileges(['hug_mail_cockpit.viewer']),
         );
     }
 }

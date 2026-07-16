@@ -11,6 +11,7 @@ use Hug\MailCockpit\Service\HugMailSender;
 use Hug\MailCockpit\Service\MailContext;
 use Hug\MailCockpit\Service\MailContextBuilder;
 use Hug\MailCockpit\Service\MailReferenceWriter;
+use Hug\MailCockpit\Service\MediaAttachmentGuard;
 use Hug\MailCockpit\Service\SendMailCommand;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -36,6 +37,8 @@ class HugMailSenderTest extends TestCase
 
     private AttachmentResolver&MockObject $attachmentResolver;
 
+    private MediaAttachmentGuard&MockObject $mediaAttachmentGuard;
+
     private MailReferenceWriter&MockObject $referenceWriter;
 
     private Context $adminContext;
@@ -51,6 +54,7 @@ class HugMailSenderTest extends TestCase
         $this->mailService = $this->createMock(AbstractMailService::class);
         $this->contextBuilder = $this->createMock(MailContextBuilder::class);
         $this->attachmentResolver = $this->createMock(AttachmentResolver::class);
+        $this->mediaAttachmentGuard = $this->createMock(MediaAttachmentGuard::class);
         $this->referenceWriter = $this->createMock(MailReferenceWriter::class);
 
         $this->adminContext = new Context(new AdminApiSource(Uuid::randomHex()));
@@ -84,6 +88,7 @@ class HugMailSenderTest extends TestCase
             $this->mailService,
             $this->contextBuilder,
             $this->attachmentResolver,
+            $this->mediaAttachmentGuard,
             $this->referenceWriter,
             $systemConfigService,
         );
@@ -172,8 +177,12 @@ class HugMailSenderTest extends TestCase
         $this->contextBuilder->method('buildOrderContext')->willReturn($this->mailContext);
         $this->attachmentResolver->expects(static::once())
             ->method('resolveDocuments')
-            ->with([$documentId], $this->mailContext->context)
+            ->with([$documentId], $this->orderId, $this->mailContext->context)
             ->willReturn($binAttachments);
+        // Uploaded media must be validated against the plugin's upload folder.
+        $this->mediaAttachmentGuard->expects(static::once())
+            ->method('assertAllowed')
+            ->with([$mediaId], $this->adminContext);
 
         $capturedData = null;
         $this->mailService->method('send')

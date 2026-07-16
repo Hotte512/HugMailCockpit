@@ -27,6 +27,12 @@
 
         <service id="Hug\MailCockpit\Service\AttachmentResolver">
             <argument type="service" id="Shopware\Core\Checkout\Document\Service\DocumentGenerator"/>
+            <argument type="service" id="document.repository"/>
+        </service>
+
+        <service id="Hug\MailCockpit\Service\MediaAttachmentGuard">
+            <argument type="service" id="media.repository"/>
+            <argument type="service" id="media_folder.repository"/>
         </service>
 
         <service id="Hug\MailCockpit\Service\TemplatePreviewRenderer">
@@ -43,6 +49,7 @@
             <argument type="service" id="Shopware\Core\Content\Mail\Service\MailService"/>
             <argument type="service" id="Hug\MailCockpit\Service\MailContextBuilder"/>
             <argument type="service" id="Hug\MailCockpit\Service\AttachmentResolver"/>
+            <argument type="service" id="Hug\MailCockpit\Service\MediaAttachmentGuard"/>
             <argument type="service" id="Hug\MailCockpit\Service\MailReferenceWriter"/>
             <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
         </service>

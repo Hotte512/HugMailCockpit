@@ -19,6 +19,7 @@ class HugMailSender
         private readonly AbstractMailService $mailService,
         private readonly MailContextBuilder $contextBuilder,
         private readonly AttachmentResolver $attachmentResolver,
+        private readonly MediaAttachmentGuard $mediaAttachmentGuard,
         private readonly MailReferenceWriter $referenceWriter,
         private readonly SystemConfigService $systemConfigService,
     ) {
@@ -48,11 +49,15 @@ class HugMailSender
         if ($command->documentIds !== []) {
             $data['binAttachments'] = $this->attachmentResolver->resolveDocuments(
                 $command->documentIds,
+                $command->orderId,
                 $mailContext->context,
             );
         }
 
         if ($command->mediaIds !== []) {
+            // Only files from the plugin's own upload folder may be attached —
+            // otherwise arbitrary media could be exfiltrated (loaded system-scoped).
+            $this->mediaAttachmentGuard->assertAllowed($command->mediaIds, $context);
             $data['mediaIds'] = $command->mediaIds;
         }
 

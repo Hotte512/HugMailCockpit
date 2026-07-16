@@ -35,6 +35,8 @@ class MailCockpitController
     private const PRIVILEGE_SENDER = 'hug_mail_cockpit.sender';
     private const PRIVILEGE_FREE_SENDER = 'hug_mail_cockpit.free_sender';
     private const PRIVILEGE_TWIG_EDITOR = 'hug_mail_cockpit.twig_editor';
+    private const PRIVILEGE_ORDER_READ = 'order:read';
+    private const PRIVILEGE_CUSTOMER_READ = 'customer:read';
 
     public function __construct(
         private readonly HugMailSender $mailSender,
@@ -57,9 +59,13 @@ class MailCockpitController
     {
         $payload = $this->decodePayload($request);
         $source = $this->stringValue($payload, 'source') ?? MailReferenceDefinition::SOURCE_FREE;
+        $documentIds = $this->stringList($payload, 'documentIds');
 
-        // Document mails (F3) need `sender`, free mails (F1) the stricter `free_sender`.
-        $requiredPrivilege = $source === MailReferenceDefinition::SOURCE_DOCUMENT
+        // The required privilege depends on WHAT is dispatched, never on the
+        // client-set `source` label: pure document dispatch (F3) needs `sender`
+        // (which carries document:read), everything with free-form content or
+        // uploads is a free mail (F1) requiring the stricter `free_sender`.
+        $requiredPrivilege = $documentIds !== []
             ? self::PRIVILEGE_SENDER
             : self::PRIVILEGE_FREE_SENDER;
 
@@ -81,10 +87,12 @@ class MailCockpitController
             cc: $this->recipientMap($payload, 'cc', true),
             bcc: $this->recipientMap($payload, 'bcc', true),
             mailTemplateId: $this->stringValue($payload, 'mailTemplateId'),
-            documentIds: $this->stringList($payload, 'documentIds'),
+            documentIds: $documentIds,
             mediaIds: $this->stringList($payload, 'mediaIds'),
             source: $source,
         );
+
+        $this->ensureEntityReadAccess($command->orderId, $command->customerId, $context);
 
         $this->mailSender->send($command, $context);
 
@@ -213,6 +221,10 @@ class MailCockpitController
         $orderId = $this->queryString($request, 'orderId');
         $customerId = $this->queryString($request, 'customerId');
 
+        // The archive rows expose full mail bodies of the addressed order/customer —
+        // gate them behind the same entity-read capability as the order/customer module.
+        $this->ensureEntityReadAccess($orderId, $customerId, $context);
+
         // countOnly powers the tab label without loading any rows.
         if ($request->query->getBoolean('countOnly')) {
             return new JsonResponse([
@@ -231,6 +243,8 @@ class MailCockpitController
 
     private function buildMailContext(?string $orderId, ?string $customerId, Context $context): MailContext
     {
+        $this->ensureEntityReadAccess($orderId, $customerId, $context);
+
         if ($orderId !== null) {
             return $this->contextBuilder->buildOrderContext($orderId, $context);
         }
@@ -240,6 +254,23 @@ class MailCockpitController
         }
 
         throw MailCockpitException::missingTarget();
+    }
+
+    /**
+     * The cockpit privileges only grant "may use the cockpit"; reading an order's
+     * or customer's data (PII, mail history, template preview) additionally
+     * requires the standard entity-read capability. Without this a viewer/sender
+     * could read arbitrary orders/customers by id, which their role never grants.
+     */
+    private function ensureEntityReadAccess(?string $orderId, ?string $customerId, Context $context): void
+    {
+        if ($orderId !== null && !$context->isAllowed(self::PRIVILEGE_ORDER_READ)) {
+            throw ApiException::missingPrivileges([self::PRIVILEGE_ORDER_READ]);
+        }
+
+        if ($customerId !== null && !$context->isAllowed(self::PRIVILEGE_CUSTOMER_READ)) {
+            throw ApiException::missingPrivileges([self::PRIVILEGE_CUSTOMER_READ]);
+        }
     }
 
     /**

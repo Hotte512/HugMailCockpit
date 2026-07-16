@@ -20,6 +20,8 @@ class MailCockpitException extends HttpException
     final public const MAIL_ARCHIVE_NOT_AVAILABLE = 'HUG_MAIL_COCKPIT__MAIL_ARCHIVE_NOT_AVAILABLE';
     final public const INVALID_PAYLOAD = 'HUG_MAIL_COCKPIT__INVALID_PAYLOAD';
     final public const MAIL_TEMPLATE_NOT_FOUND = 'HUG_MAIL_COCKPIT__MAIL_TEMPLATE_NOT_FOUND';
+    final public const DOCUMENTS_REQUIRE_ORDER = 'HUG_MAIL_COCKPIT__DOCUMENTS_REQUIRE_ORDER';
+    final public const MEDIA_ATTACHMENT_NOT_ALLOWED = 'HUG_MAIL_COCKPIT__MEDIA_ATTACHMENT_NOT_ALLOWED';
 
     public static function orderNotFound(string $orderId): self
     {
@@ -104,6 +106,25 @@ class MailCockpitException extends HttpException
             self::MAIL_TEMPLATE_NOT_FOUND,
             'Mail template "{{ mailTemplateId }}" not found.',
             ['mailTemplateId' => $mailTemplateId],
+        );
+    }
+
+    public static function documentsRequireOrder(): self
+    {
+        return new self(
+            Response::HTTP_BAD_REQUEST,
+            self::DOCUMENTS_REQUIRE_ORDER,
+            'Document attachments can only be sent from an order context.',
+        );
+    }
+
+    public static function mediaAttachmentNotAllowed(string $mediaId): self
+    {
+        return new self(
+            Response::HTTP_FORBIDDEN,
+            self::MEDIA_ATTACHMENT_NOT_ALLOWED,
+            'Media "{{ mediaId }}" is not an allowed mail attachment. Only files uploaded to the Mail-Cockpit attachment folder may be attached.',
+            ['mediaId' => $mediaId],
         );
     }
 
