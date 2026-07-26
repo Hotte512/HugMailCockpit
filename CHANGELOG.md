@@ -6,6 +6,11 @@ Format angelehnt an [Keep a Changelog](https://keepachangelog.com/de/1.1.0/); Ve
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-07-26
+
+### Behoben
+- **Admin: Platzhalter in Snippets renderten leer (vue-i18n 10):** Die Twig-Fehlermeldung mit Zeilenangabe in Vorschau/Compose („Twig-Fehler in Zeile {line}") und die Beschriftung der Sammel-Versand-Aktion im Dokumenten-Grid („Markierte per E-Mail senden ({count})") nutzten noch die alte `$tc(key, zahl, werte)`-Signatur — unter vue-i18n 10 (Shopware 6.7) wird das Werte-Objekt dabei nicht mehr interpoliert. Auf `$t(key, werte)` umgestellt.
+
 ## [1.0.0] - 2026-07-16
 
 ### Sicherheit

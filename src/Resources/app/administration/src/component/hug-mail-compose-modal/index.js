@@ -353,7 +353,7 @@ const hugMailComposeModal = {
 
         previewErrorTitle(error) {
             if (error.line) {
-                return this.$tc('hug-mail-cockpit.composeModal.previewErrorLine', 0, { line: error.line });
+                return this.$t('hug-mail-cockpit.composeModal.previewErrorLine', { line: error.line });
             }
 
             return this.$tc('hug-mail-cockpit.composeModal.previewError');
