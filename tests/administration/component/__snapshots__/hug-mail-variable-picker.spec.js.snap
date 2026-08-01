@@ -8,6 +8,9 @@ exports[`hug-mail-variable-picker renders translated labels sorted alphabeticall
     </button>
     <ul class="hug-mail-variable-picker__list">
       <li><button type="button" class="hug-mail-variable-picker__variable" title="10001">Bestellnummer <span class="hug-mail-variable-picker__value">10001</span></button></li>
+      <li><button type="button" class="hug-mail-variable-picker__variable" title="{{ order.customerComment }}">Externer Kundenkommentar
+          <!--v-if-->
+        </button></li>
       <li><button type="button" class="hug-mail-variable-picker__variable" title="99.9">Gesamtbetrag (brutto) <span class="hug-mail-variable-picker__value">99.9</span></button></li>
     </ul>
   </div>

@@ -114,7 +114,7 @@
                 "amountNet": "Total (net)",
                 "shippingTotal": "Shipping costs",
                 "positionPrice": "Sum of positions",
-                "customerComment": "Customer comment",
+                "customerComment": "External customer comment",
                 "affiliateCode": "Affiliate code",
                 "campaignCode": "Campaign code",
                 "createdAt": "Created at"

@@ -6,6 +6,12 @@ Format angelehnt an [Keep a Changelog](https://keepachangelog.com/de/1.1.0/); Ve
 
 ## [Unreleased]
 
+### Behoben
+- **Variablen-Picker versteckte Variablen, deren Feld bei der Bestellung leer ist:** Betraf vor allem den externen Kundenkommentar — ist er bei der Bestellung nicht ausgefüllt (der Normalfall), verschwand die Variable komplett aus der Liste, auch mit angehakter Expertenansicht. Kuratierte Variablen erscheinen jetzt immer; ist das Feld leer, fügt ein Klick den Platzhalter `{{ order.customerComment }}` ein, der beim Versand mit dem dann aktuellen Inhalt gefüllt wird (kein Twig-Recht nötig).
+
+### Geändert
+- Variablen-Picker: Die Variable „Kundenkommentar" heißt jetzt „Externer Kundenkommentar" — sie entspricht dem Bestellfeld, das Shopware im Bestelldetail unter „Zusätzliche Informationen" führt und das für Kunden sichtbar ist. Damit ist sie über die Suche nach „extern" auffindbar und klar vom internen Kommentar abgegrenzt.
+
 ## [1.0.1] - 2026-07-26
 
 ### Behoben

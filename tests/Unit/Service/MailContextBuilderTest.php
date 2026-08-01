@@ -178,6 +178,9 @@ class MailContextBuilderTest extends TestCase
         // Scalar properties expose their rendered value for the picker …
         static::assertSame('10001', $variables['order']['orderNumber']);
         static::assertSame('99.9', $variables['order']['amountTotal']);
+        // … including the external customer comment, which the criteria must keep
+        // loading (no field selection may ever be introduced).
+        static::assertSame('Bitte beim Nachbarn abgeben.', $variables['order']['customerComment']);
         // … non-scalar properties are listed without a value (twig mode only).
         static::assertArrayHasKey('orderCustomer', $variables['order']);
         static::assertNull($variables['order']['orderCustomer']);
@@ -221,6 +224,7 @@ class MailContextBuilderTest extends TestCase
         $order->setTaxStatus(CartPrice::TAX_STATE_GROSS);
         $order->setOrderNumber('10001');
         $order->setAmountTotal(99.9);
+        $order->setCustomerComment('Bitte beim Nachbarn abgeben.');
 
         $orderCustomer = new OrderCustomerEntity();
         $orderCustomer->setId(Uuid::randomHex());

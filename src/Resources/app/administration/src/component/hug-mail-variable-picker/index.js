@@ -8,6 +8,9 @@ import './hug-mail-variable-picker.scss';
  * mode 'values' (default, simple editor): clicking inserts the real value.
  * Only curated variables (with a translated label under
  * hug-mail-cockpit.variables.*) are shown — everything technical stays out.
+ * Curated variables are listed even when empty; clicking then inserts the
+ * `{{ root.key }}` placeholder, which the server renders on send (a plain
+ * interpolation, so no twig_editor privilege is required).
  * mode 'expressions' (twig editor): all keys, technical names, clicking
  * inserts `{{ root.key }}`.
  */
@@ -49,7 +52,14 @@ const hugMailVariablePicker = {
                             return true;
                         }
 
-                        return value !== null && (this.showAll || this.hasCuratedLabel(rootKey, key));
+                        // Curated variables stay listed even when the order/customer
+                        // leaves them empty — otherwise they are unfindable exactly
+                        // when someone wants to insert them as a placeholder.
+                        if (this.hasCuratedLabel(rootKey, key)) {
+                            return true;
+                        }
+
+                        return this.showAll && value !== null;
                     })
                     .map(([key, value]) => ({
                         key,
@@ -107,12 +117,21 @@ const hugMailVariablePicker = {
             return `{{ ${rootKey}.${key} }}`;
         },
 
+        /**
+         * A null value means "not a scalar", an empty string means "scalar but
+         * empty on this order/customer". Neither is worth inserting literally —
+         * both fall back to the twig placeholder.
+         */
+        hasValue(value) {
+            return value !== null && value !== '';
+        },
+
         shorten(value) {
             return value.length > 24 ? `${value.slice(0, 24)}…` : value;
         },
 
         selectVariable(rootKey, entry) {
-            if (this.mode === 'values' && entry.value !== null) {
+            if (this.mode === 'values' && this.hasValue(entry.value)) {
                 this.$emit('variable-selected', entry.value);
 
                 return;

@@ -41,11 +41,11 @@
                 <button
                     type="button"
                     class="hug-mail-variable-picker__variable"
-                    :title="entry.value !== null ? entry.value : buildExpression(rootKey, entry.key)"
+                    :title="hasValue(entry.value) ? entry.value : buildExpression(rootKey, entry.key)"
                     @click="selectVariable(rootKey, entry)"
                 >
                     {{ entry.label }}
-                    <span v-if="entry.value !== null" class="hug-mail-variable-picker__value">{{ shorten(entry.value) }}</span>
+                    <span v-if="hasValue(entry.value)" class="hug-mail-variable-picker__value">{{ shorten(entry.value) }}</span>
                 </button>
             </li>
         </ul>

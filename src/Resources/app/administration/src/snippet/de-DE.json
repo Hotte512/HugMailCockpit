@@ -114,7 +114,7 @@
                 "amountNet": "Gesamtbetrag (netto)",
                 "shippingTotal": "Versandkosten",
                 "positionPrice": "Summe der Positionen",
-                "customerComment": "Kundenkommentar",
+                "customerComment": "Externer Kundenkommentar",
                 "affiliateCode": "Partner-Code",
                 "campaignCode": "Aktions-Code",
                 "createdAt": "Erstellt am"

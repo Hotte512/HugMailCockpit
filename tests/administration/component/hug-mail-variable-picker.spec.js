@@ -5,6 +5,8 @@ const VARIABLES = {
     order: {
         orderNumber: '10001',
         amountTotal: '99.9',
+        // curated, but empty on this order — the common case for a comment field
+        customerComment: null,
         billingAddressId: 'a0b1c2d3e4f5a0b1c2d3e4f5a0b1c2d3',
         deepLinkCode: 'xYz',
         orderCustomer: null,
@@ -17,6 +19,7 @@ const VARIABLES = {
 const LABELS = {
     'hug-mail-cockpit.variables.order.orderNumber': 'Bestellnummer',
     'hug-mail-cockpit.variables.order.amountTotal': 'Gesamtbetrag (brutto)',
+    'hug-mail-cockpit.variables.order.customerComment': 'Externer Kundenkommentar',
     'hug-mail-cockpit.variables.salesChannel.name': 'Verkaufskanal',
 };
 
@@ -66,10 +69,41 @@ describe('hug-mail-variable-picker', () => {
     it('shows only curated (translated) entries in values mode', () => {
         const visible = createWrapper().findAll('.hug-mail-variable-picker__variable').map((b) => b.text());
 
-        expect(visible).toHaveLength(3);
+        expect(visible).toHaveLength(4);
         expect(visible.some((label) => label.includes('billingAddressId'))).toBe(false);
         expect(visible.some((label) => label.includes('deepLinkCode'))).toBe(false);
         expect(visible.some((label) => label.includes('orderCustomer'))).toBe(false);
+    });
+
+    it('keeps curated variables listed when the value is empty and inserts the placeholder', async () => {
+        const wrapper = createWrapper();
+
+        const commentButton = wrapper
+            .findAll('.hug-mail-variable-picker__variable')
+            .find((button) => button.text().startsWith('Externer Kundenkommentar'));
+
+        expect(commentButton).toBeDefined();
+        // no value preview for an empty field
+        expect(commentButton.find('.hug-mail-variable-picker__value').exists()).toBe(false);
+
+        await commentButton.trigger('click');
+
+        expect(wrapper.emitted('variable-selected')).toEqual([['{{ order.customerComment }}']]);
+    });
+
+    it('treats an empty string like a missing value', async () => {
+        const wrapper = createWrapper({
+            variables: { order: { ...VARIABLES.order, customerComment: '' } },
+        });
+
+        const commentButton = wrapper
+            .findAll('.hug-mail-variable-picker__variable')
+            .find((button) => button.text().startsWith('Externer Kundenkommentar'));
+
+        expect(commentButton).toBeDefined();
+        await commentButton.trigger('click');
+
+        expect(wrapper.emitted('variable-selected')).toEqual([['{{ order.customerComment }}']]);
     });
 
     it('reveals all scalar variables when the expert checkbox is checked', async () => {
