@@ -161,6 +161,18 @@ Unter *Einstellungen → System → Benutzer & Rechte → Rollen* findest du im 
 
 **Empfehlung für die Kundenservice-Rolle:** *Mail-Historie sehen* + *Dokumente per E-Mail versenden* + *Freie E-Mails verfassen* — **ohne** *Twig-Modus im Editor verwenden*. Der Twig-Modus ist bewusst ein separates Recht: Freier Twig-Code im Mailversand ist ein potenzieller Missbrauchsvektor und gehört nur in die Hände von Nutzern, die Vorlagen pflegen.
 
+### Interne Felder sind gesperrt
+
+Einige Bestell- und Kundenfelder dürfen **grundsätzlich nicht** in eine Kundenmail — unabhängig davon, welche Rechte jemand hat:
+
+| Feld | Warum |
+|---|---|
+| **Interner Kommentar** (Bestellung) | Interne Notizen über den Kunden; das kundenseitige Gegenstück ist der externe Kundenkommentar, der weiterhin verfügbar ist |
+| **Passwort**, **Legacy-Passwort**, **Legacy-Encoder** (Kunde) | Zugangsdaten |
+| **Letzte IP-Adresse** (Kunde) | Personenbezogenes Verbindungsdatum |
+
+Diese Felder tauchen weder im Variablen-Picker auf (auch nicht in der Expertenansicht) noch lassen sie sich von Hand in den Twig-Modus tippen — der Server lehnt Vorschau und Versand dann mit einer Fehlermeldung ab. Das gilt auch für E-Mail-Vorlagen, die eines dieser Felder verwenden.
+
 ### Plugin-Konfiguration
 
 Unter *Erweiterungen → Meine Erweiterungen → HugMailCockpit → Konfiguration* (Card **„Funktionen"**):

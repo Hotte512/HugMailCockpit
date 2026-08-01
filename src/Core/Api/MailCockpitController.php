@@ -165,11 +165,16 @@ class MailCockpitController
             $context,
         );
 
-        // No twig policy here on purpose: the template content comes from the
-        // database (maintained via the mail template module with its own ACL),
-        // not from user input. The rendered result is returned WITHOUT the
-        // letterhead so editing and re-sending never duplicates it.
+        // No twig *privilege* check here on purpose: the template content comes
+        // from the database (maintained via the mail template module with its
+        // own ACL), not from user input. The rendered result is returned
+        // WITHOUT the letterhead so editing and re-sending never duplicates it.
         $template = $this->mailTemplateGateway->getTemplateContent($mailTemplateId, $mailContext->context);
+
+        // Blocked variables are a data-protection rule, not a privilege one:
+        // rendering them here would smuggle internal data into the editor and
+        // from there into the customer mail as plain text.
+        $this->enforceBlockedVariables([$template['subject'], $template['contentHtml']]);
 
         $result = $this->previewRenderer->render(
             $template['subject'],
@@ -290,8 +295,26 @@ class MailCockpitController
     /**
      * @param list<string> $contents
      */
+    private function enforceBlockedVariables(array $contents): void
+    {
+        foreach ($contents as $content) {
+            $blocked = $this->twigContentPolicy->findBlockedVariable($content);
+
+            if ($blocked !== null) {
+                throw MailCockpitException::blockedVariable($blocked);
+            }
+        }
+    }
+
+    /**
+     * @param list<string> $contents
+     */
     private function enforceTwigPolicy(array $contents, Context $context): void
     {
+        // Blocked variables are off limits for everyone — the twig editor
+        // privilege buys expressive power, not access to internal data.
+        $this->enforceBlockedVariables($contents);
+
         if ($context->isAllowed(self::PRIVILEGE_TWIG_EDITOR)) {
             return;
         }

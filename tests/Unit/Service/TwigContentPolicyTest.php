@@ -59,4 +59,43 @@ class TwigContentPolicyTest extends TestCase
     {
         static::assertTrue($this->policy->requiresTwigEditor('{{ order.lineItems[0].label }}'));
     }
+
+    public function testCleanContentHasNoBlockedVariable(): void
+    {
+        static::assertNull($this->policy->findBlockedVariable(
+            'Your order {{ order.orderNumber }}, {{ order.customerComment }}'
+        ));
+    }
+
+    /**
+     * @return iterable<string, array{0: string, 1: string}>
+     */
+    public static function blockedContentProvider(): iterable
+    {
+        yield 'internal comment' => ['Note: {{ order.internalComment }}', 'internalComment'];
+        yield 'password hash' => ['{{ customer.password }}', 'password'];
+        yield 'legacy password' => ['{{ customer.legacyPassword }}', 'legacyPassword'];
+        yield 'legacy encoder' => ['{{ customer.legacyEncoder }}', 'legacyEncoder'];
+        yield 'remote address' => ['{{ customer.remoteAddress }}', 'remoteAddress'];
+        yield 'inside a tag' => ['{% if order.internalComment %}x{% endif %}', 'internalComment'];
+        yield 'via attribute()' => ["{{ attribute(order, 'internalComment') }}", 'internalComment'];
+        yield 'odd spacing' => ["{{\n  order.internalComment\n}}", 'internalComment'];
+        yield 'different case' => ['{{ order.INTERNALCOMMENT }}', 'internalComment'];
+    }
+
+    /**
+     * @dataProvider blockedContentProvider
+     */
+    public function testBlockedVariablesAreDetected(string $content, string $expected): void
+    {
+        static::assertSame($expected, $this->policy->findBlockedVariable($content));
+    }
+
+    public function testBlockedNameOutsideTwigMarkersIsIgnored(): void
+    {
+        // A customer may legitimately write the word in prose.
+        static::assertNull($this->policy->findBlockedVariable(
+            'Bitte teilen Sie uns Ihr Password nicht per Mail mit.'
+        ));
+    }
 }

@@ -6,6 +6,10 @@ Format angelehnt an [Keep a Changelog](https://keepachangelog.com/de/1.1.0/); Ve
 
 ## [Unreleased]
 
+### Sicherheit
+- **Interne Bestell- und Kundenfelder werden nicht mehr als Mail-Variablen angeboten:** Der Variablen-Picker listete alle Entity-Eigenschaften auf, auch solche, die Shopware bewusst von der API fernhält (kein `ApiAware`-Flag). Betroffen waren der **interne Kommentar** der Bestellung sowie **Passwort-Hash, Legacy-Passwort, Legacy-Encoder und die zuletzt gespeicherte IP-Adresse** des Kunden. Mit angehakter Expertenansicht wurden diese Werte im Editor sogar mit Klartext-Vorschau angezeigt und ließen sich per Klick in eine Kundenmail übernehmen — dafür genügte das normale Versandrecht, ein Twig-Recht war nicht nötig. Die Variablenliste folgt jetzt der Sichtbarkeitsregel des Cores und filtert die genannten Felder zusätzlich ausdrücklich heraus.
+- **Gesperrte Variablen werden serverseitig abgewiesen:** Enthalten Betreff oder Inhalt eine der gesperrten Variablen (z. B. `{{ order.internalComment }}` oder `{{ customer.password }}`), lehnen Vorschau und Versand die Mail ab — für **alle** Nutzer, auch mit dem Recht „Twig-Modus im Editor verwenden". Die Prüfung greift ebenso beim Rendern einer E-Mail-Vorlage, damit sich die Felder nicht über eine präparierte Vorlage in den Editor schmuggeln lassen.
+
 ### Behoben
 - **Variablen-Picker versteckte Variablen, deren Feld bei der Bestellung leer ist:** Betraf vor allem den externen Kundenkommentar — ist er bei der Bestellung nicht ausgefüllt (der Normalfall), verschwand die Variable komplett aus der Liste, auch mit angehakter Expertenansicht. Kuratierte Variablen erscheinen jetzt immer; ist das Feld leer, fügt ein Klick den Platzhalter `{{ order.customerComment }}` ein, der beim Versand mit dem dann aktuellen Inhalt gefüllt wird (kein Twig-Recht nötig).
 

@@ -12,6 +12,7 @@ use Shopware\Core\Checkout\Order\OrderEntity;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\Entity;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
+use Shopware\Core\Framework\DataAbstractionLayer\FieldVisibility;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Sorting\FieldSorting;
 
@@ -56,6 +57,14 @@ class MailContextBuilder
      * Template-data keys that are internal entity plumbing, not mail variables.
      */
     private const INTERNAL_VARIABLE_KEYS = ['extensions', '_uniqueIdentifier', 'translated', 'versionId'];
+
+    /**
+     * Belt and braces for the field visibility in apiAwareVars(): `getVars()`
+     * only honours the ApiAware flag when the entity carries the DAL's field
+     * visibility, so an entity built outside the hydrator would hand these out
+     * regardless. TwigContentPolicy rejects the same keys in mail content.
+     */
+    private const BLOCKED_VARIABLE_KEYS = TwigContentPolicy::BLOCKED_VARIABLE_KEYS;
 
     /**
      * @param EntityRepository<OrderCollection> $orderRepository
@@ -190,8 +199,12 @@ class MailContextBuilder
                 continue;
             }
 
-            $vars = $value->getVars();
-            $keys = array_values(array_diff(array_keys($vars), self::INTERNAL_VARIABLE_KEYS));
+            $vars = $this->apiAwareVars($value);
+            $keys = array_values(array_diff(
+                array_keys($vars),
+                self::INTERNAL_VARIABLE_KEYS,
+                self::BLOCKED_VARIABLE_KEYS,
+            ));
             sort($keys);
 
             $entries = [];
@@ -203,6 +216,26 @@ class MailContextBuilder
         }
 
         return $variables;
+    }
+
+    /**
+     * `Entity::getVars()` drops fields without the ApiAware flag — but only
+     * while the DAL believes twig is rendering. We are not rendering here, so
+     * without the flag the picker would happily list `order.internalComment`
+     * or `customer.password` with their plain values.
+     *
+     * @return array<string, mixed>
+     */
+    private function apiAwareVars(Entity $entity): array
+    {
+        $previous = FieldVisibility::$isInTwigRenderingContext;
+        FieldVisibility::$isInTwigRenderingContext = true;
+
+        try {
+            return $entity->getVars();
+        } finally {
+            FieldVisibility::$isInTwigRenderingContext = $previous;
+        }
     }
 
     private function toScalarPreview(mixed $value): ?string

@@ -13,6 +13,7 @@ use Shopware\Core\Checkout\Order\Aggregate\OrderCustomer\OrderCustomerEntity;
 use Shopware\Core\Checkout\Order\OrderEntity;
 use Shopware\Core\Framework\Api\Context\SystemSource;
 use Shopware\Core\Framework\Context;
+use Shopware\Core\Framework\DataAbstractionLayer\FieldVisibility;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\Uuid\Uuid;
 use Shopware\Core\System\SalesChannel\SalesChannelEntity;
@@ -185,6 +186,77 @@ class MailContextBuilderTest extends TestCase
         static::assertArrayHasKey('orderCustomer', $variables['order']);
         static::assertNull($variables['order']['orderCustomer']);
         static::assertArrayNotHasKey('extensions', $variables['order']);
+    }
+
+    public function testVariablesHideFieldsThatAreNotApiAware(): void
+    {
+        $order = $this->createOrder();
+        $order->setInternalComment('Kunde ist Betrüger — nur intern!');
+
+        $orderRepository = new StaticEntityRepository([
+            [$this->createOrder()],
+            [$order],
+        ]);
+
+        $builder = new MailContextBuilder($orderRepository, new StaticEntityRepository([]));
+        $mailContext = $builder->buildOrderContext($this->orderId, new Context(new SystemSource()));
+
+        $variables = $builder->getVariables($mailContext);
+
+        static::assertArrayNotHasKey('internalComment', $variables['order']);
+        static::assertNotContains('Kunde ist Betrüger — nur intern!', $variables['order'], 'internal comment leaked under another key');
+        // the customer-facing counterpart stays available
+        static::assertArrayHasKey('customerComment', $variables['order']);
+    }
+
+    public function testCustomerVariablesHideCredentialsAndRemoteAddress(): void
+    {
+        $customer = $this->createCustomer($this->orderLanguageId);
+        $customer->setPassword('$2y$10$averysecrethash');
+        $customer->setLegacyPassword('deadbeef');
+        $customer->setLegacyEncoder('Md5');
+        $customer->setRemoteAddress('203.0.113.7');
+
+        $customerRepository = new StaticEntityRepository([
+            [$this->createCustomer($this->orderLanguageId)],
+            [$customer],
+        ]);
+
+        $builder = new MailContextBuilder(new StaticEntityRepository([]), $customerRepository);
+        $mailContext = $builder->buildCustomerContext($this->customerId, new Context(new SystemSource()));
+
+        $variables = $builder->getVariables($mailContext);
+
+        foreach (['password', 'legacyPassword', 'legacyEncoder', 'remoteAddress'] as $secret) {
+            static::assertArrayNotHasKey($secret, $variables['customer'], "{$secret} must never be offered as a mail variable");
+        }
+
+        static::assertArrayHasKey('email', $variables['customer']);
+    }
+
+    /**
+     * The explicit blocklist is only the second line of defence — the first one
+     * is the core rule "no ApiAware flag, no mail variable". This proves it
+     * applies to fields the blocklist never heard of.
+     */
+    public function testVariablesRespectCoreApiAwareVisibility(): void
+    {
+        $order = $this->createOrder();
+        $order->setAffiliateCode('SECRET-PARTNER');
+        $order->internalSetEntityData('order', new FieldVisibility(['affiliateCode']));
+
+        $orderRepository = new StaticEntityRepository([
+            [$this->createOrder()],
+            [$order],
+        ]);
+
+        $builder = new MailContextBuilder($orderRepository, new StaticEntityRepository([]));
+        $mailContext = $builder->buildOrderContext($this->orderId, new Context(new SystemSource()));
+
+        $variables = $builder->getVariables($mailContext);
+
+        static::assertArrayNotHasKey('affiliateCode', $variables['order']);
+        static::assertArrayHasKey('orderNumber', $variables['order']);
     }
 
     public function testVariableValuesFormatDates(): void

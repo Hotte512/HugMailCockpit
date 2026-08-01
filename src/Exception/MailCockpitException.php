@@ -22,6 +22,7 @@ class MailCockpitException extends HttpException
     final public const MAIL_TEMPLATE_NOT_FOUND = 'HUG_MAIL_COCKPIT__MAIL_TEMPLATE_NOT_FOUND';
     final public const DOCUMENTS_REQUIRE_ORDER = 'HUG_MAIL_COCKPIT__DOCUMENTS_REQUIRE_ORDER';
     final public const MEDIA_ATTACHMENT_NOT_ALLOWED = 'HUG_MAIL_COCKPIT__MEDIA_ATTACHMENT_NOT_ALLOWED';
+    final public const BLOCKED_VARIABLE = 'HUG_MAIL_COCKPIT__BLOCKED_VARIABLE';
 
     public static function orderNotFound(string $orderId): self
     {
@@ -96,6 +97,16 @@ class MailCockpitException extends HttpException
             Response::HTTP_FORBIDDEN,
             self::TWIG_EDITOR_PRIVILEGE_REQUIRED,
             'The content contains Twig expressions that require the "hug_mail_cockpit.twig_editor" privilege.',
+        );
+    }
+
+    public static function blockedVariable(string $variable): self
+    {
+        return new self(
+            Response::HTTP_FORBIDDEN,
+            self::BLOCKED_VARIABLE,
+            'The variable "{{ variable }}" holds internal data and must not be used in customer mails.',
+            ['variable' => $variable],
         );
     }
 

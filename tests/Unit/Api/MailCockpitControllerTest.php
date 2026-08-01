@@ -156,6 +156,44 @@ class MailCockpitControllerTest extends TestCase
         static::assertSame(204, $response->getStatusCode());
     }
 
+    public function testSendRejectsInternalCommentEvenWithTwigEditorPrivilege(): void
+    {
+        $this->sender->expects(static::never())->method('send');
+
+        $this->expectException(MailCockpitException::class);
+        $this->expectExceptionMessageMatches('/internalComment/');
+
+        $this->controller->send(
+            $this->jsonRequest($this->sendPayload([
+                'contentHtml' => 'Hinweis: {{ order.internalComment }}',
+            ])),
+            $this->contextWithPrivileges([
+                'hug_mail_cockpit.free_sender',
+                'hug_mail_cockpit.twig_editor',
+                'order:read',
+            ]),
+        );
+    }
+
+    public function testSendRejectsCustomerPasswordInTheSubject(): void
+    {
+        $this->sender->expects(static::never())->method('send');
+
+        $this->expectException(MailCockpitException::class);
+        $this->expectExceptionMessageMatches('/password/');
+
+        $this->controller->send(
+            $this->jsonRequest($this->sendPayload([
+                'subject' => '{{ customer.password }}',
+            ])),
+            $this->contextWithPrivileges([
+                'hug_mail_cockpit.free_sender',
+                'hug_mail_cockpit.twig_editor',
+                'order:read',
+            ]),
+        );
+    }
+
     public function testSendBuildsCommandFromPayload(): void
     {
         $documentId = Uuid::randomHex();
