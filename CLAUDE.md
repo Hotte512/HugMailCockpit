@@ -13,7 +13,7 @@ Zielversion: **Shopware ≥ 6.7 only** (`shopware/core: ~6.7.0`), kein 6.6-Suppo
 - Shopware-Installation: `/home/shopware/sw7` (aktuell 6.7.10.2), Plugin liegt in `custom/plugins/HugMailCockpit`
 - Ausführung via **DDEV** (Projekt `s7`, Workdir `/var/www/html`, PHP 8.2 im Container — **kein natives PHP auf dem Host**)
 - `.claude/settings.local.json` setzt `PROJECT_ROOT=/home/shopware/sw7` — nötig, damit die dev-tooling-MCP-Server ihre Configs am Shopware-Root finden. Nicht entfernen.
-- Dev-tooling-Scope `hug-mail-cockpit` ist als `default_scope` gepinnt (in `/home/shopware/sw7/.mcp-php-tooling.json` / `.mcp-js-tooling.json`)
+- **Bei jedem dev-tooling-Aufruf explizit `scope: "hug-mail-cockpit"` mitgeben.** Der `default_scope` in `/home/shopware/sw7/.mcp-php-tooling.json` / `.mcp-js-tooling.json` ist über alle Plugins geteilt und zeigt je nach zuletzt bearbeitetem Projekt woanders hin — ohne `scope` laufen die Checks stillschweigend gegen ein fremdes Plugin und melden grün. Ausnahme: `console_run` braucht `scope: "shopware"`.
 
 ## Werkzeuge & Befehle
 
