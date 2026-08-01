@@ -27,6 +27,9 @@ function createWrapper({ acl = { can: () => true }, apiOverrides = {} } = {}) {
         global: {
             mocks: {
                 $tc: (key) => key,
+                // vue-i18n 10: $t(key, values) — Platzhalter werden mit abgebildet,
+                // damit Tests die Interpolation pruefen koennen.
+                $t: (key, values) => (values ? `${key}:${JSON.stringify(values)}` : key),
             },
             provide: {
                 acl,
@@ -121,6 +124,16 @@ describe('hug-mail-preview-card', () => {
         await wrapper.vm.sendTestMail();
 
         expect(apiService.send).not.toHaveBeenCalled();
+    });
+
+    it('interpolates the line number into the preview error title', async () => {
+        const { wrapper } = createWrapper();
+        await flushPromises();
+
+        expect(wrapper.vm.previewErrorTitle({ line: 7 }))
+            .toBe('hug-mail-cockpit.composeModal.previewErrorLine:{"line":7}');
+        expect(wrapper.vm.previewErrorTitle({ line: null }))
+            .toBe('hug-mail-cockpit.composeModal.previewError');
     });
 
     it('is hidden without the free_sender privilege', async () => {
