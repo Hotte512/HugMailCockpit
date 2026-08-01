@@ -4,6 +4,9 @@
 /coverage/
 .claude/settings.local.json
 .claude/worktrees/
+# Arbeitsanweisung für Claude Code — beschreibt die lokale Entwicklungsumgebung
+# (Pfade, DDEV-Projekt, Tooling-Scopes) und gehört daher nicht ins Repository.
+CLAUDE.md
 .phpunit.result.cache
 .phpactor.json
 .DS_Store
